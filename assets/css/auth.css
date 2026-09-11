@@ -377,4 +377,140 @@
         font-size: 28px;
     }
 
+    /* =========================================
+   LOGIN
+========================================= */
+
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    padding-right: 80px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    border: none;
+    background: transparent;
+
+    color: var(--primary);
+
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.toggle-password:hover {
+    text-decoration: underline;
+}
+
+.login-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 8px;
+    margin-bottom: 20px;
+
+    font-size: 0.9rem;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    cursor: pointer;
+}
+
+.checkbox-container input {
+    width: auto;
+    cursor: pointer;
+}
+
+.login-options a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-options a:hover {
+    text-decoration: underline;
+}
+
+.login-message {
+    display: none;
+
+    padding: 12px 14px;
+
+    margin-bottom: 16px;
+
+    border-radius: 8px;
+
+    font-size: 0.9rem;
+}
+
+.login-message.error {
+    display: block;
+
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.login-message.success {
+    display: block;
+
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.auth-submit {
+    width: 100%;
+}
+
+.auth-switch {
+    text-align: center;
+
+    margin-top: 24px;
+
+    font-size: 0.9rem;
+
+    color: var(--text-light);
+}
+
+.auth-switch a {
+    color: var(--primary);
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE LOGIN
+========================================= */
+
+@media (max-width: 600px) {
+
+    .login-options {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
 }
