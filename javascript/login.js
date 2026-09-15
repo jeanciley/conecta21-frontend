@@ -99,13 +99,13 @@ function validarSenha() {
         return false;
     }
 
-    if (senha.length < 6) {
+    if (senha.length < 8) {
 
         senhaError.textContent =
-            "A senha deve possuir pelo menos 6 caracteres.";
-
+            "A senha deve possuir pelo menos 8 caracteres.";
+    
         senhaInput.classList.add("input-error");
-
+    
         return false;
     }
 
@@ -226,15 +226,18 @@ loginForm.addEventListener("submit", function (event) {
 
 
     // =====================================
-    // TEMPORÁRIO
+    // LOGIN TEMPORÁRIO
     // =====================================
-    // Aqui futuramente faremos a chamada
-    // para o backend através do api.js.
 
-    mostrarMensagem(
-        "Dados validados! A autenticação será conectada ao backend na próxima etapa.",
-        "success"
-    );
+    // Simulação de um token que futuramente
+    // será enviado pelo backend.
+    const tokenSimulado = "conecta21-token-temporario";
+
+    // Salvando o token no localStorage.
+    salvarToken(tokenSimulado);
+
+    // Redirecionando para o Dashboard.
+    window.location.href = "dashboard.html";
 
 });
 
