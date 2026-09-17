@@ -105,6 +105,9 @@ const btnFecharModalChamado =
 const btnFecharModalChamadoFooter =
     document.getElementById("btnFecharModalChamadoFooter");
 
+const timelineChamado =
+    document.getElementById("timelineChamado");
+
 
 // =========================================
 // LISTA TEMPORÁRIA DE CHAMADOS
@@ -137,6 +140,39 @@ let chamados = [
     status: "aguardando",
     responsavel: "Carlos Oliveira"
 }];
+
+// =========================================
+// DADOS TEMPORÁRIOS DA TIMELINE
+// =========================================
+
+const interacoesChamados = {
+
+    "CH-0001": [
+
+        {
+            autor: "João da Silva",
+            tipo: "Chamado aberto",
+            data: "17/09/2026 09:15",
+            descricao: "O cliente informou que o computador não liga."
+        },
+
+        {
+            autor: "Carlos Oliveira",
+            tipo: "Chamado atribuído",
+            data: "17/09/2026 09:30",
+            descricao: "O chamado foi atribuído ao técnico Carlos Oliveira."
+        },
+
+        {
+            autor: "Carlos Oliveira",
+            tipo: "Interação adicionada",
+            data: "17/09/2026 10:00",
+            descricao: "O técnico iniciou a análise do equipamento."
+        }
+
+    ]
+
+};
 
 
 // =========================================
@@ -585,6 +621,8 @@ chamadosTableBody.addEventListener("click", function (event) {
     
     modalChamadoDescricao.textContent =
         chamado.descricao || "Descrição não informada";
+
+    renderizarTimeline(chamado.numero);
     
     
     // Abre o modal
@@ -614,3 +652,80 @@ btnFecharModalChamadoFooter.addEventListener(
     "click",
     fecharModalChamado
 );
+
+// =========================================
+// RENDERIZAR TIMELINE DE INTERAÇÕES
+// =========================================
+
+function renderizarTimeline(numeroChamado) {
+
+    const interacoes =
+        interacoesChamados[numeroChamado] || [];
+
+
+    timelineChamado.innerHTML = "";
+
+
+    if (interacoes.length === 0) {
+
+        timelineChamado.innerHTML = `
+            <div class="timeline-empty">
+
+                <p>
+                    Nenhuma interação registrada.
+                </p>
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    interacoes.forEach(function (interacao) {
+
+        const item =
+            document.createElement("div");
+
+        item.className = "timeline-item";
+
+
+        item.innerHTML = `
+
+            <div class="timeline-marker"></div>
+
+            <div class="timeline-content">
+
+                <div class="timeline-item-header">
+
+                    <strong>
+                        ${interacao.tipo}
+                    </strong>
+
+                    <span>
+                        ${interacao.data}
+                    </span>
+
+                </div>
+
+
+                <p class="timeline-author">
+                    ${interacao.autor}
+                </p>
+
+
+                <p class="timeline-description">
+                    ${interacao.descricao}
+                </p>
+
+            </div>
+
+        `;
+
+
+        timelineChamado.appendChild(item);
+
+    });
+
+}

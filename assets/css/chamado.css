@@ -697,3 +697,147 @@ tbody tr:hover {
     }
 
 }
+
+/* =========================================
+   TIMELINE DE INTERAÇÕES
+========================================= */
+
+.chamado-timeline {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.timeline-header {
+    margin-bottom: 25px;
+}
+
+.timeline-header h3 {
+    margin: 0 0 6px;
+    font-size: 17px;
+    color: #111827;
+}
+
+.timeline-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* =========================================
+   ITENS DA TIMELINE
+========================================= */
+
+.timeline-item {
+    display: flex;
+    position: relative;
+    gap: 15px;
+    padding-bottom: 20px;
+}
+
+
+/* Linha vertical */
+
+.timeline-item:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 16px;
+    bottom: 0;
+    width: 2px;
+    background-color: #dbeafe;
+}
+
+
+/* Marcador circular */
+
+.timeline-marker {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    margin-top: 2px;
+    border-radius: 50%;
+    background-color: #2563eb;
+    border: 3px solid #dbeafe;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+}
+
+
+/* Conteúdo da interação */
+
+.timeline-content {
+    flex: 1;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+
+/* Cabeçalho da interação */
+
+.timeline-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+
+.timeline-item-header strong {
+    font-size: 14px;
+    color: #111827;
+}
+
+
+.timeline-item-header span {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+
+/* Autor */
+
+.timeline-author {
+    margin: 8px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2563eb;
+}
+
+
+/* Descrição */
+
+.timeline-description {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #4b5563;
+}
+
+
+/* Estado vazio */
+
+.timeline-empty {
+    padding: 20px;
+    text-align: center;
+    border: 1px dashed #d1d5db;
+    border-radius: 10px;
+    background-color: #f9fafb;
+}
+
+
+.timeline-empty p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
