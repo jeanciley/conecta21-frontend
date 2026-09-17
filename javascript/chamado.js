@@ -457,12 +457,13 @@ function renderizarChamados() {
 
             <td>
 
-                <button
-                    type="button"
-                    class="btn btn-secondary"
-                >
-                    Visualizar
-                </button>
+<button
+    type="button"
+    class="btn btn-secondary btn-visualizar-chamado"
+    data-numero="${chamado.numero}"
+>
+    Visualizar
+</button>
 
             </td>
 
@@ -520,3 +521,96 @@ filtroPrioridade.addEventListener(
 renderizarChamados();
 
 console.log("Módulo de chamados carregado.");
+
+// =========================================
+// MODAL DE DETALHES DO CHAMADO
+// =========================================
+
+chamadosTableBody.addEventListener("click", function (event) {
+
+    if (!event.target.classList.contains("btn-visualizar-chamado")) {
+        return;
+    }
+
+    const numero = event.target.dataset.numero;
+
+    const chamado = chamados.find(function (chamado) {
+        return chamado.numero === numero;
+    });
+
+    if (!chamado) {
+        return;
+    }
+    
+    
+    // Preenche os dados do chamado no modal
+    
+    modalChamadoTitulo.textContent =
+        chamado.titulo;
+    
+    modalChamadoNumero.textContent =
+        chamado.numero;
+    
+    modalChamadoCliente.textContent =
+        chamado.cliente;
+    
+    modalChamadoPrioridade.textContent =
+        chamado.prioridade === "baixa"
+            ? "Baixa"
+            : chamado.prioridade === "media"
+                ? "Média"
+                : chamado.prioridade === "alta"
+                    ? "Alta"
+                    : "Crítica";
+    
+    modalChamadoPrioridade.className =
+        `ticket-priority ${chamado.prioridade}`;
+    
+    modalChamadoStatus.textContent =
+        chamado.status === "aberto"
+            ? "Aberto"
+            : chamado.status === "andamento"
+                ? "Em andamento"
+                : chamado.status === "aguardando"
+                    ? "Aguardando"
+                    : chamado.status === "resolvido"
+                        ? "Resolvido"
+                        : "Fechado";
+    
+    modalChamadoStatus.className =
+        `ticket-status ${chamado.status}`;
+    
+    modalChamadoResponsavel.textContent =
+        chamado.responsavel;
+    
+    modalChamadoDescricao.textContent =
+        chamado.descricao || "Descrição não informada";
+    
+    
+    // Abre o modal
+    
+    modalChamado.hidden = false;
+
+});
+
+// =========================================
+// FECHAR MODAL DE DETALHES
+// =========================================
+
+function fecharModalChamado() {
+
+    modalChamado.hidden = true;
+
+}
+
+
+btnFecharModalChamado.addEventListener(
+    "click",
+    fecharModalChamado
+);
+
+
+btnFecharModalChamadoFooter.addEventListener(
+    "click",
+    fecharModalChamado
+);
