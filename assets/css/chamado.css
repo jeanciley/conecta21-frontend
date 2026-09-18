@@ -841,3 +841,143 @@ tbody tr:hover {
     font-size: 14px;
     color: #6b7280;
 }
+
+/* =========================================
+   ANEXOS DO CHAMADO
+========================================= */
+
+.anexos-chamado {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.anexos-chamado h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+    color: #111827;
+}
+
+.upload-area {
+    margin-top: 18px;
+}
+
+.upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 150px;
+    padding: 25px;
+
+    border: 2px dashed #d1d5db;
+    border-radius: 10px;
+
+    background-color: #f9fafb;
+
+    cursor: pointer;
+
+    text-align: center;
+
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.upload-label:hover {
+    border-color: #2563eb;
+    background-color: #eff6ff;
+}
+
+.upload-icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.upload-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.upload-description {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+#imagensChamado {
+    display: none;
+}
+
+/* =========================================
+   PRÉ-VISUALIZAÇÃO DAS IMAGENS
+========================================= */
+
+.preview-imagens {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(120px, 1fr));
+
+    gap: 15px;
+
+    margin-top: 20px;
+}
+
+.preview-imagens img {
+    width: 100%;
+    height: 120px;
+
+    object-fit: cover;
+
+    border-radius: 8px;
+
+    border: 1px solid #e5e7eb;
+
+    background-color: #f3f4f6;
+}
+
+/* =========================================
+   CARD DE PRÉ-VISUALIZAÇÃO
+========================================= */
+
+.preview-imagem-item {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+/* =========================================
+   BOTÃO REMOVER IMAGEM
+========================================= */
+
+.btn-remover-imagem {
+    width: 100%;
+
+    padding: 7px 10px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #fee2e2;
+    color: #b91c1c;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.btn-remover-imagem:hover {
+    background-color: #fecaca;
+    color: #991b1b;
+}

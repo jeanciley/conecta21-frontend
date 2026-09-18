@@ -574,14 +574,50 @@ aria-labelledby="modalChamadoTitulo"
                 <span class="detalhe-label">
                     Status
                 </span>
-
+            
                 <span
                     id="modalChamadoStatus"
                     class="ticket-status"
                 >
                     -
                 </span>
-
+            
+            </div>
+            
+            
+            <div class="detalhe-item">
+            
+                <label
+                    for="novoStatusChamado"
+                    class="detalhe-label"
+                >
+                    Alterar status
+                </label>
+            
+                <select id="novoStatusChamado">
+            
+                    <option value="aberto">
+                        Aberto
+                    </option>
+            
+                    <option value="andamento">
+                        Em andamento
+                    </option>
+            
+                    <option value="aguardando">
+                        Aguardando
+                    </option>
+            
+                    <option value="resolvido">
+                        Resolvido
+                    </option>
+            
+                    <option value="fechado">
+                        Fechado
+                    </option>
+            
+                </select>
+            
             </div>
 
 
@@ -639,6 +675,105 @@ aria-labelledby="modalChamadoTitulo"
         <!-- As interações serão inseridas pelo JavaScript -->
 
     </div>
+
+    <div class="nova-interacao">
+
+        <h3>Adicionar interação</h3>
+    
+        <form id="formNovaInteracao">
+    
+            <div class="form-group">
+    
+                <label for="tipoInteracao">
+                    Tipo de interação
+                </label>
+    
+                <select id="tipoInteracao" required>
+    
+                    <option value="">
+                        Selecione o tipo
+                    </option>
+    
+                    <option value="Comentário">
+                        Comentário
+                    </option>
+    
+                    <option value="Atualização de status">
+                        Atualização de status
+                    </option>
+    
+                    <option value="Solução aplicada">
+                        Solução aplicada
+                    </option>
+    
+                </select>
+    
+            </div>
+    
+            <div class="form-group">
+    
+                <label for="descricaoInteracao">
+                    Descrição
+                </label>
+    
+                <textarea
+                    id="descricaoInteracao"
+                    rows="4"
+                    placeholder="Descreva a interação..."
+                    required
+                ></textarea>
+    
+            </div>
+    
+            <button type="submit" class="btn-primary">
+                Adicionar interação
+            </button>
+    
+        </form>
+    
+    </div>
+
+       <!-- =========================================
+         ANEXOS DO CHAMADO
+    ========================================= -->
+
+    <div class="anexos-chamado">
+
+        <h3>Anexos</h3>
+
+        <div class="upload-area">
+
+            <label for="imagensChamado" class="upload-label">
+
+                <span class="upload-icon">📎</span>
+
+                <span class="upload-text">
+                    Adicionar imagens
+                </span>
+
+                <span class="upload-description">
+                    Selecione uma ou mais imagens relacionadas ao chamado.
+                </span>
+
+            </label>
+
+            <input
+                type="file"
+                id="imagensChamado"
+                accept="image/*"
+                multiple
+            >
+
+        </div>
+
+        <div
+            id="previewImagens"
+            class="preview-imagens"
+        ></div>
+
+    </div>
+
+ 
 
 </div>
 

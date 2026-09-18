@@ -108,6 +108,26 @@ const btnFecharModalChamadoFooter =
 const timelineChamado =
     document.getElementById("timelineChamado");
 
+const novoStatusChamado =
+    document.getElementById("novoStatusChamado");
+
+const formNovaInteracao =
+    document.getElementById("formNovaInteracao");
+
+const imagensChamado =
+    document.getElementById("imagensChamado");
+
+const previewImagens =
+    document.getElementById("previewImagens");
+
+const tipoInteracao =
+    document.getElementById("tipoInteracao");
+
+const descricaoInteracao =
+    document.getElementById("descricaoInteracao");
+
+let chamadoAtual = null;
+
 
 // =========================================
 // LISTA TEMPORÁRIA DE CHAMADOS
@@ -577,6 +597,8 @@ chamadosTableBody.addEventListener("click", function (event) {
     if (!chamado) {
         return;
     }
+
+    chamadoAtual = chamado;
     
     
     // Preenche os dados do chamado no modal
@@ -613,6 +635,8 @@ chamadosTableBody.addEventListener("click", function (event) {
                         ? "Resolvido"
                         : "Fechado";
     
+    novoStatusChamado.value = chamado.status;
+
     modalChamadoStatus.className =
         `ticket-status ${chamado.status}`;
     
@@ -727,5 +751,182 @@ function renderizarTimeline(numeroChamado) {
         timelineChamado.appendChild(item);
 
     });
+
+}
+
+// =========================================
+// ADICIONAR NOVA INTERAÇÃO
+// =========================================
+
+formNovaInteracao.addEventListener("submit", function (event) {
+
+    event.preventDefault();
+
+    if (!chamadoAtual) {
+        return;
+    }
+
+    const tipo = tipoInteracao.value;
+    const descricao = descricaoInteracao.value.trim();
+
+    if (tipo === "" || descricao === "") {
+        return;
+    }
+
+    const novaInteracao = {
+
+        autor: chamadoAtual.responsavel,
+
+        tipo: tipo,
+
+        data: new Date().toLocaleString("pt-BR"),
+
+        descricao: descricao
+
+    };
+
+    if (!interacoesChamados[chamadoAtual.numero]) {
+
+        interacoesChamados[chamadoAtual.numero] = [];
+
+    }
+
+    interacoesChamados[chamadoAtual.numero].push(novaInteracao);
+
+    renderizarTimeline(chamadoAtual.numero);
+
+    formNovaInteracao.reset();
+
+    console.log(
+        "Nova interação adicionada:",
+        novaInteracao
+    );
+
+});
+
+// =========================================
+// ALTERAR STATUS DO CHAMADO
+// =========================================
+
+novoStatusChamado.addEventListener("change", function () {
+
+    if (!chamadoAtual) {
+        return;
+    }
+
+    chamadoAtual.status = novoStatusChamado.value;
+
+    modalChamadoStatus.textContent =
+        chamadoAtual.status === "aberto"
+            ? "Aberto"
+            : chamadoAtual.status === "andamento"
+                ? "Em andamento"
+                : chamadoAtual.status === "aguardando"
+                    ? "Aguardando"
+                    : chamadoAtual.status === "resolvido"
+                        ? "Resolvido"
+                        : "Fechado";
+    
+    modalChamadoStatus.className =
+        `ticket-status ${chamadoAtual.status}`;
+    
+    console.log(
+        "Status do chamado alterado:",
+        chamadoAtual.status
+    );
+
+});
+
+// =========================================
+// PRÉ-VISUALIZAÇÃO DE IMAGENS
+// =========================================
+
+imagensChamado.addEventListener("change", function () {
+
+    previewImagens.innerHTML = "";
+
+    const arquivos = Array.from(imagensChamado.files);
+
+    if (arquivos.length === 0) {
+        return;
+    }
+
+    arquivos.forEach(function (arquivo, indice) {
+
+        if (!arquivo.type.startsWith("image/")) {
+            return;
+        }
+
+        const container =
+            document.createElement("div");
+
+        container.className =
+            "preview-imagem-item";
+
+
+        const imagem =
+            document.createElement("img");
+
+        imagem.src =
+            URL.createObjectURL(arquivo);
+
+        imagem.alt =
+            "Imagem anexada ao chamado";
+
+
+        const botaoRemover =
+            document.createElement("button");
+
+        botaoRemover.type = "button";
+
+        botaoRemover.className =
+            "btn-remover-imagem";
+
+        botaoRemover.textContent =
+            "Remover";
+
+
+        botaoRemover.addEventListener(
+            "click",
+            function () {
+
+                arquivos.splice(indice, 1);
+
+                atualizarArquivos(arquivos);
+
+                container.remove();
+
+            }
+        );
+
+
+        container.appendChild(imagem);
+
+        container.appendChild(botaoRemover);
+
+        previewImagens.appendChild(container);
+
+    });
+
+});
+
+
+// =========================================
+// ATUALIZAR ARQUIVOS SELECIONADOS
+// =========================================
+
+function atualizarArquivos(arquivos) {
+
+    const dataTransfer =
+        new DataTransfer();
+
+    arquivos.forEach(function (arquivo) {
+
+        dataTransfer.items.add(arquivo);
+
+    });
+
+    imagensChamado.files =
+        dataTransfer.files;
 
 }
