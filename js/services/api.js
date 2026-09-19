@@ -1,7 +1,8 @@
-const API_URL = "http://localhost:8080";
+import { obterToken, logout } from '../auth.js';
 
-async function apiRequest(endpoint, options = {}) {
+const API_URL = "http://localhost:8080/api";
 
+export async function apiRequest(endpoint, options = {}) {
     const token = obterToken();
 
     const headers = {
@@ -13,15 +14,20 @@ async function apiRequest(endpoint, options = {}) {
         headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
-        headers
-    });
+    try {
+        const response = await fetch(`${API_URL}${endpoint}`, {
+            ...options,
+            headers
+        });
 
-    if (response.status === 401) {
-        logout();
-        return;
+        if (response.status === 401 || response.status === 403) {
+            logout();
+            return null;
+        }
+
+        return response;
+    } catch (error) {
+        console.error("Erro na comunicação com a API (fetch):", error);
+        throw error;
     }
-
-    return response;
 }

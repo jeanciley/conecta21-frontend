@@ -9,8 +9,8 @@
 
     <title>Dashboard | Conecta21</title>
 
-    <link rel="stylesheet" href="../assets/css/styles.css">
-    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
 
 </head>
 
@@ -99,60 +99,22 @@
         ========================================== -->
 
         <section class="metrics-grid">
-
-
             <div class="metric-card">
-
-                <span class="metric-label">
-                    Chamados abertos
-                </span>
-
-                <strong class="metric-value">
-                    0
-                </strong>
-
+                <span class="metric-label">Chamados abertos</span>
+                <strong id="metric-abertos" class="metric-value">0</strong>
             </div>
-
-
             <div class="metric-card">
-
-                <span class="metric-label">
-                    Em atendimento
-                </span>
-
-                <strong class="metric-value">
-                    0
-                </strong>
-
+                <span class="metric-label">Em atendimento</span>
+                <strong id="metric-andamento" class="metric-value">0</strong>
             </div>
-
-
             <div class="metric-card">
-
-                <span class="metric-label">
-                    Resolvidos
-                </span>
-
-                <strong class="metric-value">
-                    0
-                </strong>
-
+                <span class="metric-label">Resolvidos</span>
+                <strong id="metric-resolvidos" class="metric-value">0</strong>
             </div>
-
-
             <div class="metric-card">
-
-                <span class="metric-label">
-                    Total de chamados
-                </span>
-
-                <strong class="metric-value">
-                    0
-                </strong>
-
+                <span class="metric-label">Total de chamados</span>
+                <strong id="metric-total" class="metric-value">0</strong>
             </div>
-
-
         </section>
 
 
@@ -165,35 +127,17 @@
 
 
             <div class="dashboard-panel">
-
                 <div class="panel-header">
-
                     <div>
-
                         <h2>Chamados recentes</h2>
-
-                        <p>
-                            Acompanhe os últimos atendimentos.
-                        </p>
-
+                        <p>Acompanhe os últimos atendimentos.</p>
                     </div>
-
                 </div>
-
-
-                <div class="empty-state">
-
-                    <h3>
-                        Nenhum chamado encontrado
-                    </h3>
-
-                    <p>
-                        Os chamados aparecerão aqui quando
-                        forem registrados no sistema.
-                    </p>
-
+                <!-- ID adicionado aqui para o JS injetar a lista -->
+                <div id="lista-recentes" class="empty-state">
+                    <!-- O JS vai limpar isso e colocar os cards -->
+                    <h3>Carregando dados...</h3>
                 </div>
-
             </div>
 
 
@@ -237,7 +181,7 @@
     <!-- JavaScript -->
 
     <script src="../javascript/auth.js"></script>
-    <script src="../javascript/dashboard.js"></script>
+    <script type="module" src="./js/dashboard.js"></script>
 
 </body>
 
