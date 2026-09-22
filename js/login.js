@@ -1,3 +1,6 @@
+import { salvarToken } from './auth.js';
+import { apiRequest } from './services/api.js';
+
 // =========================================
 // LOGIN - CONECTA21
 // =========================================
@@ -205,7 +208,7 @@ senhaInput.addEventListener("input", function () {
 // SUBMIT DO LOGIN
 // =========================================
 
-loginForm.addEventListener("submit", function (event) {
+loginForm.addEventListener("submit", async function (event) { // Transformado em async
 
     event.preventDefault();
 
@@ -215,30 +218,49 @@ loginForm.addEventListener("submit", function (event) {
     const senhaValida = validarSenha();
 
     if (!emailValido || !senhaValida) {
-
         mostrarMensagem(
             "Verifique os dados informados.",
             "error"
         );
-
         return;
     }
 
+    // Feedback visual e bloqueio do botão para evitar duplo clique
+    mostrarMensagem("A autenticar...", "info");
+    btnEntrar.disabled = true;
 
-    // =====================================
-    // LOGIN TEMPORÁRIO
-    // =====================================
+    try {
+        const email = emailInput.value.trim();
+        const senha = senhaInput.value;
 
-    // Simulação de um token que futuramente
-    // será enviado pelo backend.
-    const tokenSimulado = "conecta21-token-temporario";
+        // Requisição real para o Spring Boot
+        const response = await apiRequest('/auth', {
+            method: 'POST',
+            body: JSON.stringify({ email, senha })
+        });
 
-    // Salvando o token no localStorage.
-    salvarToken(tokenSimulado);
-
-    // Redirecionando para o Dashboard.
-    window.location.href = "dashboard.html";
-
+        if (response && response.ok) {
+            const data = await response.json();
+            
+            // Grava o JWT retornado pela API
+            salvarToken(data.token); // Ajusta para data.tokenJWT consoante o teu DTO no Java
+            
+            // Redireciona para o Dashboard
+            window.location.href = "dashboard.html";
+            
+        } else if (response && response.status === 429) {
+            mostrarMensagem("Muitas tentativas. Aguarda 1 minuto.", "error");
+        } else {
+            mostrarMensagem("E-mail ou senha inválidos.", "error");
+            limparEstado(senhaInput);
+            senhaInput.classList.add("input-error");
+        }
+    } catch (error) {
+        console.error("Erro na comunicação com a API:", error);
+        mostrarMensagem("Falha de comunicação com o servidor.", "error");
+    } finally {
+        btnEntrar.disabled = false; // Restaura o botão
+    }
 });
 
 
