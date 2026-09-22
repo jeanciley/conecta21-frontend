@@ -54,25 +54,21 @@
 .sidebar-menu {
     display: flex;
     flex-direction: column;
-
     gap: 8px;
+    align-items: stretch; /* Força os itens a esticarem */
+    width: 100%; /* Garante a ocupação total */
 }
-
 
 .menu-item {
     display: block;
-
+    width: 100%; /* Ocupa todo o espaço disponível */
+    box-sizing: border-box; /* Impede que o padding quebre o tamanho */
     padding: 13px 15px;
-
     border-radius: 8px;
-
     color: #cbd5e1;
-
     text-decoration: none;
-
     font-size: 15px;
     font-weight: 500;
-
     transition: 0.2s;
 }
 

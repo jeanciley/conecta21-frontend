@@ -1,523 +1,271 @@
-// =========================================
-// EQUIPE - CONECTA21
-// =========================================
-
+import { estaAutenticado, logout } from './auth.js';
+import { EquipeService } from './services/equipeService.js';
 
 // =========================================
 // VERIFICAÇÃO DE AUTENTICAÇÃO
 // =========================================
-
 if (!estaAutenticado()) {
-
     window.location.href = "login.html";
-
 }
-
 
 // =========================================
 // ELEMENTOS DO HTML
 // =========================================
+const nomeUsuarioLogado = document.getElementById("nomeUsuarioLogado");
+const btnNovoUsuario = document.getElementById("btnNovoUsuario");
+const btnCancelarUsuario = document.getElementById("btnCancelarUsuario");
+const formUsuario = document.getElementById("formUsuario");
+const usuarioForm = document.getElementById("usuarioForm");
+const usuariosTableBody = document.getElementById("usuariosTableBody");
+const totalUsuarios = document.getElementById("totalUsuarios");
+const buscarUsuario = document.getElementById("buscarUsuario");
+const filtroTipo = document.getElementById("filtroTipo");
+const btnLogout = document.getElementById("btnLogout");
 
-const btnNovoUsuario =
-    document.getElementById("btnNovoUsuario");
+const nomeUsuario = document.getElementById("nomeUsuario");
+const emailUsuario = document.getElementById("emailUsuario");
+const tipoUsuario = document.getElementById("tipoUsuario");
+const senhaUsuario = document.getElementById("senhaUsuario");
 
-const btnCancelarUsuario =
-    document.getElementById("btnCancelarUsuario");
-
-const formUsuario =
-    document.getElementById("formUsuario");
-
-const usuarioForm =
-    document.getElementById("usuarioForm");
-
-const usuariosTableBody =
-    document.getElementById("usuariosTableBody");
-
-const totalUsuarios =
-    document.getElementById("totalUsuarios");
-
-const buscarUsuario =
-    document.getElementById("buscarUsuario");
-
-const filtroTipo =
-    document.getElementById("filtroTipo");
-
-const btnLogout =
-    document.getElementById("btnLogout");
-
-
-// Campos do formulário
-
-const nomeUsuario =
-    document.getElementById("nomeUsuario");
-
-const emailUsuario =
-    document.getElementById("emailUsuario");
-
-const tipoUsuario =
-    document.getElementById("tipoUsuario");
-
-const senhaUsuario =
-    document.getElementById("senhaUsuario");
-
-
-// Mensagens de erro
-
-const nomeUsuarioError =
-    document.getElementById("nomeUsuarioError");
-
-const emailUsuarioError =
-    document.getElementById("emailUsuarioError");
-
-const tipoUsuarioError =
-    document.getElementById("tipoUsuarioError");
-
-const senhaUsuarioError =
-    document.getElementById("senhaUsuarioError");
-
+const nomeUsuarioError = document.getElementById("nomeUsuarioError");
+const emailUsuarioError = document.getElementById("emailUsuarioError");
+const tipoUsuarioError = document.getElementById("tipoUsuarioError");
+const senhaUsuarioError = document.getElementById("senhaUsuarioError");
 
 // =========================================
-// LISTA TEMPORÁRIA DE USUÁRIOS
+// LISTA DE USUÁRIOS (Sincronizada com o Backend)
 // =========================================
-
 let usuarios = [];
 
+async function inicializarEquipe() {
+    try {
+        const dadosBackend = await EquipeService.listar();
+        
+        usuarios = dadosBackend.map(u => ({
+            id: u.id,
+            nome: u.nome,
+            email: u.email,
+            tipo: u.perfil ? u.perfil.toLowerCase() : 'usuario',
+            status: u.status || 'Ativo'
+        }));
+        
+        renderizarUsuarios();
+    } catch (error) {
+        console.error("Erro ao carregar equipe:", error);
+        usuariosTableBody.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    <div class="empty-state">
+                        <h3>Erro ao carregar usuários</h3>
+                        <p>Não foi possível carregar a lista da equipe. Verifique a conexão com a API.</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+}
 
 // =========================================
-// ABRIR FORMULÁRIO
+// ABRIR/FECHAR FORMULÁRIO
 // =========================================
-
 btnNovoUsuario.addEventListener("click", function () {
-
     formUsuario.hidden = false;
-
     nomeUsuario.focus();
-
 });
-
-
-// =========================================
-// FECHAR FORMULÁRIO
-// =========================================
 
 btnCancelarUsuario.addEventListener("click", function () {
-
     usuarioForm.reset();
-
     limparErros();
-
     formUsuario.hidden = true;
-
 });
 
-
-// =========================================
-// LIMPAR ERROS
-// =========================================
-
 function limparErros() {
-
     nomeUsuarioError.textContent = "";
     emailUsuarioError.textContent = "";
     tipoUsuarioError.textContent = "";
     senhaUsuarioError.textContent = "";
-
 }
-
 
 // =========================================
 // VALIDAR FORMULÁRIO
 // =========================================
-
 function validarFormulario() {
-
     let valido = true;
-
     limparErros();
-
-
-    // Nome
 
     if (nomeUsuario.value.trim() === "") {
-
-        nomeUsuarioError.textContent =
-            "O nome é obrigatório.";
-
+        nomeUsuarioError.textContent = "O nome é obrigatório.";
         valido = false;
-
     }
-
-
-    // E-mail
 
     const email = emailUsuario.value.trim();
-
     if (email === "") {
-
-        emailUsuarioError.textContent =
-            "O e-mail é obrigatório.";
-
+        emailUsuarioError.textContent = "O e-mail é obrigatório.";
         valido = false;
-
-    } else if (
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-    ) {
-
-        emailUsuarioError.textContent =
-            "Digite um e-mail válido.";
-
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailUsuarioError.textContent = "Digite um e-mail válido.";
         valido = false;
-
     }
-
-
-    // Tipo
 
     if (tipoUsuario.value === "") {
-
-        tipoUsuarioError.textContent =
-            "Selecione o tipo de usuário.";
-
+        tipoUsuarioError.textContent = "Selecione o tipo de usuário.";
         valido = false;
-
     }
 
-
-    // Senha
-
-    if (senhaUsuario.value.length < 8) {
-
-        senhaUsuarioError.textContent =
-            "A senha deve possuir pelo menos 8 caracteres.";
-
+    const senhaForte = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$\%^&+=!]).{8,}$/;
+    if (!senhaForte.test(senhaUsuario.value)) {
+        senhaUsuarioError.textContent = "Mínimo de 8 caracteres, contendo 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial.";
         valido = false;
-
     }
-
 
     return valido;
-
 }
 
-
 // =========================================
-// CADASTRAR USUÁRIO
+// CADASTRAR USUÁRIO (Integração API)
 // =========================================
-
-usuarioForm.addEventListener("submit", function (event) {
-
+usuarioForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
+    if (!validarFormulario()) return;
 
-    if (!validarFormulario()) {
+    const perfilEnum = tipoUsuario.value.toUpperCase();
 
-        return;
-
-    }
-
-
-    const novoUsuario = {
-
+    const payload = {
         nome: nomeUsuario.value.trim(),
-
         email: emailUsuario.value.trim(),
-
-        tipo: tipoUsuario.value,
-
-        status: "Ativo"
-
+        senha: senhaUsuario.value,
+        perfil: perfilEnum
     };
 
+    const btnSubmit = usuarioForm.querySelector('button[type="submit"]');
+    const textoOriginal = btnSubmit.textContent;
 
-    usuarios.push(novoUsuario);
+    try {
+        btnSubmit.disabled = true;
+        btnSubmit.textContent = "Cadastrando...";
 
+        await EquipeService.cadastrarMembro(payload);
 
-    renderizarUsuarios();
+        alert("Usuário cadastrado com sucesso!");
 
+        usuarioForm.reset();
+        limparErros();
+        formUsuario.hidden = true;
 
-    usuarioForm.reset();
+        await inicializarEquipe();
 
-    limparErros();
-
-    formUsuario.hidden = true;
-
+    } catch (error) {
+        alert(error.message);
+    } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = textoOriginal;
+    }
 });
-
 
 // =========================================
 // EXIBIR USUÁRIOS
 // =========================================
-
 function renderizarUsuarios() {
+    const termo = buscarUsuario.value.trim().toLowerCase();
+    const tipoFiltro = filtroTipo.value;
 
-    const termo =
-        buscarUsuario.value.trim().toLowerCase();
-
-    const tipoFiltro =
-        filtroTipo.value;
-
-
-    const usuariosFiltrados =
-        usuarios.filter(function (usuario) {
-
-            const correspondeBusca =
-                usuario.nome.toLowerCase().includes(termo) ||
-                usuario.email.toLowerCase().includes(termo);
-
-            const correspondeTipo =
-                tipoFiltro === "todos" ||
-                usuario.tipo === tipoFiltro;
-
-            return correspondeBusca && correspondeTipo;
-
-        });
-
+    const usuariosFiltrados = usuarios.filter(function (usuario) {
+        const correspondeBusca = usuario.nome.toLowerCase().includes(termo) || usuario.email.toLowerCase().includes(termo);
+        const correspondeTipo = tipoFiltro === "todos" || usuario.tipo === tipoFiltro;
+        return correspondeBusca && correspondeTipo;
+    });
 
     usuariosTableBody.innerHTML = "";
 
-
     if (usuariosFiltrados.length === 0) {
-
         usuariosTableBody.innerHTML = `
-
             <tr>
-
                 <td colspan="5">
-
                     <div class="empty-state">
-
-                        <h3>
-                            Nenhum usuário encontrado
-                        </h3>
-
-                        <p>
-                            Cadastre um usuário para
-                            começar a preencher a equipe.
-                        </p>
-
+                        <h3>Nenhum usuário encontrado</h3>
+                        <p>Cadastre um usuário para preencher a equipe.</p>
                     </div>
-
                 </td>
-
             </tr>
-
         `;
-
     } else {
-
         usuariosFiltrados.forEach(function (usuario) {
-
             const linha = document.createElement("tr");
-
             linha.innerHTML = `
-
-    <td>
-        <strong>${usuario.nome}</strong>
-    </td>
-
-    <td>
-        ${usuario.email}
-    </td>
-
-    <td>
-
-        <span class="user-type ${usuario.tipo}">
-
-            ${usuario.tipo === "tecnico"
-                ? "Técnico"
-                : "Usuário"}
-
-        </span>
-
-    </td>
-
-    <td>
-
-        <span class="user-status">
-
-            ${usuario.status}
-
-        </span>
-
-    </td>
-
-    <td>
-
-        <button
-            type="button"
-            class="btn btn-secondary btn-visualizar"
-            data-email="${usuario.email}"
-        >
-            Visualizar
-        </button>
-
-    </td>
-
-`;
-
+                <td><strong>${usuario.nome}</strong></td>
+                <td>${usuario.email}</td>
+                <td><span class="user-type ${usuario.tipo}">${usuario.tipo === "tecnico" ? "Técnico" : "Usuário"}</span></td>
+                <td><span class="user-status">${usuario.status}</span></td>
+                <td><button type="button" class="btn btn-secondary btn-visualizar" data-email="${usuario.email}">Visualizar</button></td>
+            `;
             usuariosTableBody.appendChild(linha);
-
         });
-
     }
-
-
     atualizarContador();
-
 }
-
-
-// =========================================
-// ATUALIZAR CONTADOR
-// =========================================
 
 function atualizarContador() {
-
     const quantidade = usuarios.length;
-
-    totalUsuarios.textContent =
-        quantidade === 1
-            ? "1 usuário"
-            : `${quantidade} usuários`;
-
+    totalUsuarios.textContent = quantidade === 1 ? "1 usuário" : `${quantidade} usuários`;
 }
 
-
-// =========================================
-// BUSCA E FILTRO
-// =========================================
-
-buscarUsuario.addEventListener(
-    "input",
-    renderizarUsuarios
-);
-
-
-filtroTipo.addEventListener(
-    "change",
-    renderizarUsuarios
-);
+buscarUsuario.addEventListener("input", renderizarUsuarios);
+filtroTipo.addEventListener("change", renderizarUsuarios);
+btnLogout.addEventListener("click", () => logout());
 
 
 // =========================================
-// LOGOUT
+// MODAL DE VISUALIZAÇÃO
 // =========================================
-
-btnLogout.addEventListener("click", function () {
-
-    logout();
-
-});
-
-
-// =========================================
-// INICIALIZAÇÃO
-// =========================================
-
-renderizarUsuarios();
-
-// =========================================
-// VISUALIZAR USUÁRIO
-// =========================================
-
-const modalUsuario =
-    document.getElementById("modalUsuario");
-
-const modalUsuarioTitulo =
-    document.getElementById("modalUsuarioTitulo");
-
-const modalNome =
-    document.getElementById("modalNome");
-
-const modalEmail =
-    document.getElementById("modalEmail");
-
-const modalTipo =
-    document.getElementById("modalTipo");
-
-const modalStatus =
-    document.getElementById("modalStatus");
-
-const btnFecharModal =
-    document.getElementById("btnFecharModal");
-
-const btnFecharModalFooter =
-    document.getElementById("btnFecharModalFooter");
-
-
-// =========================================
-// ABRIR MODAL
-// =========================================
+const modalUsuario = document.getElementById("modalUsuario");
+const modalUsuarioTitulo = document.getElementById("modalUsuarioTitulo");
+const modalNome = document.getElementById("modalNome");
+const modalEmail = document.getElementById("modalEmail");
+const modalTipo = document.getElementById("modalTipo");
+const modalStatus = document.getElementById("modalStatus");
+const btnFecharModal = document.getElementById("btnFecharModal");
+const btnFecharModalFooter = document.getElementById("btnFecharModalFooter");
 
 usuariosTableBody.addEventListener("click", function (event) {
+    if (!event.target.classList.contains("btn-visualizar")) return;
 
-    if (!event.target.classList.contains("btn-visualizar")) {
+    const email = event.target.dataset.email;
+    const usuario = usuarios.find(u => u.email === email);
+    if (!usuario) return;
 
-        return;
-
-    }
-
-
-    const email =
-        event.target.dataset.email;
-
-
-    const usuario =
-        usuarios.find(function (usuario) {
-
-            return usuario.email === email;
-
-        });
-
-
-    if (!usuario) {
-
-        return;
-
-    }
-
-
-    modalUsuarioTitulo.textContent =
-        usuario.nome;
-
-    modalNome.textContent =
-        usuario.nome;
-
-    modalEmail.textContent =
-        usuario.email;
-
-    modalTipo.textContent =
-        usuario.tipo === "tecnico"
-            ? "Técnico"
-            : "Usuário";
-
-    modalStatus.textContent =
-        usuario.status;
-
-
+    modalUsuarioTitulo.textContent = usuario.nome;
+    modalNome.textContent = usuario.nome;
+    modalEmail.textContent = usuario.email;
+    modalTipo.textContent = usuario.tipo === "tecnico" ? "Técnico" : "Usuário";
+    modalStatus.textContent = usuario.status;
+    
     modalUsuario.hidden = false;
-
 });
 
-
-// =========================================
-// FECHAR MODAL
-// =========================================
-
 function fecharModal() {
-
     modalUsuario.hidden = true;
-
 }
 
+btnFecharModal.addEventListener("click", fecharModal);
+btnFecharModalFooter.addEventListener("click", fecharModal);
 
-btnFecharModal.addEventListener(
-    "click",
-    fecharModal
-);
+// =========================================
+// INICIALIZAÇÃO DA PÁGINA E DO PERFIL
+// =========================================
+async function inicializarPagina() {
+    try {
+        const perfil = await EquipeService.obterPerfilLogado();
+        
+        // Exibe apenas o primeiro nome para manter o layout limpo
+        const primeiroNome = perfil.nome.split(' ')[0];
+        nomeUsuarioLogado.textContent = primeiroNome;
 
+        await inicializarEquipe();
+    } catch (error) {
+        nomeUsuarioLogado.textContent = "Usuário";
+        await inicializarEquipe();
+    }
+}
 
-btnFecharModalFooter.addEventListener(
-    "click",
-    fecharModal
-);
+inicializarPagina();
