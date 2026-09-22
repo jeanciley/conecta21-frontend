@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="./assets/css/styles.css">
     <link rel="stylesheet" href="./assets/css/dashboard.css">
+    <link rel="stylesheet" href="./assets/css/sla.css">
 
 </head>
 
@@ -43,6 +44,10 @@
 
             <a href="chamado.html" class="menu-item">
                 Chamados
+            </a>
+
+            <a href="sla.html" class="menu-item">
+                SLA
             </a>
 
         </nav>
@@ -117,6 +122,8 @@
             </div>
         </section>
 
+        <div id="dashboardMsg" class="dashboard-msg" role="status" hidden></div>
+
 
 
         <!-- =========================================
@@ -148,10 +155,10 @@
 
                     <div>
 
-                        <h2>Status dos chamados</h2>
+                        <h2>Chamados por categoria</h2>
 
                         <p>
-                            Visão geral dos atendimentos.
+                            Distribuição dos atendimentos (30 dias).
                         </p>
 
                     </div>
@@ -159,17 +166,55 @@
                 </div>
 
 
-                <div class="empty-state">
+                <div id="listaCategorias">
+                    <div class="empty-state">
+
+                        <p>
+                            Carregando...
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =========================================
+             RELATÓRIOS
+        ========================================== -->
+
+        <section class="dashboard-panel relatorio-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>Relatórios</h2>
 
                     <p>
-                        Os indicadores serão carregados
-                        quando o backend estiver conectado.
+                        Exporte os chamados em CSV (formato suportado pela API).
                     </p>
 
                 </div>
 
             </div>
 
+            <p class="relatorio-desc">
+                O arquivo contém ID, título, status, prioridade, data de abertura
+                e data limite do SLA de todos os chamados da sua empresa.
+            </p>
+
+            <div class="relatorio-actions">
+                <button type="button" id="btnBaixarCsv" class="btn btn-primary">
+                    Baixar relatório CSV
+                </button>
+                <span id="relatorioLoading" class="relatorio-loading" hidden>Gerando arquivo...</span>
+            </div>
+
+            <div id="relatorioMsg" class="relatorio-msg" role="status" hidden></div>
 
         </section>
 
@@ -180,7 +225,11 @@
 
     <!-- JavaScript -->
 
-    <script src="../js/auth.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/services/api.js"></script>
+    <script src="js/sla.js"></script>
+    <script src="js/relatorio.js"></script>
+    <script src="js/dashboard.js"></script>
     <script type="module" src="./js/dashboard.js"></script>
 
 </body>
