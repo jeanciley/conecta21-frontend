@@ -1,18 +1,12 @@
 // =========================================
-// CHAMADOS - CONECTA21
-// =========================================
-
-
-// =========================================
-// VERIFICAÇÃO DE AUTENTICAÇÃO
+// CHAMADOS - CONECTA21 (Sprint 3)
+// Lista via GET /api/chamados/kanban (com SLA)
+// + GET /api/chamados (detalhes/descricao).
 // =========================================
 
 if (!estaAutenticado()) {
-
     window.location.href = "login.html";
-
 }
-
 
 // =========================================
 // ELEMENTOS DO HTML
@@ -72,6 +66,9 @@ const chamadosTableBody =
 const totalChamados =
     document.getElementById("totalChamados");
 
+const chamadosMsg =
+    document.getElementById("chamadosMsg");
+
 const btnLogout =
     document.getElementById("btnLogout");
 
@@ -92,6 +89,12 @@ const modalChamadoPrioridade =
 
 const modalChamadoStatus =
     document.getElementById("modalChamadoStatus");
+
+const modalChamadoSla =
+    document.getElementById("modalChamadoSla");
+
+const modalChamadoSlaLimite =
+    document.getElementById("modalChamadoSlaLimite");
 
 const modalChamadoResponsavel =
     document.getElementById("modalChamadoResponsavel");
@@ -127,84 +130,154 @@ const descricaoInteracao =
     document.getElementById("descricaoInteracao");
 
 let chamadoAtual = null;
-
-
-// =========================================
-// LISTA TEMPORÁRIA DE CHAMADOS
-// =========================================
-
-let chamados = [    
-    {
-    numero: "CH-0001",
-    titulo: "Computador não liga",
-    cliente: "João da Silva",
-    prioridade: "alta",
-    status: "aberto",
-    responsavel: "Carlos Oliveira"
-},
-
-{
-    numero: "CH-0002",
-    titulo: "Erro ao acessar o sistema",
-    cliente: "Maria Souza",
-    prioridade: "media",
-    status: "andamento",
-    responsavel: "Ana Costa"
-},
-
-{
-    numero: "CH-0003",
-    titulo: "Solicitação de instalação de software",
-    cliente: "Empresa ABC",
-    prioridade: "baixa",
-    status: "aguardando",
-    responsavel: "Carlos Oliveira"
-}];
+let chamados = [];
+const interacoesCache = {};
 
 // =========================================
-// DADOS TEMPORÁRIOS DA TIMELINE
+// HELPERS
 // =========================================
 
-const interacoesChamados = {
+function escapeHtmlChamado(valor) {
+    return String(valor == null ? "" : valor)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
 
-    "CH-0001": [
+function mostrarChamadosMsg(texto, tipo) {
+    if (!chamadosMsg) {
+        return;
+    }
+    chamadosMsg.hidden = false;
+    chamadosMsg.textContent = texto;
+    chamadosMsg.className = "sla-msg " + (tipo || "error");
+}
 
-        {
-            autor: "João da Silva",
-            tipo: "Chamado aberto",
-            data: "17/09/2026 09:15",
-            descricao: "O cliente informou que o computador não liga."
-        },
+function limparChamadosMsg() {
+    if (!chamadosMsg) {
+        return;
+    }
+    chamadosMsg.hidden = true;
+    chamadosMsg.textContent = "";
+    chamadosMsg.className = "sla-msg";
+}
 
-        {
-            autor: "Carlos Oliveira",
-            tipo: "Chamado atribuído",
-            data: "17/09/2026 09:30",
-            descricao: "O chamado foi atribuído ao técnico Carlos Oliveira."
-        },
+function nomeCliente(chamado) {
+    if (chamado.cliente) {
+        return chamado.cliente;
+    }
+    if (chamado.solicitanteId) {
+        return "Solicitante #" + chamado.solicitanteId;
+    }
+    return "—";
+}
 
-        {
-            autor: "Carlos Oliveira",
-            tipo: "Interação adicionada",
-            data: "17/09/2026 10:00",
-            descricao: "O técnico iniciou a análise do equipamento."
+function nomeResponsavel(chamado) {
+    if (chamado.responsavel) {
+        return chamado.responsavel;
+    }
+    if (chamado.tecnicoId) {
+        return "Técnico #" + chamado.tecnicoId;
+    }
+    return "—";
+}
+
+function numeroChamado(chamado) {
+    if (chamado.numero) {
+        return chamado.numero;
+    }
+    return "#" + chamado.id;
+}
+
+// =========================================
+// CARREGAR CHAMADOS DA API
+// Kanban tem prioridade + dataLimiteResolucao (SLA).
+// Lista paginada tem descricao + fechamento.
+// =========================================
+
+async function carregarChamados() {
+    limparChamadosMsg();
+    chamadosTableBody.innerHTML =
+        '<tr><td colspan="8"><div class="empty-state"><p>Carregando chamados...</p></div></td></tr>';
+
+    let porId = {};
+
+    try {
+        const kanban = await apiGetJson("/api/chamados/kanban");
+        const lanes = []
+            .concat(kanban.abertos || [])
+            .concat(kanban.emAndamento || [])
+            .concat(kanban.emAtraso || [])
+            .concat(kanban.resolvidos || []);
+
+        lanes.forEach(function (card) {
+            porId[card.id] = {
+                id: card.id,
+                titulo: card.titulo,
+                prioridade: card.prioridade,
+                status: card.status,
+                solicitanteId: card.solicitanteId,
+                tecnicoId: card.tecnicoId,
+                dataAbertura: card.dataAbertura,
+                dataLimiteResolucao: card.dataLimiteResolucao
+            };
+        });
+    } catch (erro) {
+        if (erro && erro.status === 401) {
+            return;
         }
+    }
 
-    ]
+    try {
+        const pagina = await apiGetJson("/api/chamados?page=0&size=100&sort=dataAbertura,DESC");
+        const conteudo = pagina && pagina.content ? pagina.content : [];
 
-};
+        conteudo.forEach(function (item) {
+            const existente = porId[item.id] || {};
+            porId[item.id] = {
+                ...existente,
+                id: item.id,
+                titulo: item.titulo || existente.titulo,
+                descricao: item.descricao,
+                status: item.status || existente.status,
+                solicitanteId: item.solicitanteId ?? existente.solicitanteId,
+                tecnicoId: item.tecnicoId ?? existente.tecnicoId,
+                dataAbertura: item.dataAbertura || existente.dataAbertura,
+                dataFechamento: item.dataFechamento,
+                tipo: item.tipo,
+                prioridade: existente.prioridade || item.prioridade || null,
+                dataLimiteResolucao:
+                    existente.dataLimiteResolucao || item.dataLimiteResolucao || null
+            };
+        });
+    } catch (erro) {
+        if (erro && erro.status === 401) {
+            return;
+        }
+    }
 
+    chamados = Object.values(porId).sort(function (a, b) {
+        return (b.id || 0) - (a.id || 0);
+    });
+
+    if (chamados.length === 0) {
+        mostrarChamadosMsg(
+            "Nenhum chamado retornado pela API. Verifique se o backend está no ar e se há chamados cadastrados.",
+            "error"
+        );
+    }
+
+    renderizarChamados();
+}
 
 // =========================================
 // VALIDAÇÃO DO FORMULÁRIO
 // =========================================
 
 function validarFormulario() {
-
     let valido = true;
-
-
-    // Limpa as mensagens anteriores
 
     tituloChamadoError.textContent = "";
     clienteChamadoError.textContent = "";
@@ -212,189 +285,113 @@ function validarFormulario() {
     responsavelChamadoError.textContent = "";
     descricaoChamadoError.textContent = "";
 
-
-    // Validação do título
-
     if (tituloChamado.value.trim() === "") {
-
-        tituloChamadoError.textContent =
-            "O título é obrigatório.";
-
+        tituloChamadoError.textContent = "O título é obrigatório.";
         valido = false;
-
     }
-
-
-    // Validação do cliente
 
     if (clienteChamado.value.trim() === "") {
-
-        clienteChamadoError.textContent =
-            "O cliente é obrigatório.";
-
+        clienteChamadoError.textContent = "O cliente é obrigatório.";
         valido = false;
-
     }
-
-
-    // Validação da prioridade
 
     if (prioridadeChamado.value === "") {
-
-        prioridadeChamadoError.textContent =
-            "Selecione uma prioridade.";
-
+        prioridadeChamadoError.textContent = "Selecione uma prioridade.";
         valido = false;
-
     }
-
-
-    // Validação do responsável
 
     if (responsavelChamado.value.trim() === "") {
-
-        responsavelChamadoError.textContent =
-            "O responsável é obrigatório.";
-
+        responsavelChamadoError.textContent = "O responsável é obrigatório.";
         valido = false;
-
     }
-
-
-    // Validação da descrição
 
     if (descricaoChamado.value.trim() === "") {
-
-        descricaoChamadoError.textContent =
-            "A descrição é obrigatória.";
-
+        descricaoChamadoError.textContent = "A descrição é obrigatória.";
         valido = false;
-
     }
 
-
     return valido;
-
 }
 
-
 // =========================================
-// ENVIO DO FORMULÁRIO
+// ENVIO DO FORMULÁRIO (POST /api/chamados)
 // =========================================
 
 const novoChamadoForm =
     document.getElementById("novoChamadoForm");
 
-
-novoChamadoForm.addEventListener("submit", function (event) {
-
+novoChamadoForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-
     if (!validarFormulario()) {
-
         return;
-
     }
 
+    const botao = novoChamadoForm.querySelector('button[type="submit"]');
+    const textoOriginal = botao ? botao.textContent : "";
+    if (botao) {
+        botao.disabled = true;
+        botao.textContent = "Cadastrando...";
+    }
 
-    // Gera o número do próximo chamado
+    try {
+        const response = await apiRequest("/api/chamados", {
+            method: "POST",
+            body: JSON.stringify({
+                titulo: tituloChamado.value.trim(),
+                descricao: descricaoChamado.value.trim(),
+                prioridade: prioridadeChamado.value.toUpperCase(),
+                tipo: "SUPORTE_EXTERNO"
+            })
+        });
 
-    const proximoNumero =
-        chamados.length + 1;
+        if (!response) {
+            return;
+        }
 
-    const numeroChamado =
-        `CH-${String(proximoNumero).padStart(4, "0")}`;
+        if (response.status === 403) {
+            mostrarChamadosMsg("Você não tem permissão para criar chamados.", "error");
+            return;
+        }
 
+        if (!response.ok) {
+            mostrarChamadosMsg("Não foi possível cadastrar o chamado. Tente novamente.", "error");
+            return;
+        }
 
-    // Cria o novo chamado
-
-    const novoChamado = {
-
-        numero: numeroChamado,
-
-        titulo: tituloChamado.value.trim(),
-
-        cliente: clienteChamado.value.trim(),
-
-        prioridade: prioridadeChamado.value,
-
-        status: "aberto",
-
-        responsavel: responsavelChamado.value.trim(),
-
-        descricao: descricaoChamado.value.trim()
-
-    };
-
-
-    // Adiciona o chamado à lista
-
-    chamados.push(novoChamado);
-
-
-    // Atualiza a tabela
-
-    renderizarChamados();
-
-
-    // Limpa o formulário
-
-    novoChamadoForm.reset();
-
-
-    // Limpa as mensagens de erro
-
-    tituloChamadoError.textContent = "";
-
-    clienteChamadoError.textContent = "";
-
-    prioridadeChamadoError.textContent = "";
-
-    responsavelChamadoError.textContent = "";
-
-    descricaoChamadoError.textContent = "";
-
-
-    // Fecha o formulário
-
-    formNovoChamado.hidden = true;
-
-
-    console.log(
-        "Chamado cadastrado:",
-        novoChamado
-    );
-
+        novoChamadoForm.reset();
+        formNovoChamado.hidden = true;
+        mostrarChamadosMsg("Chamado cadastrado com sucesso!", "success");
+        await carregarChamados();
+    } catch (erro) {
+        mostrarChamadosMsg(
+            "Não foi possível conectar ao servidor para cadastrar o chamado.",
+            "error"
+        );
+    } finally {
+        if (botao) {
+            botao.disabled = false;
+            botao.textContent = textoOriginal;
+        }
+    }
 });
 
-
 // =========================================
-// ABRIR FORMULÁRIO DE NOVO CHAMADO
+// ABRIR / CANCELAR FORMULÁRIO
 // =========================================
 
 btnNovoChamado.addEventListener("click", function () {
-
     formNovoChamado.hidden = false;
-
 });
 
-// =========================================
-// CANCELAR NOVO CHAMADO
-// =========================================
-
 btnCancelarChamado.addEventListener("click", function () {
-
     novoChamadoForm.reset();
-
     tituloChamadoError.textContent = "";
     clienteChamadoError.textContent = "";
     prioridadeChamadoError.textContent = "";
     responsavelChamadoError.textContent = "";
     descricaoChamadoError.textContent = "";
-
     formNovoChamado.hidden = true;
-
 });
 
 // =========================================
@@ -402,196 +399,123 @@ btnCancelarChamado.addEventListener("click", function () {
 // =========================================
 
 btnLogout.addEventListener("click", function () {
-
     logout();
-
 });
 
 // =========================================
 // EXIBIR CHAMADOS
 // =========================================
 
-function renderizarChamados() {
-
-    chamadosTableBody.innerHTML = "";
-
-
-    const termo =
-        buscarChamado.value.trim().toLowerCase();
-
-    const statusFiltro =
-        filtroStatus.value;
-
-    const prioridadeFiltro =
-        filtroPrioridade.value;
-
-
-    const chamadosFiltrados =
-        chamados.filter(function (chamado) {
-
-            const correspondeBusca =
-                chamado.numero.toLowerCase().includes(termo) ||
-                chamado.titulo.toLowerCase().includes(termo) ||
-                chamado.cliente.toLowerCase().includes(termo);
-
-
-            const correspondeStatus =
-                statusFiltro === "todos" ||
-                chamado.status === statusFiltro;
-
-
-            const correspondePrioridade =
-                prioridadeFiltro === "todas" ||
-                chamado.prioridade === prioridadeFiltro;
-
-
-            return (
-                correspondeBusca &&
-                correspondeStatus &&
-                correspondePrioridade
-            );
-
-        });
-
-
-    chamadosFiltrados.forEach(function (chamado) {
-
-        const linha = document.createElement("tr");
-
-
-        linha.innerHTML = `
-
-            <td>
-                <strong>${chamado.numero}</strong>
-            </td>
-
-            <td>
-                ${chamado.titulo}
-            </td>
-
-            <td>
-                ${chamado.cliente}
-            </td>
-
-            <td>
-
-    <span class="ticket-priority ${chamado.prioridade}">
-
-        ${chamado.prioridade === "baixa"
-            ? "Baixa"
-            : chamado.prioridade === "media"
-                ? "Média"
-                : chamado.prioridade === "alta"
-                    ? "Alta"
-                    : "Crítica"}
-
-    </span>
-
-</td>
-
-<td>
-
-    <span class="ticket-status ${chamado.status}">
-
-        ${chamado.status === "aberto"
-            ? "Aberto"
-            : chamado.status === "andamento"
-                ? "Em andamento"
-                : chamado.status === "aguardando"
-                    ? "Aguardando"
-                    : chamado.status === "resolvido"
-                        ? "Resolvido"
-                        : "Fechado"}
-
-    </span>
-
-</td>
-
-            <td>
-                ${chamado.responsavel}
-            </td>
-
-            <td>
-
-<button
-    type="button"
-    class="btn btn-secondary btn-visualizar-chamado"
-    data-numero="${chamado.numero}"
->
-    Visualizar
-</button>
-
-            </td>
-
-        `;
-
-
-        chamadosTableBody.appendChild(linha);
-
-    });
-
-
-    atualizarContador(chamadosFiltrados.length);
-
+function correspondeStatus(chamado, filtro) {
+    if (filtro === "todos") {
+        return true;
+    }
+    const statusApi = String(chamado.status || "").toUpperCase();
+    const mapa = {
+        aberto: "ABERTO",
+        andamento: "EM_ANDAMENTO",
+        aguardando: "AGUARDANDO",
+        resolvido: "RESOLVIDO",
+        fechado: "FECHADO",
+        em_atraso: "EM_ATRASO"
+    };
+    return statusApi === (mapa[filtro] || filtro.toUpperCase());
 }
 
+function correspondePrioridade(chamado, filtro) {
+    if (filtro === "todas") {
+        return true;
+    }
+    const pri = String(chamado.prioridade || "").toUpperCase();
+    return pri === filtro.toUpperCase();
+}
+
+function renderizarChamados() {
+    chamadosTableBody.innerHTML = "";
+
+    const termo = buscarChamado.value.trim().toLowerCase();
+    const statusFiltro = filtroStatus.value;
+    const prioridadeFiltro = filtroPrioridade.value;
+
+    const chamadosFiltrados = chamados.filter(function (chamado) {
+        const correspondeBusca =
+            String(chamado.id || "").includes(termo) ||
+            (chamado.numero || "").toLowerCase().includes(termo) ||
+            (chamado.titulo || "").toLowerCase().includes(termo) ||
+            nomeCliente(chamado).toLowerCase().includes(termo);
+
+        return (
+            correspondeBusca &&
+            correspondeStatus(chamado, statusFiltro) &&
+            correspondePrioridade(chamado, prioridadeFiltro)
+        );
+    });
+
+    if (chamadosFiltrados.length === 0) {
+        chamadosTableBody.innerHTML =
+            '<tr><td colspan="8"><div class="empty-state">' +
+            "<h3>Nenhum chamado encontrado</h3>" +
+            "<p>Ajuste os filtros ou cadastre um novo chamado.</p>" +
+            "</div></td></tr>";
+        atualizarContador(0);
+        return;
+    }
+
+    chamadosFiltrados.forEach(function (chamado) {
+        const linha = document.createElement("tr");
+        const sla = getSlaStatus(chamado);
+
+        linha.innerHTML =
+            "<td><strong>" + escapeHtmlChamado(numeroChamado(chamado)) + "</strong></td>" +
+            "<td>" + escapeHtmlChamado(chamado.titulo || "—") + "</td>" +
+            "<td>" + escapeHtmlChamado(nomeCliente(chamado)) + "</td>" +
+            '<td><span class="ticket-priority ' + escapeHtmlChamado(cssPrioridade(chamado.prioridade)) + '">' +
+            escapeHtmlChamado(formatarPrioridade(chamado.prioridade)) +
+            "</span></td>" +
+            '<td><span class="ticket-status ' + escapeHtmlChamado(cssStatus(chamado.status)) + '">' +
+            escapeHtmlChamado(formatarStatus(chamado.status)) +
+            "</span></td>" +
+            "<td>" + renderSlaBadge(sla, describeSlaTooltip(chamado, sla)) + "</td>" +
+            "<td>" + escapeHtmlChamado(nomeResponsavel(chamado)) + "</td>" +
+            '<td><button type="button" class="btn btn-secondary btn-visualizar-chamado" data-id="' +
+            escapeHtmlChamado(chamado.id) +
+            '">Visualizar</button></td>';
+
+        chamadosTableBody.appendChild(linha);
+    });
+
+    atualizarContador(chamadosFiltrados.length);
+}
 
 // =========================================
 // ATUALIZAR CONTADOR
 // =========================================
 
 function atualizarContador(quantidade) {
-
     totalChamados.textContent =
-        quantidade === 1
-            ? "1 chamado"
-            : `${quantidade} chamados`;
-
+        quantidade === 1 ? "1 chamado" : `${quantidade} chamados`;
 }
 
 // =========================================
 // BUSCA E FILTROS
 // =========================================
 
-buscarChamado.addEventListener(
-    "input",
-    renderizarChamados
-);
-
-
-filtroStatus.addEventListener(
-    "change",
-    renderizarChamados
-);
-
-
-filtroPrioridade.addEventListener(
-    "change",
-    renderizarChamados
-);
-
-// =========================================
-// INICIALIZAÇÃO
-// =========================================
-
-renderizarChamados();
-
-console.log("Módulo de chamados carregado.");
+buscarChamado.addEventListener("input", renderizarChamados);
+filtroStatus.addEventListener("change", renderizarChamados);
+filtroPrioridade.addEventListener("change", renderizarChamados);
 
 // =========================================
 // MODAL DE DETALHES DO CHAMADO
 // =========================================
 
-chamadosTableBody.addEventListener("click", function (event) {
-
+chamadosTableBody.addEventListener("click", async function (event) {
     if (!event.target.classList.contains("btn-visualizar-chamado")) {
         return;
     }
 
-    const numero = event.target.dataset.numero;
-
-    const chamado = chamados.find(function (chamado) {
-        return chamado.numero === numero;
+    const id = Number(event.target.dataset.id);
+    const chamado = chamados.find(function (item) {
+        return item.id === id;
     });
 
     if (!chamado) {
@@ -599,334 +523,276 @@ chamadosTableBody.addEventListener("click", function (event) {
     }
 
     chamadoAtual = chamado;
-    
-    
-    // Preenche os dados do chamado no modal
-    
-    modalChamadoTitulo.textContent =
-        chamado.titulo;
-    
-    modalChamadoNumero.textContent =
-        chamado.numero;
-    
-    modalChamadoCliente.textContent =
-        chamado.cliente;
-    
-    modalChamadoPrioridade.textContent =
-        chamado.prioridade === "baixa"
-            ? "Baixa"
-            : chamado.prioridade === "media"
-                ? "Média"
-                : chamado.prioridade === "alta"
-                    ? "Alta"
-                    : "Crítica";
-    
+
+    modalChamadoTitulo.textContent = chamado.titulo || "Detalhes do chamado";
+    modalChamadoNumero.textContent = numeroChamado(chamado);
+    modalChamadoCliente.textContent = nomeCliente(chamado);
+
+    modalChamadoPrioridade.textContent = formatarPrioridade(chamado.prioridade);
     modalChamadoPrioridade.className =
-        `ticket-priority ${chamado.prioridade}`;
-    
-    modalChamadoStatus.textContent =
-        chamado.status === "aberto"
-            ? "Aberto"
-            : chamado.status === "andamento"
-                ? "Em andamento"
-                : chamado.status === "aguardando"
-                    ? "Aguardando"
-                    : chamado.status === "resolvido"
-                        ? "Resolvido"
-                        : "Fechado";
-    
-    novoStatusChamado.value = chamado.status;
+        "ticket-priority " + cssPrioridade(chamado.prioridade);
 
-    modalChamadoStatus.className =
-        `ticket-status ${chamado.status}`;
-    
-    modalChamadoResponsavel.textContent =
-        chamado.responsavel;
-    
-    modalChamadoDescricao.textContent =
-        chamado.descricao || "Descrição não informada";
+    modalChamadoStatus.textContent = formatarStatus(chamado.status);
+    modalChamadoStatus.className = "ticket-status " + cssStatus(chamado.status);
 
-    renderizarTimeline(chamado.numero);
-    
-    
-    // Abre o modal
-    
+    novoStatusChamado.value = String(chamado.status || "ABERTO").toUpperCase();
+
+    const sla = getSlaStatus(chamado);
+    modalChamadoSla.innerHTML = renderSlaBadge(sla, describeSlaTooltip(chamado, sla));
+
+    if (modalChamadoSlaLimite) {
+        const limite = chamado.dataLimiteResolucao || null;
+        modalChamadoSlaLimite.textContent = limite
+            ? "Limite: " + new Date(limite).toLocaleString("pt-BR")
+            : "Sem data limite retornada pela API.";
+    }
+
+    modalChamadoResponsavel.textContent = nomeResponsavel(chamado);
+    modalChamadoDescricao.textContent = chamado.descricao || "Descrição não informada";
+
+    await renderizarTimeline(chamado.id);
+
     modalChamado.hidden = false;
-
 });
 
 // =========================================
-// FECHAR MODAL DE DETALHES
+// FECHAR MODAL
 // =========================================
 
 function fecharModalChamado() {
-
     modalChamado.hidden = true;
-
 }
 
-
-btnFecharModalChamado.addEventListener(
-    "click",
-    fecharModalChamado
-);
-
-
-btnFecharModalChamadoFooter.addEventListener(
-    "click",
-    fecharModalChamado
-);
+btnFecharModalChamado.addEventListener("click", fecharModalChamado);
+btnFecharModalChamadoFooter.addEventListener("click", fecharModalChamado);
 
 // =========================================
-// RENDERIZAR TIMELINE DE INTERAÇÕES
+// TIMELINE: GET /api/chamados/{id}/interacoes
 // =========================================
 
-function renderizarTimeline(numeroChamado) {
+async function renderizarTimeline(chamadoId) {
+    timelineChamado.innerHTML =
+        '<div class="timeline-empty"><p>Carregando interações...</p></div>';
 
-    const interacoes =
-        interacoesChamados[numeroChamado] || [];
+    let interacoes = interacoesCache[chamadoId] || [];
 
+    try {
+        const pagina = await apiGetJson(
+            "/api/chamados/" + chamadoId + "/interacoes?page=0&size=50"
+        );
+        if (pagina && pagina.content) {
+            interacoes = pagina.content.map(function (item) {
+                return {
+                    autor: item.autorNome || ("Usuário #" + item.autorId),
+                    tipo: "Interação",
+                    data: item.dataCriacao
+                        ? new Date(item.dataCriacao).toLocaleString("pt-BR")
+                        : "—",
+                    descricao: item.mensagem
+                };
+            });
+            interacoesCache[chamadoId] = interacoes;
+        }
+    } catch (erro) {
+        // Mantém cache local em caso de falha.
+    }
 
     timelineChamado.innerHTML = "";
 
-
     if (interacoes.length === 0) {
-
-        timelineChamado.innerHTML = `
-            <div class="timeline-empty">
-
-                <p>
-                    Nenhuma interação registrada.
-                </p>
-
-            </div>
-        `;
-
+        timelineChamado.innerHTML =
+            '<div class="timeline-empty"><p>Nenhuma interação registrada.</p></div>';
         return;
-
     }
 
-
     interacoes.forEach(function (interacao) {
-
-        const item =
-            document.createElement("div");
-
+        const item = document.createElement("div");
         item.className = "timeline-item";
-
-
-        item.innerHTML = `
-
-            <div class="timeline-marker"></div>
-
-            <div class="timeline-content">
-
-                <div class="timeline-item-header">
-
-                    <strong>
-                        ${interacao.tipo}
-                    </strong>
-
-                    <span>
-                        ${interacao.data}
-                    </span>
-
-                </div>
-
-
-                <p class="timeline-author">
-                    ${interacao.autor}
-                </p>
-
-
-                <p class="timeline-description">
-                    ${interacao.descricao}
-                </p>
-
-            </div>
-
-        `;
-
-
+        item.innerHTML =
+            '<div class="timeline-marker"></div>' +
+            '<div class="timeline-content">' +
+            '<div class="timeline-item-header"><strong>' +
+            escapeHtmlChamado(interacao.tipo) +
+            "</strong><span>" +
+            escapeHtmlChamado(interacao.data) +
+            "</span></div>" +
+            '<p class="timeline-author">' +
+            escapeHtmlChamado(interacao.autor) +
+            "</p>" +
+            '<p class="timeline-description">' +
+            escapeHtmlChamado(interacao.descricao) +
+            "</p></div>";
         timelineChamado.appendChild(item);
-
     });
-
 }
 
 // =========================================
-// ADICIONAR NOVA INTERAÇÃO
+// NOVA INTERAÇÃO: POST /api/chamados/{id}/interacoes
 // =========================================
 
-formNovaInteracao.addEventListener("submit", function (event) {
-
+formNovaInteracao.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     if (!chamadoAtual) {
         return;
     }
 
-    const tipo = tipoInteracao.value;
     const descricao = descricaoInteracao.value.trim();
 
-    if (tipo === "" || descricao === "") {
+    if (descricao === "") {
         return;
     }
 
-    const novaInteracao = {
+    try {
+        const response = await apiRequest(
+            "/api/chamados/" + chamadoAtual.id + "/interacoes",
+            {
+                method: "POST",
+                body: JSON.stringify({ mensagem: descricao })
+            }
+        );
 
-        autor: chamadoAtual.responsavel,
+        if (response && response.status === 403) {
+            mostrarChamadosMsg("Você não tem permissão para interagir neste chamado.", "error");
+            return;
+        }
 
-        tipo: tipo,
+        if (response && !response.ok && response.status !== 201) {
+            mostrarChamadosMsg("Não foi possível salvar a interação.", "error");
+            return;
+        }
 
-        data: new Date().toLocaleString("pt-BR"),
-
-        descricao: descricao
-
-    };
-
-    if (!interacoesChamados[chamadoAtual.numero]) {
-
-        interacoesChamados[chamadoAtual.numero] = [];
-
+        delete interacoesCache[chamadoAtual.id];
+        formNovaInteracao.reset();
+        await renderizarTimeline(chamadoAtual.id);
+    } catch (erro) {
+        const local = {
+            autor: nomeResponsavel(chamadoAtual),
+            tipo: tipoInteracao.value || "Comentário",
+            data: new Date().toLocaleString("pt-BR"),
+            descricao: descricao
+        };
+        if (!interacoesCache[chamadoAtual.id]) {
+            interacoesCache[chamadoAtual.id] = [];
+        }
+        interacoesCache[chamadoAtual.id].push(local);
+        formNovaInteracao.reset();
+        await renderizarTimeline(chamadoAtual.id);
     }
-
-    interacoesChamados[chamadoAtual.numero].push(novaInteracao);
-
-    renderizarTimeline(chamadoAtual.numero);
-
-    formNovaInteracao.reset();
-
-    console.log(
-        "Nova interação adicionada:",
-        novaInteracao
-    );
-
 });
 
 // =========================================
-// ALTERAR STATUS DO CHAMADO
+// ALTERAR STATUS: PATCH /api/chamados/{id}/status
 // =========================================
 
-novoStatusChamado.addEventListener("change", function () {
-
+novoStatusChamado.addEventListener("change", async function () {
     if (!chamadoAtual) {
         return;
     }
 
-    chamadoAtual.status = novoStatusChamado.value;
+    const anterior = chamadoAtual.status;
+    const novo = novoStatusChamado.value;
 
-    modalChamadoStatus.textContent =
-        chamadoAtual.status === "aberto"
-            ? "Aberto"
-            : chamadoAtual.status === "andamento"
-                ? "Em andamento"
-                : chamadoAtual.status === "aguardando"
-                    ? "Aguardando"
-                    : chamadoAtual.status === "resolvido"
-                        ? "Resolvido"
-                        : "Fechado";
-    
-    modalChamadoStatus.className =
-        `ticket-status ${chamadoAtual.status}`;
-    
-    console.log(
-        "Status do chamado alterado:",
-        chamadoAtual.status
-    );
-
-});
-
-// =========================================
-// PRÉ-VISUALIZAÇÃO DE IMAGENS
-// =========================================
-
-imagensChamado.addEventListener("change", function () {
-
-    previewImagens.innerHTML = "";
-
-    const arquivos = Array.from(imagensChamado.files);
-
-    if (arquivos.length === 0) {
-        return;
-    }
-
-    arquivos.forEach(function (arquivo, indice) {
-
-        if (!arquivo.type.startsWith("image/")) {
-            return;
-        }
-
-        const container =
-            document.createElement("div");
-
-        container.className =
-            "preview-imagem-item";
-
-
-        const imagem =
-            document.createElement("img");
-
-        imagem.src =
-            URL.createObjectURL(arquivo);
-
-        imagem.alt =
-            "Imagem anexada ao chamado";
-
-
-        const botaoRemover =
-            document.createElement("button");
-
-        botaoRemover.type = "button";
-
-        botaoRemover.className =
-            "btn-remover-imagem";
-
-        botaoRemover.textContent =
-            "Remover";
-
-
-        botaoRemover.addEventListener(
-            "click",
-            function () {
-
-                arquivos.splice(indice, 1);
-
-                atualizarArquivos(arquivos);
-
-                container.remove();
-
+    try {
+        const response = await apiRequest(
+            "/api/chamados/" + chamadoAtual.id + "/status",
+            {
+                method: "PATCH",
+                body: JSON.stringify({ status: novo })
             }
         );
 
+        if (!response) {
+            return;
+        }
 
-        container.appendChild(imagem);
+        if (response.status === 403) {
+            mostrarChamadosMsg(
+                "Apenas técnico ou administrador pode marcar como RESOLVIDO.",
+                "error"
+            );
+            novoStatusChamado.value = String(anterior || "ABERTO").toUpperCase();
+            return;
+        }
 
-        container.appendChild(botaoRemover);
+        if (!response.ok) {
+            mostrarChamadosMsg("Status inválido ou não permitido.", "error");
+            novoStatusChamado.value = String(anterior || "ABERTO").toUpperCase();
+            return;
+        }
 
-        previewImagens.appendChild(container);
+        const atualizado = await response.json();
+        chamadoAtual.status = atualizado.status || novo;
+        if (atualizado.dataFechamento !== undefined) {
+            chamadoAtual.dataFechamento = atualizado.dataFechamento;
+        }
 
-    });
+        modalChamadoStatus.textContent = formatarStatus(chamadoAtual.status);
+        modalChamadoStatus.className = "ticket-status " + cssStatus(chamadoAtual.status);
 
+        const sla = getSlaStatus(chamadoAtual);
+        modalChamadoSla.innerHTML = renderSlaBadge(sla, describeSlaTooltip(chamadoAtual, sla));
+
+        await carregarChamados();
+    } catch (erro) {
+        mostrarChamadosMsg("Não foi possível alterar o status. Tente novamente.", "error");
+        novoStatusChamado.value = String(anterior || "ABERTO").toUpperCase();
+    }
 });
 
+// =========================================
+// PRÉ-VISUALIZAÇÃO DE IMAGENS (local)
+// =========================================
 
-// =========================================
-// ATUALIZAR ARQUIVOS SELECIONADOS
-// =========================================
+if (imagensChamado) {
+    imagensChamado.addEventListener("change", function () {
+        previewImagens.innerHTML = "";
+        const arquivos = Array.from(imagensChamado.files || []);
+
+        if (arquivos.length === 0) {
+            return;
+        }
+
+        arquivos.forEach(function (arquivo, indice) {
+            if (!arquivo.type.startsWith("image/")) {
+                return;
+            }
+
+            const container = document.createElement("div");
+            container.className = "preview-imagem-item";
+
+            const imagem = document.createElement("img");
+            imagem.src = URL.createObjectURL(arquivo);
+            imagem.alt = "Imagem anexada ao chamado";
+
+            const botaoRemover = document.createElement("button");
+            botaoRemover.type = "button";
+            botaoRemover.className = "btn-remover-imagem";
+            botaoRemover.textContent = "Remover";
+
+            botaoRemover.addEventListener("click", function () {
+                arquivos.splice(indice, 1);
+                atualizarArquivos(arquivos);
+                container.remove();
+            });
+
+            container.appendChild(imagem);
+            container.appendChild(botaoRemover);
+            previewImagens.appendChild(container);
+        });
+    });
+}
 
 function atualizarArquivos(arquivos) {
-
-    const dataTransfer =
-        new DataTransfer();
-
+    const dataTransfer = new DataTransfer();
     arquivos.forEach(function (arquivo) {
-
         dataTransfer.items.add(arquivo);
-
     });
-
-    imagensChamado.files =
-        dataTransfer.files;
-
+    imagensChamado.files = dataTransfer.files;
 }
+
+// =========================================
+// INICIALIZAÇÃO
+// =========================================
+
+carregarChamados();

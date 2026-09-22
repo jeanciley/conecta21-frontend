@@ -1,1 +1,1 @@
-console.log("Sistema de Atendimento de Chamados iniciado!");
+// Sistema de Atendimento de Chamados - landing page (sem lógica).

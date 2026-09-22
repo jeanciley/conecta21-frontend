@@ -205,7 +205,7 @@ senhaInput.addEventListener("input", function () {
 // SUBMIT DO LOGIN
 // =========================================
 
-loginForm.addEventListener("submit", function (event) {
+loginForm.addEventListener("submit", async function (event) {
 
     event.preventDefault();
 
@@ -224,20 +224,59 @@ loginForm.addEventListener("submit", function (event) {
         return;
     }
 
+    btnEntrar.disabled = true;
+    btnEntrar.textContent = "Entrando...";
 
-    // =====================================
-    // LOGIN TEMPORÁRIO
-    // =====================================
+    try {
+        const response = await fetch(`${API_URL}/api/auth`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: emailInput.value.trim(),
+                senha: senhaInput.value
+            })
+        });
 
-    // Simulação de um token que futuramente
-    // será enviado pelo backend.
-    const tokenSimulado = "conecta21-token-temporario";
+        if (response.status === 429) {
+            mostrarMensagem(
+                "Muitas tentativas de login. Tente novamente em 1 minuto.",
+                "error"
+            );
+            return;
+        }
 
-    // Salvando o token no localStorage.
-    salvarToken(tokenSimulado);
+        if (!response.ok) {
+            mostrarMensagem(
+                "E-mail ou senha inválidos.",
+                "error"
+            );
+            return;
+        }
 
-    // Redirecionando para o Dashboard.
-    window.location.href = "dashboard.html";
+        const dados = await response.json();
+
+        if (!dados || !dados.token) {
+            mostrarMensagem(
+                "Resposta inesperada do servidor. Tente novamente.",
+                "error"
+            );
+            return;
+        }
+
+        salvarToken(dados.token);
+
+        mostrarMensagem("Login realizado com sucesso!", "success");
+
+        window.location.href = "dashboard.html";
+    } catch (erro) {
+        mostrarMensagem(
+            "Não foi possível conectar ao servidor. Verifique se a API está no ar.",
+            "error"
+        );
+    } finally {
+        btnEntrar.disabled = false;
+        btnEntrar.textContent = "Entrar";
+    }
 
 });
 
