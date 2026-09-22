@@ -7,8 +7,8 @@
 
     <title>Criar conta | Conecta21</title>
 
-    <link rel="stylesheet" href="../assets/css/styles.css">
-    <link rel="stylesheet" href="../assets/css/auth.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
 </head>
 
 <body class="auth-page">
@@ -17,221 +17,100 @@
 
         <!-- LADO ESQUERDO -->
         <section class="auth-info">
-
             <a href="index.html" class="logo auth-logo">
                 Conecta<span>21</span>
             </a>
-
             <div class="auth-info-content">
-
-                <span class="section-label">
-                    Atendimento inteligente
-                </span>
-
-                <h1>
-                    Comece a conectar
-                    sua equipe.
-                </h1>
-
-                <p>
-                    Crie sua conta no Conecta21 e tenha uma plataforma
-                    centralizada para gerenciar chamados, equipes
-                    e atendimentos.
-                </p>
-
+                <span class="section-label">Atendimento inteligente</span>
+                <h1>Comece a conectar sua equipe.</h1>
+                <p>Crie sua conta no Conecta21 e tenha uma plataforma centralizada para gerenciar chamados, equipes e atendimentos.</p>
                 <div class="auth-benefits">
-
-                    <div class="auth-benefit">
-                        <span class="benefit-icon">✓</span>
-                        <span>Centralize seus chamados</span>
-                    </div>
-
-                    <div class="auth-benefit">
-                        <span class="benefit-icon">✓</span>
-                        <span>Acompanhe seus atendimentos</span>
-                    </div>
-
-                    <div class="auth-benefit">
-                        <span class="benefit-icon">✓</span>
-                        <span>Organize sua equipe</span>
-                    </div>
-
+                    <div class="auth-benefit"><span class="benefit-icon">✓</span><span>Centralize seus chamados</span></div>
+                    <div class="auth-benefit"><span class="benefit-icon">✓</span><span>Acompanhe seus atendimentos</span></div>
+                    <div class="auth-benefit"><span class="benefit-icon">✓</span><span>Organize sua equipe</span></div>
                 </div>
-
             </div>
-
         </section>
-
 
         <!-- FORMULÁRIO -->
         <section class="auth-form-section">
-
             <div class="auth-form-container">
-
                 <div class="auth-form-header">
-
-                    <h2>
-                        Criar sua conta
-                    </h2>
-
-                    <p>
-                        Preencha os dados abaixo para começar.
-                    </p>
-
+                    <h2>Criar conta da Empresa</h2>
+                    <p>Preencha os dados da empresa e do administrador para começar.</p>
                 </div>
-
 
                 <form id="cadastroForm" novalidate>
 
-                    <!-- NOME -->
+                    <!-- NOME DA EMPRESA -->
                     <div class="form-group">
-
-                        <label for="nome">
-                            Nome completo
-                        </label>
-
-                        <input
-                            type="text"
-                            id="nome"
-                            name="nome"
-                            placeholder="Digite seu nome completo"
-                            autocomplete="name"
-                            required
-                        >
-
-                        <small class="form-error" id="nomeError"></small>
-
+                        <label for="nomeFantasia">Nome da Empresa</label>
+                        <input type="text" id="nomeFantasia" name="nomeFantasia" placeholder="Nome Fantasia" required>
+                        <small class="form-error" id="nomeFantasiaError"></small>
                     </div>
 
-
-                    <!-- EMAIL -->
+                    <!-- CNPJ -->
                     <div class="form-group">
-
-                        <label for="email">
-                            E-mail
-                        </label>
-
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="seuemail@empresa.com"
-                            autocomplete="email"
-                            required
-                        >
-
-                        <small class="form-error" id="emailError"></small>
-
+                        <label for="cnpj">CNPJ</label>
+                        <input type="text" id="cnpj" name="cnpj" placeholder="Apenas números" maxlength="14" required>
+                        <small class="form-error" id="cnpjError"></small>
                     </div>
 
-
-                    <!-- SENHA -->
+                    <!-- NOME USUÁRIO (ADMIN) -->
                     <div class="form-group">
-
-                        <label for="senha">
-                            Senha
-                        </label>
-
-                        <input
-                            type="password"
-                            id="senha"
-                            name="senha"
-                            placeholder="Digite sua senha"
-                            autocomplete="new-password"
-                            required
-                        >
-
-                        <small class="form-help">
-                            A senha deve possuir pelo menos 8 caracteres.
-                        </small>
-
-                        <small class="form-error" id="senhaError"></small>
-
+                        <label for="nomeUsuario">Seu Nome (Administrador)</label>
+                        <input type="text" id="nomeUsuario" name="nomeUsuario" placeholder="Digite seu nome completo" autocomplete="name" required>
+                        <small class="form-error" id="nomeUsuarioError"></small>
                     </div>
 
+                    <!-- EMAIL USUÁRIO -->
+                    <div class="form-group">
+                        <label for="emailUsuario">E-mail</label>
+                        <input type="email" id="emailUsuario" name="emailUsuario" placeholder="seuemail@empresa.com" autocomplete="email" required>
+                        <small class="form-error" id="emailUsuarioError"></small>
+                    </div>
+
+                    <!-- SENHA USUÁRIO -->
+                    <div class="form-group">
+                        <label for="senhaUsuario">Senha</label>
+                        <input type="password" id="senhaUsuario" name="senhaUsuario" placeholder="Digite sua senha" autocomplete="new-password" required>
+                        <small class="form-help">A senha deve possuir pelo menos 8 caracteres.</small>
+                        <small class="form-error" id="senhaUsuarioError"></small>
+                    </div>
 
                     <!-- CONFIRMAÇÃO -->
                     <div class="form-group">
-
-                        <label for="confirmarSenha">
-                            Confirmar senha
-                        </label>
-
-                        <input
-                            type="password"
-                            id="confirmarSenha"
-                            name="confirmarSenha"
-                            placeholder="Digite a senha novamente"
-                            autocomplete="new-password"
-                            required
-                        >
-
+                        <label for="confirmarSenha">Confirmar senha</label>
+                        <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Digite a senha novamente" autocomplete="new-password" required>
                         <small class="form-error" id="confirmarSenhaError"></small>
-
                     </div>
-
 
                     <!-- TERMOS -->
                     <div class="terms-group">
-
                         <label class="checkbox-label">
-
-                            <input
-                                type="checkbox"
-                                id="termos"
-                                name="termos"
-                            >
-
-                            <span>
-                                Li e concordo com os termos de uso
-                                e a política de privacidade.
-                            </span>
-
+                            <input type="checkbox" id="termos" name="termos">
+                            <span>Li e concordo com os termos de uso e a política de privacidade.</span>
                         </label>
-
                         <small class="form-error" id="termosError"></small>
-
                     </div>
 
-
                     <!-- BOTÃO -->
-                    <button
-                        type="submit"
-                        id="btnCadastrar"
-                        class="btn btn-primary auth-submit"
-                    >
-                        Criar minha conta
-                    </button>
+                    <button type="submit" id="btnCadastrar" class="btn btn-primary auth-submit">Criar conta da Empresa</button>
 
                 </form>
 
-
                 <div class="auth-footer">
-
-                    <span>
-                        Já possui uma conta?
-                    </span>
-
-                    <a href="login.html">
-                        Entrar
-                    </a>
-
+                    <span>Já possui uma conta?</span>
+                    <a href="login.html">Entrar</a>
                 </div>
 
-
-                <a href="index.html" class="back-link">
-                    ← Voltar para a página inicial
-                </a>
-
+                <a href="index.html" class="back-link">← Voltar para a página inicial</a>
             </div>
-
         </section>
 
     </main>
 
-
-    <script src="../javascript/cadastro.js"></script>
+    <script type="module" src="js/cadastro.js"></script>
 
 </body>
-
 </html>

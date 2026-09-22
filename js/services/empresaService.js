@@ -1,17 +1,16 @@
-export const UsuarioService = {
-    async cadastrar(dadosUsuario) {
+export const EmpresaService = {
+    async cadastrar(dadosEmpresa) {
         try {
-            // Fetch direto, isolado do api.js para não injetar tokens
-            const response = await fetch('http://localhost:8080/api/usuarios', {
+            const response = await fetch('http://localhost:8080/api/empresas', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(dadosUsuario)
+                body: JSON.stringify(dadosEmpresa)
             });
 
             if (!response.ok) {
-                let mensagem = "Erro ao realizar o cadastro. Verifique os dados.";
+                let mensagem = "Erro ao realizar o cadastro da empresa.";
                 try {
                     const erro = await response.json();
                     if (erro.message) mensagem = erro.message;
@@ -22,7 +21,7 @@ export const UsuarioService = {
 
             return true; 
         } catch (error) {
-            console.error('Erro no UsuarioService:', error);
+            console.error('Erro no EmpresaService:', error);
             throw new Error("Não foi possível conectar ao servidor. Verifique se a API está rodando.");
         }
     }
