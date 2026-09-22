@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SLA | Conecta21</title>
+
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/chamado.css">
+    <link rel="stylesheet" href="assets/css/sla.css">
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+    <!-- =========================================
+         MENU LATERAL
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+
+            <span>Conecta</span><strong>21</strong>
+
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <a href="dashboard.html" class="menu-item">
+                Dashboard
+            </a>
+
+            <a href="equipe.html" class="menu-item">
+                Equipe
+            </a>
+
+            <a href="chamado.html" class="menu-item">
+                Chamados
+            </a>
+
+            <a href="sla.html" class="menu-item active">
+                SLA
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <button id="btnLogout" class="logout-button">
+                Sair
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         CONTEÚDO PRINCIPAL
+    ========================================== -->
+
+    <main class="sla-main">
+
+
+        <header class="sla-header">
+
+            <div>
+
+                <h1>Configurações de SLA</h1>
+
+                <p>
+                    Prazos de resolução por prioridade definidos no backend.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <div id="slaMsg" class="sla-msg" role="status" hidden></div>
+
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>Prazos por prioridade</h2>
+
+                    <p>
+                        Valores espelham o enum PrioridadeChamado da API.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="table-container">
+
+                <table class="sla-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Prioridade</th>
+                            <th>Prazo</th>
+                            <th>Horas</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="slaTableBody">
+
+                        <tr>
+                            <td>
+                                <span class="ticket-priority alta">Alta</span>
+                            </td>
+                            <td>4 horas</td>
+                            <td>4h</td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <span class="ticket-priority media">Média</span>
+                            </td>
+                            <td>24 horas</td>
+                            <td>24h</td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <span class="ticket-priority baixa">Baixa</span>
+                            </td>
+                            <td>48 horas</td>
+                            <td>48h</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="sla-aviso">
+                A API atual não possui endpoint de leitura/edição de SLA
+                (valores fixos em <code>PrioridadeChamado: ALTA(4), MEDIA(24), BAIXA(48)</code>).
+                Esta tela é somente visualização. A edição dependerá de
+                endpoint futuro no backend.
+            </div>
+
+            <div class="sla-legenda">
+                <span class="sla-badge sla-normal"><span class="sla-icon">✓</span> Dentro do SLA</span>
+                <span class="sla-badge sla-proximo"><span class="sla-icon">⚠</span> Próximo do vencimento</span>
+                <span class="sla-badge sla-atrasado"><span class="sla-icon">!</span> EM ATRASO</span>
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <script src="js/auth.js"></script>
+    <script src="js/services/api.js"></script>
+    <script src="js/sla-config.js"></script>
+
+</body>
+
+</html>

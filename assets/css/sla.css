@@ -1,0 +1,231 @@
+/* =========================================
+   SLA + RELATÓRIOS - CONECTA21 (Sprint 3)
+   Reutiliza vars de styles.css e padrão de
+   dashboard.css / chamado.css.
+========================================= */
+
+/* ---------- Badges SLA (ícone + texto, não só cor) ---------- */
+
+.sla-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.sla-icon {
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.sla-normal {
+    background-color: #ecfdf5;
+    color: #047857;
+    border-color: #a7f3d0;
+}
+
+.sla-proximo {
+    background-color: #fffbeb;
+    color: #92400e;
+    border-color: #fcd34d;
+}
+
+.sla-atrasado {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border-color: #fca5a5;
+}
+
+.sla-sem-dados {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border-color: #d1d5db;
+}
+
+/* Status EM_ATRASO na tabela (backend) */
+
+.ticket-status.em_atraso {
+    background-color: #fef2f2;
+    color: #b91c1c;
+}
+
+/* ---------- Mensagens ---------- */
+
+.dashboard-msg,
+.relatorio-msg,
+.sla-msg {
+    margin: 0 0 20px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.dashboard-msg.error,
+.relatorio-msg.error,
+.sla-msg.error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.dashboard-msg.success,
+.relatorio-msg.success,
+.sla-msg.success {
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.dashboard-msg[hidden],
+.relatorio-msg[hidden],
+.sla-msg[hidden] {
+    display: none;
+}
+
+/* ---------- Listas do dashboard ---------- */
+
+.categoria-list,
+.atraso-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.categoria-item,
+.atraso-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background-color: #f9fafb;
+    font-size: 14px;
+}
+
+.atraso-item {
+    align-items: flex-start;
+}
+
+.categoria-item strong {
+    color: #111827;
+}
+
+.atraso-meta {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.metric-card-alert {
+    border-color: #fecaca;
+}
+
+/* ---------- Painel de relatórios ---------- */
+
+.relatorio-panel {
+    margin-top: 20px;
+}
+
+.relatorio-desc {
+    margin: 0 0 16px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.relatorio-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.relatorio-loading {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.relatorio-loading[hidden] {
+    display: none;
+}
+
+.relatorio-msg {
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
+/* ---------- Página SLA ---------- */
+
+.sla-main {
+    flex: 1;
+    padding: 35px 40px;
+    box-sizing: border-box;
+}
+
+.sla-header {
+    margin-bottom: 30px;
+}
+
+.sla-header h1 {
+    margin: 0 0 6px;
+    font-size: 30px;
+    color: #111827;
+}
+
+.sla-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 15px;
+}
+
+.sla-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.sla-aviso {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    font-size: 14px;
+}
+
+.sla-legenda {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+/* ---------- Responsivo (segue padrão) ---------- */
+
+@media (max-width: 850px) {
+    .sla-main {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 550px) {
+    .sla-main {
+        padding: 20px;
+    }
+
+    .relatorio-actions .btn {
+        width: 100%;
+    }
+}
