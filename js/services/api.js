@@ -1,12 +1,13 @@
-const API_URL = "http://localhost:8080";
+import { obterToken, logout } from '../auth.js';
 
-async function apiRequest(endpoint, options = {}) {
+const API_URL = "http://localhost:8080/api";
+
+export async function apiRequest(endpoint, options = {}) {
     const token = obterToken();
 
     const headers = { ...options.headers };
 
-    const isFormData =
-        typeof FormData !== "undefined" && options.body instanceof FormData;
+    const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
 
     if (!isFormData && options.body && !headers["Content-Type"]) {
         headers["Content-Type"] = "application/json";
@@ -16,20 +17,25 @@ async function apiRequest(endpoint, options = {}) {
         headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
-        headers
-    });
+    try {
+        const response = await fetch(`${API_URL}${endpoint}`, {
+            ...options,
+            headers
+        });
 
-    if (response.status === 401) {
-        logout();
+        if (response.status === 401 || response.status === 403) {
+            logout();
+            return null;
+        }
+
         return response;
+    } catch (error) {
+        console.error("Erro na comunicação com a API (fetch):", error);
+        throw error;
     }
-
-    return response;
 }
 
-async function apiGetJson(endpoint) {
+export async function apiGetJson(endpoint) {
     const response = await apiRequest(endpoint, { method: "GET" });
 
     if (!response) {
@@ -53,7 +59,7 @@ async function apiGetJson(endpoint) {
     return response.json();
 }
 
-function getFilenameFromContentDisposition(contentDisposition, fallback) {
+export function getFilenameFromContentDisposition(contentDisposition, fallback) {
     if (!contentDisposition) {
         return fallback;
     }
@@ -75,7 +81,7 @@ function getFilenameFromContentDisposition(contentDisposition, fallback) {
     return fallback;
 }
 
-async function apiDownload(endpoint, fallbackFilename) {
+export async function apiDownload(endpoint, fallbackFilename) {
     const response = await apiRequest(endpoint, { method: "GET" });
 
     if (!response) {
@@ -110,7 +116,7 @@ async function apiDownload(endpoint, fallbackFilename) {
     return filename;
 }
 
-function getMensagemErroAmigavel(status) {
+export function getMensagemErroAmigavel(status) {
     if (status === 401) {
         return "Sessão expirada. Faça login novamente.";
     }

@@ -1,7 +1,8 @@
+import { carregarKanban } from './services/chamadoService.js';
+import { estaAutenticado, logout } from './auth.js';
+
 // =========================================
-// CHAMADOS - CONECTA21 (Sprint 3)
-// Lista via GET /api/chamados/kanban (com SLA)
-// + GET /api/chamados (detalhes/descricao).
+// VERIFICAÇÃO DE AUTENTICAÇÃO
 // =========================================
 
 if (!estaAutenticado()) {
@@ -12,122 +13,45 @@ if (!estaAutenticado()) {
 // ELEMENTOS DO HTML
 // =========================================
 
-const btnNovoChamado =
-    document.getElementById("btnNovoChamado");
-
-const formNovoChamado =
-    document.getElementById("formNovoChamado");
-
-const btnCancelarChamado =
-    document.getElementById("btnCancelarChamado");
-
-const tituloChamado =
-    document.getElementById("tituloChamado");
-
-const clienteChamado =
-    document.getElementById("clienteChamado");
-
-const prioridadeChamado =
-    document.getElementById("prioridadeChamado");
-
-const responsavelChamado =
-    document.getElementById("responsavelChamado");
-
-const descricaoChamado =
-    document.getElementById("descricaoChamado");
-
-const tituloChamadoError =
-    document.getElementById("tituloChamadoError");
-
-const clienteChamadoError =
-    document.getElementById("clienteChamadoError");
-
-const prioridadeChamadoError =
-    document.getElementById("prioridadeChamadoError");
-
-const responsavelChamadoError =
-    document.getElementById("responsavelChamadoError");
-
-const descricaoChamadoError =
-    document.getElementById("descricaoChamadoError");
-
-const buscarChamado =
-    document.getElementById("buscarChamado");
-
-const filtroStatus =
-    document.getElementById("filtroStatus");
-
-const filtroPrioridade =
-    document.getElementById("filtroPrioridade");
-
-const chamadosTableBody =
-    document.getElementById("chamadosTableBody");
-
-const totalChamados =
-    document.getElementById("totalChamados");
-
-const chamadosMsg =
-    document.getElementById("chamadosMsg");
-
-const btnLogout =
-    document.getElementById("btnLogout");
-
-const modalChamado =
-    document.getElementById("modalChamado");
-
-const modalChamadoTitulo =
-    document.getElementById("modalChamadoTitulo");
-
-const modalChamadoNumero =
-    document.getElementById("modalChamadoNumero");
-
-const modalChamadoCliente =
-    document.getElementById("modalChamadoCliente");
-
-const modalChamadoPrioridade =
-    document.getElementById("modalChamadoPrioridade");
-
-const modalChamadoStatus =
-    document.getElementById("modalChamadoStatus");
-
-const modalChamadoSla =
-    document.getElementById("modalChamadoSla");
-
-const modalChamadoSlaLimite =
-    document.getElementById("modalChamadoSlaLimite");
-
-const modalChamadoResponsavel =
-    document.getElementById("modalChamadoResponsavel");
-
-const modalChamadoDescricao =
-    document.getElementById("modalChamadoDescricao");
-
-const btnFecharModalChamado =
-    document.getElementById("btnFecharModalChamado");
-
-const btnFecharModalChamadoFooter =
-    document.getElementById("btnFecharModalChamadoFooter");
-
-const timelineChamado =
-    document.getElementById("timelineChamado");
-
-const novoStatusChamado =
-    document.getElementById("novoStatusChamado");
-
-const formNovaInteracao =
-    document.getElementById("formNovaInteracao");
-
-const imagensChamado =
-    document.getElementById("imagensChamado");
-
-const previewImagens =
-    document.getElementById("previewImagens");
-
-const tipoInteracao =
-    document.getElementById("tipoInteracao");
-
-const descricaoInteracao =
-    document.getElementById("descricaoInteracao");
+const btnNovoChamado = document.getElementById("btnNovoChamado");
+const formNovoChamado = document.getElementById("formNovoChamado");
+const btnCancelarChamado = document.getElementById("btnCancelarChamado");
+const tituloChamado = document.getElementById("tituloChamado");
+const clienteChamado = document.getElementById("clienteChamado");
+const prioridadeChamado = document.getElementById("prioridadeChamado");
+const responsavelChamado = document.getElementById("responsavelChamado");
+const descricaoChamado = document.getElementById("descricaoChamado");
+const tituloChamadoError = document.getElementById("tituloChamadoError");
+const clienteChamadoError = document.getElementById("clienteChamadoError");
+const prioridadeChamadoError = document.getElementById("prioridadeChamadoError");
+const responsavelChamadoError = document.getElementById("responsavelChamadoError");
+const descricaoChamadoError = document.getElementById("descricaoChamadoError");
+const buscarChamado = document.getElementById("buscarChamado");
+const filtroStatus = document.getElementById("filtroStatus");
+const filtroPrioridade = document.getElementById("filtroPrioridade");
+const chamadosTableBody = document.getElementById("chamadosTableBody");
+const totalChamados = document.getElementById("totalChamados");
+const chamadosMsg = document.getElementById("chamadosMsg");
+const btnLogout = document.getElementById("btnLogout");
+const modalChamado = document.getElementById("modalChamado");
+const modalChamadoTitulo = document.getElementById("modalChamadoTitulo");
+const modalChamadoNumero = document.getElementById("modalChamadoNumero");
+const modalChamadoCliente = document.getElementById("modalChamadoCliente");
+const modalChamadoPrioridade = document.getElementById("modalChamadoPrioridade");
+const modalChamadoStatus = document.getElementById("modalChamadoStatus");
+const modalChamadoSla = document.getElementById("modalChamadoSla");
+const modalChamadoSlaLimite = document.getElementById("modalChamadoSlaLimite");
+const modalChamadoResponsavel = document.getElementById("modalChamadoResponsavel");
+const modalChamadoDescricao = document.getElementById("modalChamadoDescricao");
+const btnFecharModalChamado = document.getElementById("btnFecharModalChamado");
+const btnFecharModalChamadoFooter = document.getElementById("btnFecharModalChamadoFooter");
+const timelineChamado = document.getElementById("timelineChamado");
+const novoStatusChamado = document.getElementById("novoStatusChamado");
+const formNovaInteracao = document.getElementById("formNovaInteracao");
+const imagensChamado = document.getElementById("imagensChamado");
+const previewImagens = document.getElementById("previewImagens");
+const tipoInteracao = document.getElementById("tipoInteracao");
+const descricaoInteracao = document.getElementById("descricaoInteracao");
 
 let chamadoAtual = null;
 let chamados = [];
@@ -273,7 +197,7 @@ async function carregarChamados() {
 }
 
 // =========================================
-// VALIDAÇÃO DO FORMULÁRIO
+// FUNÇÕES DE FORMATAÇÃO (AJUSTE DTO -> HTML)
 // =========================================
 
 function validarFormulario() {
@@ -317,8 +241,7 @@ function validarFormulario() {
 // ENVIO DO FORMULÁRIO (POST /api/chamados)
 // =========================================
 
-const novoChamadoForm =
-    document.getElementById("novoChamadoForm");
+const novoChamadoForm = document.getElementById("novoChamadoForm");
 
 novoChamadoForm.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -518,9 +441,7 @@ chamadosTableBody.addEventListener("click", async function (event) {
         return item.id === id;
     });
 
-    if (!chamado) {
-        return;
-    }
+    if (!chamado) return;
 
     chamadoAtual = chamado;
 
@@ -632,10 +553,7 @@ async function renderizarTimeline(chamadoId) {
 
 formNovaInteracao.addEventListener("submit", async function (event) {
     event.preventDefault();
-
-    if (!chamadoAtual) {
-        return;
-    }
+    if (!chamadoAtual) return;
 
     const descricao = descricaoInteracao.value.trim();
 

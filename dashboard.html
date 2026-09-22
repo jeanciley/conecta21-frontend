@@ -9,9 +9,9 @@
 
     <title>Dashboard | Conecta21</title>
 
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/dashboard.css">
-    <link rel="stylesheet" href="assets/css/sla.css">
+    <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+    <link rel="stylesheet" href="./assets/css/sla.css">
 
 </head>
 
@@ -104,60 +104,22 @@
         ========================================== -->
 
         <section class="metrics-grid">
-
-
             <div class="metric-card">
-
-                <span class="metric-label">
-                    Chamados abertos
-                </span>
-
-                <strong class="metric-value" id="metricAbertos">
-                    —
-                </strong>
-
+                <span class="metric-label">Chamados abertos</span>
+                <strong id="metric-abertos" class="metric-value">0</strong>
             </div>
-
-
             <div class="metric-card">
-
-                <span class="metric-label">
-                    Em atendimento
-                </span>
-
-                <strong class="metric-value" id="metricAndamento">
-                    —
-                </strong>
-
+                <span class="metric-label">Em atendimento</span>
+                <strong id="metric-andamento" class="metric-value">0</strong>
             </div>
-
-
             <div class="metric-card">
-
-                <span class="metric-label">
-                    Resolvidos
-                </span>
-
-                <strong class="metric-value" id="metricResolvidos">
-                    —
-                </strong>
-
+                <span class="metric-label">Resolvidos</span>
+                <strong id="metric-resolvidos" class="metric-value">0</strong>
             </div>
-
-
-            <div class="metric-card metric-card-alert">
-
-                <span class="metric-label">
-                    Em atraso (SLA)
-                </span>
-
-                <strong class="metric-value" id="metricAtraso">
-                    —
-                </strong>
-
+            <div class="metric-card">
+                <span class="metric-label">Total de chamados</span>
+                <strong id="metric-total" class="metric-value">0</strong>
             </div>
-
-
         </section>
 
         <div id="dashboardMsg" class="dashboard-msg" role="status" hidden></div>
@@ -172,32 +134,17 @@
 
 
             <div class="dashboard-panel">
-
                 <div class="panel-header">
-
                     <div>
-
-                        <h2>Chamados em atraso</h2>
-
-                        <p>
-                            Atendimentos que estouraram o SLA.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div id="listaAtraso">
-                    <div class="empty-state">
-
-                        <p>
-                            Carregando...
-                        </p>
-
+                        <h2>Chamados recentes</h2>
+                        <p>Acompanhe os últimos atendimentos.</p>
                     </div>
                 </div>
-
+                <!-- ID adicionado aqui para o JS injetar a lista -->
+                <div id="lista-recentes" class="empty-state">
+                    <!-- O JS vai limpar isso e colocar os cards -->
+                    <h3>Carregando dados...</h3>
+                </div>
             </div>
 
 
@@ -283,6 +230,7 @@
     <script src="js/sla.js"></script>
     <script src="js/relatorio.js"></script>
     <script src="js/dashboard.js"></script>
+    <script type="module" src="./js/dashboard.js"></script>
 
 </body>
 
