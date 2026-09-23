@@ -1,4 +1,4 @@
- /* =========================================
+/* =========================================
    DASHBOARD - CONECTA21
 ========================================= */
 
@@ -10,6 +10,7 @@
 .dashboard-page {
     display: flex;
     min-height: 100vh;
+
     background-color: #f5f7fa;
 }
 
@@ -216,6 +217,15 @@
     box-sizing: border-box;
 
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+    transition: 0.2s;
+}
+
+
+.metric-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.07);
 }
 
 
@@ -297,43 +307,231 @@
 
 
 /* =========================================
-   ESTADO VAZIO
+   CHAMADOS RECENTES
 ========================================= */
 
-.empty-state {
-    min-height: 150px;
+.recent-tickets {
+    display: flex;
 
+    flex-direction: column;
+}
+
+
+.recent-ticket {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 16px 0;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.recent-ticket:first-child {
+    padding-top: 0;
+}
+
+
+.recent-ticket:last-child {
+    border-bottom: none;
+
+    padding-bottom: 0;
+}
+
+
+.recent-ticket-info {
     display: flex;
 
     flex-direction: column;
 
-    justify-content: center;
+    gap: 5px;
 
-    align-items: center;
-
-    text-align: center;
-
-    color: #6b7280;
+    min-width: 0;
 }
 
 
-.empty-state h3 {
-    margin: 0 0 8px;
+.recent-ticket-number {
+    font-size: 12px;
 
-    font-size: 16px;
+    font-weight: 600;
+
+    color: #2563eb;
+
+    text-transform: uppercase;
+}
+
+
+.recent-ticket-info strong {
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #111827;
+}
+
+
+.recent-ticket-details {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+
+/* =========================================
+   PRIORIDADE
+========================================= */
+
+.ticket-priority,
+.ticket-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* Prioridade alta */
+
+.priority-alta {
+    background-color: #fee2e2;
+
+    color: #b91c1c;
+}
+
+
+/* Prioridade média */
+
+.priority-média {
+    background-color: #fef3c7;
+
+    color: #b45309;
+}
+
+
+/* Prioridade baixa */
+
+.priority-baixa {
+    background-color: #dcfce7;
+
+    color: #15803d;
+}
+
+
+/* =========================================
+   STATUS DOS CHAMADOS RECENTES
+========================================= */
+
+.status-em-andamento {
+    background-color: #dbeafe;
+
+    color: #1d4ed8;
+}
+
+
+.status-aberto {
+    background-color: #fef3c7;
+
+    color: #b45309;
+}
+
+
+.status-resolvido {
+    background-color: #dcfce7;
+
+    color: #15803d;
+}
+
+
+/* =========================================
+   STATUS DOS CHAMADOS
+========================================= */
+
+.status-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+.status-item {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+
+.status-info {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+
+.status-info span {
+    font-size: 14px;
 
     color: #374151;
 }
 
 
-.empty-state p {
-    margin: 0;
-
-    max-width: 420px;
-
+.status-info strong {
     font-size: 14px;
 
-    line-height: 1.6;
+    color: #111827;
+}
+
+
+/* Barra */
+
+.status-bar {
+    width: 100%;
+
+    height: 8px;
+
+    background-color: #e5e7eb;
+
+    border-radius: 999px;
+
+    overflow: hidden;
+}
+
+
+.status-bar-fill {
+    height: 100%;
+
+    background-color: #2563eb;
+
+    border-radius: 999px;
+
+    transition: width 0.3s ease;
 }
 
 
@@ -372,6 +570,16 @@
         flex-direction: column;
     }
 
+    .recent-ticket {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .recent-ticket-details {
+        justify-content: flex-start;
+    }
+
 }
 
 
@@ -388,6 +596,10 @@
 
     .metrics-grid {
         grid-template-columns: 1fr;
+    }
+
+    .dashboard-main {
+        padding: 20px;
     }
 
 }

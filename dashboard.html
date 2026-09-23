@@ -9,8 +9,8 @@
 
     <title>Dashboard | Conecta21</title>
 
-    <link rel="stylesheet" href="../assets/css/styles.css">
-    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
 
 </head>
 
@@ -107,7 +107,7 @@
                     Chamados abertos
                 </span>
 
-                <strong class="metric-value">
+                <strong class="metric-value" id="chamadosAbertos">
                     0
                 </strong>
 
@@ -120,7 +120,7 @@
                     Em atendimento
                 </span>
 
-                <strong class="metric-value">
+                <strong class="metric-value" id="chamadosAndamento">
                     0
                 </strong>
 
@@ -133,7 +133,7 @@
                     Resolvidos
                 </span>
 
-                <strong class="metric-value">
+                <strong class="metric-value" id="chamadosResolvidos">
                     0
                 </strong>
 
@@ -146,7 +146,7 @@
                     Total de chamados
                 </span>
 
-                <strong class="metric-value">
+                <strong class="metric-value" id="totalChamados">
                     0
                 </strong>
 
@@ -163,6 +163,10 @@
 
         <section class="dashboard-content">
 
+
+            <!-- =====================================
+                 CHAMADOS RECENTES
+            ====================================== -->
 
             <div class="dashboard-panel">
 
@@ -181,22 +185,25 @@
                 </div>
 
 
-                <div class="empty-state">
+                <div
+                    id="listaChamadosRecentes"
+                    class="recent-tickets"
+                >
 
-                    <h3>
-                        Nenhum chamado encontrado
-                    </h3>
-
-                    <p>
-                        Os chamados aparecerão aqui quando
-                        forem registrados no sistema.
-                    </p>
+                    <!--
+                        Os chamados serão inseridos
+                        pelo dashboard.js.
+                    -->
 
                 </div>
 
             </div>
 
 
+
+            <!-- =====================================
+                 STATUS DOS CHAMADOS
+            ====================================== -->
 
             <div class="dashboard-panel">
 
@@ -215,12 +222,15 @@
                 </div>
 
 
-                <div class="empty-state">
+                <div
+                    id="statusChamados"
+                    class="status-list"
+                >
 
-                    <p>
-                        Os indicadores serão carregados
-                        quando o backend estiver conectado.
-                    </p>
+                    <!--
+                        Os status serão inseridos
+                        pelo dashboard.js.
+                    -->
 
                 </div>
 
@@ -236,8 +246,8 @@
 
     <!-- JavaScript -->
 
-    <script src="../javascript/auth.js"></script>
-    <script src="../javascript/dashboard.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
 
 </body>
 

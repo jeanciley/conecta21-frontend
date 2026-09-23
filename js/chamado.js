@@ -24,38 +24,11 @@ const btnNovoChamado =
 const formNovoChamado =
     document.getElementById("formNovoChamado");
 
+const novoChamadoForm =
+    document.getElementById("novoChamadoForm");
+
 const btnCancelarChamado =
     document.getElementById("btnCancelarChamado");
-
-const tituloChamado =
-    document.getElementById("tituloChamado");
-
-const clienteChamado =
-    document.getElementById("clienteChamado");
-
-const prioridadeChamado =
-    document.getElementById("prioridadeChamado");
-
-const responsavelChamado =
-    document.getElementById("responsavelChamado");
-
-const descricaoChamado =
-    document.getElementById("descricaoChamado");
-
-const tituloChamadoError =
-    document.getElementById("tituloChamadoError");
-
-const clienteChamadoError =
-    document.getElementById("clienteChamadoError");
-
-const prioridadeChamadoError =
-    document.getElementById("prioridadeChamadoError");
-
-const responsavelChamadoError =
-    document.getElementById("responsavelChamadoError");
-
-const descricaoChamadoError =
-    document.getElementById("descricaoChamadoError");
 
 const buscarChamado =
     document.getElementById("buscarChamado");
@@ -75,8 +48,76 @@ const totalChamados =
 const btnLogout =
     document.getElementById("btnLogout");
 
+
+// =========================================
+// CAMPOS DO FORMULÁRIO
+// =========================================
+
+const tituloChamado =
+    document.getElementById("tituloChamado");
+
+const clienteChamado =
+    document.getElementById("clienteChamado");
+
+const prioridadeChamado =
+    document.getElementById("prioridadeChamado");
+
+const responsavelChamado =
+    document.getElementById("responsavelChamado");
+
+const descricaoChamado =
+    document.getElementById("descricaoChamado");
+
+
+// =========================================
+// MENSAGENS DE ERRO
+// =========================================
+
+const tituloChamadoError =
+    document.getElementById("tituloChamadoError");
+
+const clienteChamadoError =
+    document.getElementById("clienteChamadoError");
+
+const prioridadeChamadoError =
+    document.getElementById("prioridadeChamadoError");
+
+const responsavelChamadoError =
+    document.getElementById("responsavelChamadoError");
+
+const descricaoChamadoError =
+    document.getElementById("descricaoChamadoError");
+
+
+// =========================================
+// ELEMENTOS DE IMAGEM - NOVO CHAMADO
+// =========================================
+
+const imagensNovoChamado =
+    document.getElementById("imagensNovoChamado");
+
+const previewImagensNovoChamado =
+    document.getElementById("previewImagensNovoChamado");
+
+
+// =========================================
+// ELEMENTOS DO MODAL
+// =========================================
+
 const modalChamado =
     document.getElementById("modalChamado");
+
+const modalWindow =
+    modalChamado.querySelector(".modal-window");
+
+const btnFecharModalChamado =
+    document.getElementById("btnFecharModalChamado");
+
+const btnFecharModalChamadoFooter =
+    document.getElementById("btnFecharModalChamadoFooter");
+
+const btnSalvarAlteracoesChamado =
+    document.getElementById("btnSalvarAlteracoesChamado");
 
 const modalChamadoTitulo =
     document.getElementById("modalChamadoTitulo");
@@ -93,32 +134,25 @@ const modalChamadoPrioridade =
 const modalChamadoStatus =
     document.getElementById("modalChamadoStatus");
 
+const novoStatusChamado =
+    document.getElementById("novoStatusChamado");
+
 const modalChamadoResponsavel =
     document.getElementById("modalChamadoResponsavel");
 
 const modalChamadoDescricao =
     document.getElementById("modalChamadoDescricao");
 
-const btnFecharModalChamado =
-    document.getElementById("btnFecharModalChamado");
-
-const btnFecharModalChamadoFooter =
-    document.getElementById("btnFecharModalChamadoFooter");
-
 const timelineChamado =
     document.getElementById("timelineChamado");
 
-const novoStatusChamado =
-    document.getElementById("novoStatusChamado");
+
+// =========================================
+// ELEMENTOS DE INTERAÇÃO
+// =========================================
 
 const formNovaInteracao =
     document.getElementById("formNovaInteracao");
-
-const imagensChamado =
-    document.getElementById("imagensChamado");
-
-const previewImagens =
-    document.getElementById("previewImagens");
 
 const tipoInteracao =
     document.getElementById("tipoInteracao");
@@ -126,43 +160,99 @@ const tipoInteracao =
 const descricaoInteracao =
     document.getElementById("descricaoInteracao");
 
+
+// =========================================
+// ELEMENTOS DE IMAGEM - MODAL
+// =========================================
+
+const imagensChamado =
+    document.getElementById("imagensChamado");
+
+const previewImagens =
+    document.getElementById("previewImagens");
+
+
+// =========================================
+// CONTROLE DO CHAMADO ATUAL
+// =========================================
+
 let chamadoAtual = null;
 
 
 // =========================================
-// LISTA TEMPORÁRIA DE CHAMADOS
+// RASCUNHO DO CHAMADO
 // =========================================
 
-let chamados = [    
+let chamadoEdicao = null;
+
+
+// =========================================
+// IMAGENS DO NOVO CHAMADO
+// =========================================
+
+let imagensSelecionadasNovoChamado = [];
+
+
+// =========================================
+// URLS TEMPORÁRIAS DAS IMAGENS
+// =========================================
+
+let urlsImagensModal = [];
+
+let urlsImagensNovoChamado = [];
+
+
+// =========================================
+// ELEMENTO QUE ABRIU O MODAL
+// =========================================
+
+let ultimoElementoFocado = null;
+
+
+// =========================================
+// DADOS TEMPORÁRIOS DOS CHAMADOS
+// =========================================
+
+let chamados = [
+
     {
-    numero: "CH-0001",
-    titulo: "Computador não liga",
-    cliente: "João da Silva",
-    prioridade: "alta",
-    status: "aberto",
-    responsavel: "Carlos Oliveira"
-},
+        numero: "CH-0001",
+        titulo: "Computador não liga",
+        cliente: "João da Silva",
+        prioridade: "alta",
+        status: "aberto",
+        responsavel: "Carlos Oliveira",
+        descricao:
+            "O cliente informou que o computador não liga."
+    },
 
-{
-    numero: "CH-0002",
-    titulo: "Erro ao acessar o sistema",
-    cliente: "Maria Souza",
-    prioridade: "media",
-    status: "andamento",
-    responsavel: "Ana Costa"
-},
+    {
+        numero: "CH-0002",
+        titulo: "Erro ao acessar o sistema",
+        cliente: "Maria Souza",
+        prioridade: "media",
+        status: "andamento",
+        responsavel: "Ana Costa",
+        descricao:
+            "A cliente informou que não consegue acessar o sistema."
+    },
 
-{
-    numero: "CH-0003",
-    titulo: "Solicitação de instalação de software",
-    cliente: "Empresa ABC",
-    prioridade: "baixa",
-    status: "aguardando",
-    responsavel: "Carlos Oliveira"
-}];
+    {
+        numero: "CH-0003",
+        titulo: "Solicitação de instalação de software",
+        cliente: "Empresa ABC",
+        prioridade: "baixa",
+        status: "aguardando",
+        responsavel: "Carlos Oliveira",
+        descricao:
+            "Solicitação para instalação de software em um computador."
+    }
+
+];
+
 
 // =========================================
-// DADOS TEMPORÁRIOS DA TIMELINE
+// TIMELINE TEMPORÁRIA
 // =========================================
 
 const interacoesChamados = {
@@ -173,21 +263,24 @@ const interacoesChamados = {
             autor: "João da Silva",
             tipo: "Chamado aberto",
             data: "17/09/2026 09:15",
-            descricao: "O cliente informou que o computador não liga."
+            descricao:
+                "O cliente informou que o computador não liga."
         },
 
         {
             autor: "Carlos Oliveira",
             tipo: "Chamado atribuído",
             data: "17/09/2026 09:30",
-            descricao: "O chamado foi atribuído ao técnico Carlos Oliveira."
+            descricao:
+                "O chamado foi atribuído ao técnico Carlos Oliveira."
         },
 
         {
             autor: "Carlos Oliveira",
             tipo: "Interação adicionada",
             data: "17/09/2026 10:00",
-            descricao: "O técnico iniciou a análise do equipamento."
+            descricao:
+                "O técnico iniciou a análise do equipamento."
         }
 
     ]
@@ -196,15 +289,28 @@ const interacoesChamados = {
 
 
 // =========================================
-// VALIDAÇÃO DO FORMULÁRIO
+// ESCAPAR HTML
+// =========================================
+// Evita que textos digitados pelo usuário
+// sejam interpretados como HTML.
+
+function escaparHtml(valor) {
+
+    return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+// =========================================
+// FUNÇÕES DE VALIDAÇÃO
 // =========================================
 
-function validarFormulario() {
-
-    let valido = true;
-
-
-    // Limpa as mensagens anteriores
+function limparErros() {
 
     tituloChamadoError.textContent = "";
     clienteChamadoError.textContent = "";
@@ -212,61 +318,60 @@ function validarFormulario() {
     responsavelChamadoError.textContent = "";
     descricaoChamadoError.textContent = "";
 
+}
 
-    // Validação do título
+
+function validarNovoChamado() {
+
+    let valido = true;
+
+    limparErros();
+
 
     if (tituloChamado.value.trim() === "") {
 
         tituloChamadoError.textContent =
-            "O título é obrigatório.";
+            "Informe o título do chamado.";
 
         valido = false;
 
     }
 
-
-    // Validação do cliente
 
     if (clienteChamado.value.trim() === "") {
 
         clienteChamadoError.textContent =
-            "O cliente é obrigatório.";
+            "Informe o cliente.";
 
         valido = false;
 
     }
 
-
-    // Validação da prioridade
 
     if (prioridadeChamado.value === "") {
 
         prioridadeChamadoError.textContent =
-            "Selecione uma prioridade.";
+            "Selecione a prioridade.";
 
         valido = false;
 
     }
 
-
-    // Validação do responsável
 
     if (responsavelChamado.value.trim() === "") {
 
         responsavelChamadoError.textContent =
-            "O responsável é obrigatório.";
+            "Informe o responsável.";
 
         valido = false;
 
     }
 
 
-    // Validação da descrição
-
     if (descricaoChamado.value.trim() === "") {
 
         descricaoChamadoError.textContent =
-            "A descrição é obrigatória.";
+            "Informe a descrição do chamado.";
 
         valido = false;
 
@@ -279,136 +384,114 @@ function validarFormulario() {
 
 
 // =========================================
-// ENVIO DO FORMULÁRIO
+// ABRIR FORMULÁRIO
 // =========================================
 
-const novoChamadoForm =
-    document.getElementById("novoChamadoForm");
+btnNovoChamado.addEventListener("click", () => {
+
+    formNovoChamado.hidden = false;
+
+    tituloChamado.focus();
+
+});
 
 
-novoChamadoForm.addEventListener("submit", function (event) {
+// =========================================
+// CANCELAR NOVO CHAMADO
+// =========================================
+
+btnCancelarChamado.addEventListener("click", () => {
+
+    novoChamadoForm.reset();
+
+    limparErros();
+
+    limparImagensNovoChamado();
+
+    formNovoChamado.hidden = true;
+
+});
+
+
+// =========================================
+// CADASTRAR NOVO CHAMADO
+// =========================================
+
+novoChamadoForm.addEventListener("submit", (event) => {
 
     event.preventDefault();
 
 
-    if (!validarFormulario()) {
+    if (!validarNovoChamado()) {
 
         return;
 
     }
 
 
-    // Gera o número do próximo chamado
-
     const proximoNumero =
         chamados.length + 1;
 
-    const numeroChamado =
-        `CH-${String(proximoNumero).padStart(4, "0")}`;
-
-
-    // Cria o novo chamado
 
     const novoChamado = {
 
-        numero: numeroChamado,
+        numero:
+            `CH-${String(proximoNumero).padStart(4, "0")}`,
 
-        titulo: tituloChamado.value.trim(),
+        titulo:
+            tituloChamado.value.trim(),
 
-        cliente: clienteChamado.value.trim(),
+        cliente:
+            clienteChamado.value.trim(),
 
-        prioridade: prioridadeChamado.value,
+        prioridade:
+            prioridadeChamado.value,
 
-        status: "aberto",
+        status:
+            "aberto",
 
-        responsavel: responsavelChamado.value.trim(),
+        responsavel:
+            responsavelChamado.value.trim(),
 
-        descricao: descricaoChamado.value.trim()
+        descricao:
+            descricaoChamado.value.trim(),
+
+        imagens:
+            [...imagensSelecionadasNovoChamado]
 
     };
 
 
-    // Adiciona o chamado à lista
-
     chamados.push(novoChamado);
 
-
-    // Atualiza a tabela
 
     renderizarChamados();
 
 
-    // Limpa o formulário
-
     novoChamadoForm.reset();
 
+    limparErros();
 
-    // Limpa as mensagens de erro
-
-    tituloChamadoError.textContent = "";
-
-    clienteChamadoError.textContent = "";
-
-    prioridadeChamadoError.textContent = "";
-
-    responsavelChamadoError.textContent = "";
-
-    descricaoChamadoError.textContent = "";
-
-
-    // Fecha o formulário
-
-    formNovoChamado.hidden = true;
-
-
-    console.log(
-        "Chamado cadastrado:",
-        novoChamado
-    );
-
-});
-
-
-// =========================================
-// ABRIR FORMULÁRIO DE NOVO CHAMADO
-// =========================================
-
-btnNovoChamado.addEventListener("click", function () {
-
-    formNovoChamado.hidden = false;
-
-});
-
-// =========================================
-// CANCELAR NOVO CHAMADO
-// =========================================
-
-btnCancelarChamado.addEventListener("click", function () {
-
-    novoChamadoForm.reset();
-
-    tituloChamadoError.textContent = "";
-    clienteChamadoError.textContent = "";
-    prioridadeChamadoError.textContent = "";
-    responsavelChamadoError.textContent = "";
-    descricaoChamadoError.textContent = "";
+    limparImagensNovoChamado();
 
     formNovoChamado.hidden = true;
 
 });
+
 
 // =========================================
 // LOGOUT
 // =========================================
 
-btnLogout.addEventListener("click", function () {
+btnLogout.addEventListener("click", () => {
 
     logout();
 
 });
 
+
 // =========================================
-// EXIBIR CHAMADOS
+// RENDERIZAR CHAMADOS
 // =========================================
 
 function renderizarChamados() {
@@ -419,138 +502,212 @@ function renderizarChamados() {
     const termo =
         buscarChamado.value.trim().toLowerCase();
 
-    const statusFiltro =
+    const statusSelecionado =
         filtroStatus.value;
 
-    const prioridadeFiltro =
+    const prioridadeSelecionada =
         filtroPrioridade.value;
 
 
     const chamadosFiltrados =
-        chamados.filter(function (chamado) {
+        chamados.filter((chamado) => {
 
             const correspondeBusca =
-                chamado.numero.toLowerCase().includes(termo) ||
-                chamado.titulo.toLowerCase().includes(termo) ||
-                chamado.cliente.toLowerCase().includes(termo);
+
+                chamado.numero
+                    .toLowerCase()
+                    .includes(termo)
+
+                ||
+
+                chamado.titulo
+                    .toLowerCase()
+                    .includes(termo)
+
+                ||
+
+                chamado.cliente
+                    .toLowerCase()
+                    .includes(termo);
 
 
             const correspondeStatus =
-                statusFiltro === "todos" ||
-                chamado.status === statusFiltro;
+
+                statusSelecionado === "todos"
+
+                ||
+
+                chamado.status === statusSelecionado;
 
 
             const correspondePrioridade =
-                prioridadeFiltro === "todas" ||
-                chamado.prioridade === prioridadeFiltro;
+
+                prioridadeSelecionada === "todas"
+
+                ||
+
+                chamado.prioridade === prioridadeSelecionada;
 
 
             return (
-                correspondeBusca &&
-                correspondeStatus &&
+                correspondeBusca
+                &&
+                correspondeStatus
+                &&
                 correspondePrioridade
             );
 
         });
 
 
-    chamadosFiltrados.forEach(function (chamado) {
+    if (chamadosFiltrados.length === 0) {
 
-        const linha = document.createElement("tr");
+        chamadosTableBody.innerHTML = `
+
+            <tr>
+
+                <td colspan="7">
+
+                    <div class="empty-state">
+
+                        <h3>
+                            Nenhum chamado encontrado
+                        </h3>
+
+                        <p>
+                            Não existem chamados que correspondam aos filtros selecionados.
+                        </p>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
 
 
-        linha.innerHTML = `
+    chamadosFiltrados.forEach((chamado) => {
+
+        const tr =
+            document.createElement("tr");
+
+
+        tr.innerHTML = `
 
             <td>
-                <strong>${chamado.numero}</strong>
+                <strong class="ticket-number">
+                    ${escaparHtml(chamado.numero)}
+                </strong>
             </td>
 
             <td>
-                ${chamado.titulo}
+                ${escaparHtml(chamado.titulo)}
             </td>
 
             <td>
-                ${chamado.cliente}
-            </td>
-
-            <td>
-
-    <span class="ticket-priority ${chamado.prioridade}">
-
-        ${chamado.prioridade === "baixa"
-            ? "Baixa"
-            : chamado.prioridade === "media"
-                ? "Média"
-                : chamado.prioridade === "alta"
-                    ? "Alta"
-                    : "Crítica"}
-
-    </span>
-
-</td>
-
-<td>
-
-    <span class="ticket-status ${chamado.status}">
-
-        ${chamado.status === "aberto"
-            ? "Aberto"
-            : chamado.status === "andamento"
-                ? "Em andamento"
-                : chamado.status === "aguardando"
-                    ? "Aguardando"
-                    : chamado.status === "resolvido"
-                        ? "Resolvido"
-                        : "Fechado"}
-
-    </span>
-
-</td>
-
-            <td>
-                ${chamado.responsavel}
+                ${escaparHtml(chamado.cliente)}
             </td>
 
             <td>
 
-<button
-    type="button"
-    class="btn btn-secondary btn-visualizar-chamado"
-    data-numero="${chamado.numero}"
->
-    Visualizar
-</button>
+                <span class="ticket-priority ${escaparHtml(chamado.prioridade)}">
+                    ${escaparHtml(formatarPrioridade(chamado.prioridade))}
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="ticket-status ${escaparHtml(chamado.status)}">
+                    ${escaparHtml(formatarStatus(chamado.status))}
+                </span>
+
+            </td>
+
+            <td>
+                ${escaparHtml(chamado.responsavel)}
+            </td>
+
+            <td>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary btn-visualizar-chamado"
+                    data-numero="${escaparHtml(chamado.numero)}"
+                    aria-label="Visualizar ${escaparHtml(chamado.numero)}"
+                >
+                    Visualizar
+                </button>
 
             </td>
 
         `;
 
 
-        chamadosTableBody.appendChild(linha);
+        chamadosTableBody.appendChild(tr);
 
     });
 
 
-    atualizarContador(chamadosFiltrados.length);
-
-}
-
-
-// =========================================
-// ATUALIZAR CONTADOR
-// =========================================
-
-function atualizarContador(quantidade) {
-
     totalChamados.textContent =
-        quantidade === 1
+
+        chamadosFiltrados.length === 1
+
             ? "1 chamado"
-            : `${quantidade} chamados`;
+
+            : `${chamadosFiltrados.length} chamados`;
 
 }
 
+
 // =========================================
-// BUSCA E FILTROS
+// FORMATAR PRIORIDADE
+// =========================================
+
+function formatarPrioridade(prioridade) {
+
+    const prioridades = {
+
+        baixa: "Baixa",
+        media: "Média",
+        alta: "Alta",
+        critica: "Crítica"
+
+    };
+
+
+    return prioridades[prioridade] || prioridade;
+
+}
+
+
+// =========================================
+// FORMATAR STATUS
+// =========================================
+
+function formatarStatus(status) {
+
+    const statusMap = {
+
+        aberto: "Aberto",
+        andamento: "Em andamento",
+        aguardando: "Aguardando",
+        resolvido: "Resolvido",
+        fechado: "Fechado"
+
+    };
+
+
+    return statusMap[status] || status;
+
+}
+
+
+// =========================================
+// FILTROS
 // =========================================
 
 buscarChamado.addEventListener(
@@ -570,101 +727,384 @@ filtroPrioridade.addEventListener(
     renderizarChamados
 );
 
-// =========================================
-// INICIALIZAÇÃO
-// =========================================
-
-renderizarChamados();
-
-console.log("Módulo de chamados carregado.");
 
 // =========================================
-// MODAL DE DETALHES DO CHAMADO
+// VISUALIZAR CHAMADO
 // =========================================
 
-chamadosTableBody.addEventListener("click", function (event) {
+chamadosTableBody.addEventListener(
+    "click",
+    (event) => {
 
-    if (!event.target.classList.contains("btn-visualizar-chamado")) {
-        return;
+        const botao =
+            event.target.closest(
+                ".btn-visualizar-chamado"
+            );
+
+
+        if (!botao) {
+
+            return;
+
+        }
+
+
+        const numero =
+            botao.dataset.numero;
+
+
+        const chamado =
+            chamados.find(
+                (item) => item.numero === numero
+            );
+
+
+        if (!chamado) {
+
+            return;
+
+        }
+
+
+        abrirModalChamado(chamado);
+
     }
+);
 
-    const numero = event.target.dataset.numero;
 
-    const chamado = chamados.find(function (chamado) {
-        return chamado.numero === numero;
-    });
+// =========================================
+// CRIAR RASCUNHO
+// =========================================
 
-    if (!chamado) {
-        return;
-    }
+function criarRascunhoChamado(chamado) {
+
+    const interacoes =
+        interacoesChamados[chamado.numero] || [];
+
+
+    return {
+
+        ...chamado,
+
+        imagens:
+            [...(chamado.imagens || [])],
+
+        interacoes:
+            interacoes.map((interacao) => ({
+                ...interacao
+            }))
+
+    };
+
+}
+
+
+// =========================================
+// ABRIR MODAL
+// =========================================
+
+function abrirModalChamado(chamado) {
+
+    ultimoElementoFocado =
+        document.activeElement;
+
 
     chamadoAtual = chamado;
-    
-    
-    // Preenche os dados do chamado no modal
-    
+
+
+    chamadoEdicao =
+        criarRascunhoChamado(chamado);
+
+
     modalChamadoTitulo.textContent =
-        chamado.titulo;
-    
+        chamadoEdicao.titulo;
+
+
     modalChamadoNumero.textContent =
-        chamado.numero;
-    
+        chamadoEdicao.numero;
+
+
     modalChamadoCliente.textContent =
-        chamado.cliente;
-    
+        chamadoEdicao.cliente;
+
+
     modalChamadoPrioridade.textContent =
-        chamado.prioridade === "baixa"
-            ? "Baixa"
-            : chamado.prioridade === "media"
-                ? "Média"
-                : chamado.prioridade === "alta"
-                    ? "Alta"
-                    : "Crítica";
-    
+        formatarPrioridade(
+            chamadoEdicao.prioridade
+        );
+
+
     modalChamadoPrioridade.className =
-        `ticket-priority ${chamado.prioridade}`;
-    
+        `ticket-priority ${chamadoEdicao.prioridade}`;
+
+
     modalChamadoStatus.textContent =
-        chamado.status === "aberto"
-            ? "Aberto"
-            : chamado.status === "andamento"
-                ? "Em andamento"
-                : chamado.status === "aguardando"
-                    ? "Aguardando"
-                    : chamado.status === "resolvido"
-                        ? "Resolvido"
-                        : "Fechado";
-    
-    novoStatusChamado.value = chamado.status;
+        formatarStatus(
+            chamadoEdicao.status
+        );
+
 
     modalChamadoStatus.className =
-        `ticket-status ${chamado.status}`;
-    
-    modalChamadoResponsavel.textContent =
-        chamado.responsavel;
-    
-    modalChamadoDescricao.textContent =
-        chamado.descricao || "Descrição não informada";
+        `ticket-status ${chamadoEdicao.status}`;
 
-    renderizarTimeline(chamado.numero);
-    
-    
-    // Abre o modal
-    
+
+    novoStatusChamado.value =
+        chamadoEdicao.status;
+
+
+    modalChamadoResponsavel.textContent =
+        chamadoEdicao.responsavel;
+
+
+    modalChamadoDescricao.textContent =
+        chamadoEdicao.descricao ||
+        "Descrição não informada";
+
+
+    renderizarTimeline();
+
+    renderizarImagensDoChamado();
+
+
+    imagensChamado.value = "";
+
+
     modalChamado.hidden = false;
 
-});
+    document.body.classList.add("modal-aberto");
+
+
+    requestAnimationFrame(() => {
+
+        btnFecharModalChamado.focus();
+
+    });
+
+}
+
 
 // =========================================
-// FECHAR MODAL DE DETALHES
+// LIBERAR URLS DAS IMAGENS DO MODAL
+// =========================================
+
+function liberarUrlsImagensModal() {
+
+    urlsImagensModal.forEach((url) => {
+
+        URL.revokeObjectURL(url);
+
+    });
+
+
+    urlsImagensModal = [];
+
+}
+
+
+// =========================================
+// RENDERIZAR IMAGENS DO CHAMADO
+// =========================================
+
+function renderizarImagensDoChamado() {
+
+    liberarUrlsImagensModal();
+
+    previewImagens.innerHTML = "";
+
+
+    if (!chamadoEdicao) {
+
+        return;
+
+    }
+
+
+    const imagens =
+        chamadoEdicao.imagens || [];
+
+
+    if (imagens.length === 0) {
+
+        return;
+
+    }
+
+
+    imagens.forEach((arquivo, index) => {
+
+        const container =
+            document.createElement("div");
+
+
+        container.className =
+            "preview-imagem-item";
+
+
+        const imagem =
+            document.createElement("img");
+
+
+        const url =
+            URL.createObjectURL(arquivo);
+
+
+        urlsImagensModal.push(url);
+
+
+        imagem.src = url;
+
+        imagem.alt =
+            `Imagem anexada ${index + 1}`;
+
+
+        const botao =
+            document.createElement("button");
+
+
+        botao.type = "button";
+
+        botao.className =
+            "btn-remover-imagem";
+
+        botao.textContent =
+            "Remover";
+
+
+        botao.setAttribute(
+            "aria-label",
+            `Remover imagem ${index + 1}`
+        );
+
+
+        botao.addEventListener(
+            "click",
+            () => {
+
+                if (!chamadoEdicao) {
+
+                    return;
+
+                }
+
+
+                chamadoEdicao.imagens.splice(
+                    index,
+                    1
+                );
+
+
+                renderizarImagensDoChamado();
+
+            }
+        );
+
+
+        container.appendChild(imagem);
+
+        container.appendChild(botao);
+
+        previewImagens.appendChild(container);
+
+    });
+
+}
+
+
+// =========================================
+// SALVAR ALTERAÇÕES
+// =========================================
+
+function salvarAlteracoesChamado() {
+
+    if (
+        !chamadoAtual
+        ||
+        !chamadoEdicao
+    ) {
+
+        return;
+
+    }
+
+
+    chamadoAtual.status =
+        chamadoEdicao.status;
+
+
+    chamadoAtual.imagens =
+        [...(chamadoEdicao.imagens || [])];
+
+
+    interacoesChamados[
+        chamadoAtual.numero
+    ] =
+        [...(chamadoEdicao.interacoes || [])];
+
+
+    renderizarChamados();
+
+
+    fecharModalChamado();
+
+}
+
+
+// =========================================
+// FECHAR MODAL
 // =========================================
 
 function fecharModalChamado() {
 
     modalChamado.hidden = true;
 
+
+    liberarUrlsImagensModal();
+
+
+    chamadoAtual = null;
+
+    chamadoEdicao = null;
+
+
+    imagensChamado.value = "";
+
+    previewImagens.innerHTML = "";
+
+    formNovaInteracao.reset();
+
+
+    document.body.classList.remove("modal-aberto");
+
+
+    if (
+        ultimoElementoFocado
+        &&
+        typeof ultimoElementoFocado.focus === "function"
+    ) {
+
+        ultimoElementoFocado.focus();
+
+    }
+
+
+    ultimoElementoFocado = null;
+
 }
 
+
+// =========================================
+// BOTÃO SALVAR
+// =========================================
+
+btnSalvarAlteracoesChamado.addEventListener(
+    "click",
+    salvarAlteracoesChamado
+);
+
+
+// =========================================
+// BOTÕES DE FECHAR
+// =========================================
 
 btnFecharModalChamado.addEventListener(
     "click",
@@ -677,29 +1117,81 @@ btnFecharModalChamadoFooter.addEventListener(
     fecharModalChamado
 );
 
+
 // =========================================
-// RENDERIZAR TIMELINE DE INTERAÇÕES
+// FECHAR CLICANDO FORA
 // =========================================
 
-function renderizarTimeline(numeroChamado) {
+modalChamado.addEventListener(
+    "click",
+    (event) => {
 
-    const interacoes =
-        interacoesChamados[numeroChamado] || [];
+        if (
+            event.target === modalChamado
+        ) {
 
+            fecharModalChamado();
+
+        }
+
+    }
+);
+
+
+// =========================================
+// FECHAR COM ESC
+// =========================================
+
+document.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Escape"
+            &&
+            !modalChamado.hidden
+        ) {
+
+            fecharModalChamado();
+
+        }
+
+    }
+);
+
+
+// =========================================
+// RENDERIZAR TIMELINE
+// =========================================
+
+function renderizarTimeline() {
 
     timelineChamado.innerHTML = "";
+
+
+    if (!chamadoEdicao) {
+
+        return;
+
+    }
+
+
+    const interacoes =
+        chamadoEdicao.interacoes || [];
 
 
     if (interacoes.length === 0) {
 
         timelineChamado.innerHTML = `
+
             <div class="timeline-empty">
 
                 <p>
-                    Nenhuma interação registrada.
+                    Nenhuma interação registrada para este chamado.
                 </p>
 
             </div>
+
         `;
 
         return;
@@ -707,12 +1199,14 @@ function renderizarTimeline(numeroChamado) {
     }
 
 
-    interacoes.forEach(function (interacao) {
+    interacoes.forEach((interacao) => {
 
         const item =
             document.createElement("div");
 
-        item.className = "timeline-item";
+
+        item.className =
+            "timeline-item";
 
 
         item.innerHTML = `
@@ -723,24 +1217,22 @@ function renderizarTimeline(numeroChamado) {
 
                 <div class="timeline-item-header">
 
-                    <strong>
-                        ${interacao.tipo}
+                    <strong class="timeline-author">
+                        ${escaparHtml(interacao.autor)}
                     </strong>
 
                     <span>
-                        ${interacao.data}
+                        ${escaparHtml(interacao.data)}
                     </span>
 
                 </div>
 
-
-                <p class="timeline-author">
-                    ${interacao.autor}
-                </p>
-
+                <strong class="timeline-type">
+                    ${escaparHtml(interacao.tipo)}
+                </strong>
 
                 <p class="timeline-description">
-                    ${interacao.descricao}
+                    ${escaparHtml(interacao.descricao)}
                 </p>
 
             </div>
@@ -754,179 +1246,348 @@ function renderizarTimeline(numeroChamado) {
 
 }
 
+
 // =========================================
 // ADICIONAR NOVA INTERAÇÃO
 // =========================================
 
-formNovaInteracao.addEventListener("submit", function (event) {
+formNovaInteracao.addEventListener(
+    "submit",
+    (event) => {
 
-    event.preventDefault();
+        event.preventDefault();
 
-    if (!chamadoAtual) {
-        return;
-    }
 
-    const tipo = tipoInteracao.value;
-    const descricao = descricaoInteracao.value.trim();
+        if (!chamadoEdicao) {
 
-    if (tipo === "" || descricao === "") {
-        return;
-    }
-
-    const novaInteracao = {
-
-        autor: chamadoAtual.responsavel,
-
-        tipo: tipo,
-
-        data: new Date().toLocaleString("pt-BR"),
-
-        descricao: descricao
-
-    };
-
-    if (!interacoesChamados[chamadoAtual.numero]) {
-
-        interacoesChamados[chamadoAtual.numero] = [];
-
-    }
-
-    interacoesChamados[chamadoAtual.numero].push(novaInteracao);
-
-    renderizarTimeline(chamadoAtual.numero);
-
-    formNovaInteracao.reset();
-
-    console.log(
-        "Nova interação adicionada:",
-        novaInteracao
-    );
-
-});
-
-// =========================================
-// ALTERAR STATUS DO CHAMADO
-// =========================================
-
-novoStatusChamado.addEventListener("change", function () {
-
-    if (!chamadoAtual) {
-        return;
-    }
-
-    chamadoAtual.status = novoStatusChamado.value;
-
-    modalChamadoStatus.textContent =
-        chamadoAtual.status === "aberto"
-            ? "Aberto"
-            : chamadoAtual.status === "andamento"
-                ? "Em andamento"
-                : chamadoAtual.status === "aguardando"
-                    ? "Aguardando"
-                    : chamadoAtual.status === "resolvido"
-                        ? "Resolvido"
-                        : "Fechado";
-    
-    modalChamadoStatus.className =
-        `ticket-status ${chamadoAtual.status}`;
-    
-    console.log(
-        "Status do chamado alterado:",
-        chamadoAtual.status
-    );
-
-});
-
-// =========================================
-// PRÉ-VISUALIZAÇÃO DE IMAGENS
-// =========================================
-
-imagensChamado.addEventListener("change", function () {
-
-    previewImagens.innerHTML = "";
-
-    const arquivos = Array.from(imagensChamado.files);
-
-    if (arquivos.length === 0) {
-        return;
-    }
-
-    arquivos.forEach(function (arquivo, indice) {
-
-        if (!arquivo.type.startsWith("image/")) {
             return;
+
         }
 
-        const container =
-            document.createElement("div");
 
-        container.className =
-            "preview-imagem-item";
+        const tipo =
+            tipoInteracao.value;
 
 
-        const imagem =
-            document.createElement("img");
-
-        imagem.src =
-            URL.createObjectURL(arquivo);
-
-        imagem.alt =
-            "Imagem anexada ao chamado";
+        const descricao =
+            descricaoInteracao.value.trim();
 
 
-        const botaoRemover =
-            document.createElement("button");
+        if (
+            tipo === ""
+            ||
+            descricao === ""
+        ) {
 
-        botaoRemover.type = "button";
+            return;
 
-        botaoRemover.className =
-            "btn-remover-imagem";
-
-        botaoRemover.textContent =
-            "Remover";
+        }
 
 
-        botaoRemover.addEventListener(
-            "click",
-            function () {
+        chamadoEdicao.interacoes.push({
 
-                arquivos.splice(indice, 1);
+            autor:
+                chamadoEdicao.responsavel,
 
-                atualizarArquivos(arquivos);
+            tipo:
+                tipo,
 
-                container.remove();
+            data:
+                new Date().toLocaleString(
+                    "pt-BR"
+                ),
+
+            descricao:
+                descricao
+
+        });
+
+
+        renderizarTimeline();
+
+
+        formNovaInteracao.reset();
+
+    }
+);
+
+
+// =========================================
+// ALTERAÇÃO DE STATUS
+// =========================================
+
+novoStatusChamado.addEventListener(
+    "change",
+    () => {
+
+        if (!chamadoEdicao) {
+
+            return;
+
+        }
+
+
+        chamadoEdicao.status =
+            novoStatusChamado.value;
+
+
+        modalChamadoStatus.textContent =
+            formatarStatus(
+                chamadoEdicao.status
+            );
+
+
+        modalChamadoStatus.className =
+            `ticket-status ${chamadoEdicao.status}`;
+
+    }
+);
+
+
+// =========================================
+// ADICIONAR IMAGENS AO CHAMADO
+// =========================================
+
+imagensChamado.addEventListener(
+    "change",
+    () => {
+
+        if (!chamadoEdicao) {
+
+            return;
+
+        }
+
+
+        const novasImagens =
+            Array.from(imagensChamado.files);
+
+
+        if (!chamadoEdicao.imagens) {
+
+            chamadoEdicao.imagens = [];
+
+        }
+
+
+        novasImagens.forEach((arquivo) => {
+
+            if (
+                arquivo.type.startsWith("image/")
+            ) {
+
+                chamadoEdicao.imagens.push(
+                    arquivo
+                );
 
             }
-        );
+
+        });
 
 
-        container.appendChild(imagem);
+        renderizarImagensDoChamado();
 
-        container.appendChild(botaoRemover);
 
-        previewImagens.appendChild(container);
+        imagensChamado.value = "";
+
+    }
+);
+
+
+// =========================================
+// URLS DAS IMAGENS DO NOVO CHAMADO
+// =========================================
+
+function liberarUrlsImagensNovoChamado() {
+
+    urlsImagensNovoChamado.forEach((url) => {
+
+        URL.revokeObjectURL(url);
 
     });
 
-});
+
+    urlsImagensNovoChamado = [];
+
+}
 
 
 // =========================================
-// ATUALIZAR ARQUIVOS SELECIONADOS
+// PRÉ-VISUALIZAÇÃO - NOVO CHAMADO
 // =========================================
 
-function atualizarArquivos(arquivos) {
+imagensNovoChamado.addEventListener(
+    "change",
+    () => {
+
+        const novosArquivos =
+            Array.from(imagensNovoChamado.files);
+
+
+        novosArquivos.forEach((arquivo) => {
+
+            if (
+                arquivo.type.startsWith("image/")
+            ) {
+
+                imagensSelecionadasNovoChamado.push(
+                    arquivo
+                );
+
+            }
+
+        });
+
+
+        atualizarPreviewImagensNovoChamado();
+
+        atualizarInputImagensNovoChamado();
+
+    }
+);
+
+
+// =========================================
+// ATUALIZAR PREVIEW - NOVO CHAMADO
+// =========================================
+
+function atualizarPreviewImagensNovoChamado() {
+
+    liberarUrlsImagensNovoChamado();
+
+    previewImagensNovoChamado.innerHTML = "";
+
+
+    imagensSelecionadasNovoChamado.forEach(
+        (arquivo, index) => {
+
+            const container =
+                document.createElement("div");
+
+
+            container.className =
+                "preview-imagem-item";
+
+
+            const imagem =
+                document.createElement("img");
+
+
+            const url =
+                URL.createObjectURL(arquivo);
+
+
+            urlsImagensNovoChamado.push(url);
+
+
+            imagem.src = url;
+
+
+            imagem.alt =
+                `Imagem anexada ${index + 1}`;
+
+
+            const botao =
+                document.createElement("button");
+
+
+            botao.type =
+                "button";
+
+
+            botao.className =
+                "btn-remover-imagem";
+
+
+            botao.textContent =
+                "Remover";
+
+
+            botao.setAttribute(
+                "aria-label",
+                `Remover imagem ${index + 1}`
+            );
+
+
+            botao.addEventListener(
+                "click",
+                () => {
+
+                    imagensSelecionadasNovoChamado.splice(
+                        index,
+                        1
+                    );
+
+
+                    atualizarPreviewImagensNovoChamado();
+
+                    atualizarInputImagensNovoChamado();
+
+                }
+            );
+
+
+            container.appendChild(imagem);
+
+            container.appendChild(botao);
+
+            previewImagensNovoChamado.appendChild(
+                container
+            );
+
+        }
+    );
+
+}
+
+
+// =========================================
+// ATUALIZAR INPUT DE IMAGENS
+// =========================================
+
+function atualizarInputImagensNovoChamado() {
 
     const dataTransfer =
         new DataTransfer();
 
-    arquivos.forEach(function (arquivo) {
 
-        dataTransfer.items.add(arquivo);
+    imagensSelecionadasNovoChamado.forEach(
+        (arquivo) => {
 
-    });
+            dataTransfer.items.add(arquivo);
 
-    imagensChamado.files =
+        }
+    );
+
+
+    imagensNovoChamado.files =
         dataTransfer.files;
 
 }
+
+
+// =========================================
+// LIMPAR IMAGENS DO NOVO CHAMADO
+// =========================================
+
+function limparImagensNovoChamado() {
+
+    liberarUrlsImagensNovoChamado();
+
+
+    imagensSelecionadasNovoChamado = [];
+
+
+    previewImagensNovoChamado.innerHTML = "";
+
+
+    imagensNovoChamado.value = "";
+
+}
+
+
+// =========================================
+// INICIALIZAÇÃO
+// =========================================
+
+renderizarChamados();

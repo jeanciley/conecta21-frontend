@@ -614,3 +614,129 @@ a {
     }
 
 }
+
+/* ========================================
+   MENU LATERAL - ÁREA INTERNA
+======================================== */
+
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+
+    background-color: #111827;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 28px 18px;
+
+    box-sizing: border-box;
+}
+
+
+/* LOGO */
+
+.sidebar-logo {
+    font-size: 24px;
+    font-weight: 700;
+
+    padding: 0 14px 35px;
+
+    color: #ffffff;
+}
+
+.sidebar-logo strong {
+    color: #3b82f6;
+}
+
+
+/* MENU */
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.menu-item {
+    display: block;
+
+    padding: 13px 15px;
+
+    border-radius: 8px;
+
+    color: #cbd5e1;
+
+    text-decoration: none;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    transition: 0.2s;
+}
+
+
+.menu-item:hover {
+    background-color: #1f2937;
+
+    color: #ffffff;
+}
+
+
+.menu-item.active {
+    background-color: #2563eb;
+
+    color: #ffffff;
+}
+
+
+/* RODAPÉ DO MENU */
+
+.sidebar-footer {
+    margin-top: auto;
+
+    padding: 15px 5px 0;
+}
+
+
+.logout-button {
+    width: 100%;
+
+    padding: 11px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: transparent;
+
+    color: #cbd5e1;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.logout-button:hover {
+    background-color: #1f2937;
+
+    color: #ffffff;
+}
+
+
+/* ========================================
+   MENU LATERAL - RESPONSIVIDADE
+======================================== */
+
+@media (max-width: 550px) {
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+    }
+
+}

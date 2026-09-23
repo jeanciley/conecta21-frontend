@@ -1,17 +1,22 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Chamados | Conecta21</title>
 
-    <link rel="stylesheet" href="../assets/css/styles.css">
-    <link rel="stylesheet" href="../assets/css/dashboard.css">
-    <link rel="stylesheet" href="../assets/css/chamado.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/chamado.css">
 
 </head>
 
@@ -34,15 +39,26 @@
 
         <nav class="sidebar-menu">
 
-            <a href="dashboard.html" class="menu-item">
+            <a
+                href="dashboard.html"
+                class="menu-item"
+            >
                 Dashboard
             </a>
 
-            <a href="equipe.html" class="menu-item">
+
+            <a
+                href="equipe.html"
+                class="menu-item"
+            >
                 Equipe
             </a>
 
-            <a href="chamado.html" class="menu-item active">
+
+            <a
+                href="chamado.html"
+                class="menu-item active"
+            >
                 Chamados
             </a>
 
@@ -52,6 +68,7 @@
         <div class="sidebar-footer">
 
             <button
+                type="button"
                 id="btnLogout"
                 class="logout-button"
             >
@@ -71,15 +88,15 @@
     <main class="chamado-main">
 
 
-        <!-- =========================================
-             CABEÇALHO
-        ========================================== -->
+        <!-- CABEÇALHO -->
 
         <header class="chamado-header">
 
             <div>
 
-                <h1>Atendimento de Chamados</h1>
+                <h1>
+                    Atendimento de Chamados
+                </h1>
 
                 <p>
                     Gerencie e acompanhe as solicitações
@@ -117,6 +134,7 @@
                     type="search"
                     id="buscarChamado"
                     placeholder="Número, título ou cliente"
+                    autocomplete="off"
                 >
 
             </div>
@@ -193,183 +211,259 @@
 
         </section>
 
-         <!-- =========================================
-     FORMULÁRIO NOVO CHAMADO
-========================================== -->
-
-<section
-id="formNovoChamado"
-class="chamado-form"
-hidden
->
-
-<div class="panel-header">
-
-    <div>
-
-        <h2>Novo chamado</h2>
-
-        <p>
-            Preencha os dados para registrar
-            uma nova solicitação.
-        </p>
-
-    </div>
-
-</div>
 
 
-<form id="novoChamadoForm">
+        <!-- =========================================
+             FORMULÁRIO NOVO CHAMADO
+        ========================================== -->
 
-
-    <div class="form-grid">
-
-
-        <div class="form-group">
-
-            <label for="tituloChamado">
-                Título
-            </label>
-
-            <input
-                type="text"
-                id="tituloChamado"
-                placeholder="Digite o título do chamado"
-            >
-
-            <small
-                id="tituloChamadoError"
-                class="form-error"
-            ></small>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label for="clienteChamado">
-                Cliente
-            </label>
-
-            <input
-                type="text"
-                id="clienteChamado"
-                placeholder="Digite o nome do cliente"
-            >
-
-            <small
-                id="clienteChamadoError"
-                class="form-error"
-            ></small>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label for="prioridadeChamado">
-                Prioridade
-            </label>
-
-            <select id="prioridadeChamado">
-
-                <option value="">
-                    Selecione a prioridade
-                </option>
-
-                <option value="baixa">
-                    Baixa
-                </option>
-
-                <option value="media">
-                    Média
-                </option>
-
-                <option value="alta">
-                    Alta
-                </option>
-
-                <option value="critica">
-                    Crítica
-                </option>
-
-            </select>
-
-            <small
-                id="prioridadeChamadoError"
-                class="form-error"
-            ></small>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label for="responsavelChamado">
-                Responsável
-            </label>
-
-            <input
-                type="text"
-                id="responsavelChamado"
-                placeholder="Digite o responsável"
-            >
-
-            <small
-                id="responsavelChamadoError"
-                class="form-error"
-            ></small>
-
-        </div>
-
-
-    </div>
-
-
-    <div class="form-group form-group-full">
-
-        <label for="descricaoChamado">
-            Descrição
-        </label>
-
-        <textarea
-            id="descricaoChamado"
-            rows="5"
-            placeholder="Descreva detalhadamente o problema ou solicitação"
-        ></textarea>
-
-        <small
-            id="descricaoChamadoError"
-            class="form-error"
-        ></small>
-
-    </div>
-
-
-    <div class="form-actions">
-
-        <button
-            type="button"
-            id="btnCancelarChamado"
-            class="btn btn-secondary"
+        <section
+            id="formNovoChamado"
+            class="chamado-form"
+            hidden
         >
-            Cancelar
-        </button>
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Novo chamado
+                    </h2>
+
+                    <p>
+                        Preencha os dados para registrar
+                        uma nova solicitação.
+                    </p>
+
+                </div>
+
+            </div>
 
 
-        <button
-            type="submit"
-            class="btn btn-primary"
-        >
-            Cadastrar chamado
-        </button>
+            <form id="novoChamadoForm">
 
-    </div>
+                <div class="form-grid">
 
 
-</form>
+                    <!-- TÍTULO -->
 
-</section>
+                    <div class="form-group">
+
+                        <label for="tituloChamado">
+                            Título
+                        </label>
+
+                        <input
+                            type="text"
+                            id="tituloChamado"
+                            placeholder="Digite o título do chamado"
+                            autocomplete="off"
+                        >
+
+                        <small
+                            id="tituloChamadoError"
+                            class="form-error"
+                        ></small>
+
+                    </div>
+
+
+
+                    <!-- CLIENTE -->
+
+                    <div class="form-group">
+
+                        <label for="clienteChamado">
+                            Cliente
+                        </label>
+
+                        <input
+                            type="text"
+                            id="clienteChamado"
+                            placeholder="Digite o nome do cliente"
+                            autocomplete="off"
+                        >
+
+                        <small
+                            id="clienteChamadoError"
+                            class="form-error"
+                        ></small>
+
+                    </div>
+
+
+
+                    <!-- PRIORIDADE -->
+
+                    <div class="form-group">
+
+                        <label for="prioridadeChamado">
+                            Prioridade
+                        </label>
+
+                        <select id="prioridadeChamado">
+
+                            <option value="">
+                                Selecione a prioridade
+                            </option>
+
+                            <option value="baixa">
+                                Baixa
+                            </option>
+
+                            <option value="media">
+                                Média
+                            </option>
+
+                            <option value="alta">
+                                Alta
+                            </option>
+
+                            <option value="critica">
+                                Crítica
+                            </option>
+
+                        </select>
+
+                        <small
+                            id="prioridadeChamadoError"
+                            class="form-error"
+                        ></small>
+
+                    </div>
+
+
+
+                    <!-- RESPONSÁVEL -->
+
+                    <div class="form-group">
+
+                        <label for="responsavelChamado">
+                            Responsável
+                        </label>
+
+                        <input
+                            type="text"
+                            id="responsavelChamado"
+                            placeholder="Digite o responsável"
+                            autocomplete="off"
+                        >
+
+                        <small
+                            id="responsavelChamadoError"
+                            class="form-error"
+                        ></small>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     DESCRIÇÃO
+                ========================================== -->
+
+                <div class="form-group form-group-full">
+
+                    <label for="descricaoChamado">
+                        Descrição
+                    </label>
+
+                    <textarea
+                        id="descricaoChamado"
+                        rows="5"
+                        placeholder="Descreva detalhadamente o problema ou solicitação"
+                    ></textarea>
+
+                    <small
+                        id="descricaoChamadoError"
+                        class="form-error"
+                    ></small>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     ANEXOS DO NOVO CHAMADO
+                ========================================== -->
+
+                <div class="form-group form-group-full">
+
+                    <label for="imagensNovoChamado">
+                        Anexar imagens
+                    </label>
+
+                    <div class="upload-area">
+
+                        <label
+                            for="imagensNovoChamado"
+                            class="upload-label"
+                        >
+
+                            <span class="upload-icon">
+                                📎
+                            </span>
+
+                            <span class="upload-text">
+                                Adicionar imagens
+                            </span>
+
+                            <span class="upload-description">
+                                Selecione uma ou mais imagens relacionadas ao chamado.
+                            </span>
+
+                        </label>
+
+
+                        <input
+                            type="file"
+                            id="imagensNovoChamado"
+                            accept="image/*"
+                            multiple
+                        >
+
+                    </div>
+
+
+                    <div
+                        id="previewImagensNovoChamado"
+                        class="preview-imagens"
+                    ></div>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     AÇÕES
+                ========================================== -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="button"
+                        id="btnCancelarChamado"
+                        class="btn btn-secondary"
+                    >
+                        Cancelar
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Cadastrar chamado
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
 
 
 
@@ -379,12 +473,13 @@ hidden
 
         <section class="chamado-panel">
 
-
             <div class="panel-header">
 
                 <div>
 
-                    <h2>Chamados</h2>
+                    <h2>
+                        Chamados
+                    </h2>
 
                     <p>
                         Solicitações registradas no sistema.
@@ -396,15 +491,13 @@ hidden
                 <span
                     id="totalChamados"
                     class="total-chamados"
+                    aria-live="polite"
                 >
                     0 chamados
                 </span>
 
             </div>
 
-
-
-            <!-- Tabela -->
 
             <div class="table-container">
 
@@ -414,33 +507,13 @@ hidden
 
                         <tr>
 
-                            <th>
-                                Chamado
-                            </th>
-
-                            <th>
-                                Título
-                            </th>
-
-                            <th>
-                                Cliente
-                            </th>
-
-                            <th>
-                                Prioridade
-                            </th>
-
-                            <th>
-                                Status
-                            </th>
-
-                            <th>
-                                Responsável
-                            </th>
-
-                            <th>
-                                Ações
-                            </th>
+                            <th>Chamado</th>
+                            <th>Título</th>
+                            <th>Cliente</th>
+                            <th>Prioridade</th>
+                            <th>Status</th>
+                            <th>Responsável</th>
+                            <th>Ações</th>
 
                         </tr>
 
@@ -476,325 +549,384 @@ hidden
 
             </div>
 
-
         </section>
-
-
 
     </main>
 
 
+
     <!-- =========================================
-     MODAL DE DETALHES DO CHAMADO
-========================================= -->
-
-<div
-id="modalChamado"
-class="modal-overlay"
-hidden
-role="dialog"
-aria-modal="true"
-aria-labelledby="modalChamadoTitulo"
->
-
-<div class="modal-window chamado-modal">
-
-    <div class="modal-header">
-
-        <div>
-            <h2 id="modalChamadoTitulo">
-                Detalhes do chamado
-            </h2>
-
-            <p>
-                Informações da solicitação
-            </p>
-        </div>
-
-        <button
-            type="button"
-            id="btnFecharModalChamado"
-            class="modal-close"
-            aria-label="Fechar"
-        >
-            &times;
-        </button>
-
-    </div>
-
-
-    <div class="modal-content">
-
-        <div class="chamado-detalhes-grid">
-
-            <div class="detalhe-item">
-
-                <span class="detalhe-label">
-                    Número
-                </span>
-
-                <strong id="modalChamadoNumero">
-                    -
-                </strong>
-
-            </div>
-
-
-            <div class="detalhe-item">
-
-                <span class="detalhe-label">
-                    Cliente
-                </span>
-
-                <strong id="modalChamadoCliente">
-                    -
-                </strong>
-
-            </div>
-
-
-            <div class="detalhe-item">
-
-                <span class="detalhe-label">
-                    Prioridade
-                </span>
-
-                <span
-                    id="modalChamadoPrioridade"
-                    class="ticket-priority"
-                >
-                    -
-                </span>
-
-            </div>
-
-
-            <div class="detalhe-item">
-
-                <span class="detalhe-label">
-                    Status
-                </span>
-            
-                <span
-                    id="modalChamadoStatus"
-                    class="ticket-status"
-                >
-                    -
-                </span>
-            
-            </div>
-            
-            
-            <div class="detalhe-item">
-            
-                <label
-                    for="novoStatusChamado"
-                    class="detalhe-label"
-                >
-                    Alterar status
-                </label>
-            
-                <select id="novoStatusChamado">
-            
-                    <option value="aberto">
-                        Aberto
-                    </option>
-            
-                    <option value="andamento">
-                        Em andamento
-                    </option>
-            
-                    <option value="aguardando">
-                        Aguardando
-                    </option>
-            
-                    <option value="resolvido">
-                        Resolvido
-                    </option>
-            
-                    <option value="fechado">
-                        Fechado
-                    </option>
-            
-                </select>
-            
-            </div>
-
-
-            <div class="detalhe-item">
-
-                <span class="detalhe-label">
-                    Responsável
-                </span>
-
-                <strong id="modalChamadoResponsavel">
-                    -
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <div class="detalhe-descricao">
-
-            <span class="detalhe-label">
-                Descrição
-            </span>
-
-            <p id="modalChamadoDescricao">
-                -
-            </p>
-
-        </div>
-
-        <!-- =========================================
-     TIMELINE DE INTERAÇÕES
-========================================= -->
-
-<div class="chamado-timeline">
-
-    <div class="timeline-header">
-
-        <h3>
-            Histórico de interações
-        </h3>
-
-        <p>
-            Acompanhe as movimentações deste chamado.
-        </p>
-
-    </div>
-
+         MODAL DE DETALHES DO CHAMADO
+    ========================================== -->
 
     <div
-        id="timelineChamado"
-        class="timeline-list"
+        id="modalChamado"
+        class="modal-overlay"
+        hidden
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalChamadoTitulo"
     >
 
-        <!-- As interações serão inseridas pelo JavaScript -->
+        <div
+            class="modal-window chamado-modal"
+            tabindex="-1"
+        >
 
-    </div>
 
-    <div class="nova-interacao">
+            <!-- CABEÇALHO -->
 
-        <h3>Adicionar interação</h3>
-    
-        <form id="formNovaInteracao">
-    
-            <div class="form-group">
-    
-                <label for="tipoInteracao">
-                    Tipo de interação
-                </label>
-    
-                <select id="tipoInteracao" required>
-    
-                    <option value="">
-                        Selecione o tipo
-                    </option>
-    
-                    <option value="Comentário">
-                        Comentário
-                    </option>
-    
-                    <option value="Atualização de status">
-                        Atualização de status
-                    </option>
-    
-                    <option value="Solução aplicada">
-                        Solução aplicada
-                    </option>
-    
-                </select>
-    
+            <div class="modal-header">
+
+                <div>
+
+                    <h2 id="modalChamadoTitulo">
+                        Detalhes do chamado
+                    </h2>
+
+                    <p>
+                        Informações da solicitação
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="btnFecharModalChamado"
+                    class="modal-close"
+                    aria-label="Fechar detalhes do chamado"
+                >
+                    &times;
+                </button>
+
             </div>
-    
-            <div class="form-group">
-    
-                <label for="descricaoInteracao">
-                    Descrição
-                </label>
-    
-                <textarea
-                    id="descricaoInteracao"
-                    rows="4"
-                    placeholder="Descreva a interação..."
-                    required
-                ></textarea>
-    
+
+
+
+            <!-- CONTEÚDO -->
+
+            <div class="modal-content">
+
+
+                <!-- DADOS DO CHAMADO -->
+
+                <div class="chamado-detalhes-grid">
+
+
+                    <div class="detalhe-item">
+
+                        <span class="detalhe-label">
+                            Número
+                        </span>
+
+                        <strong id="modalChamadoNumero">
+                            -
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="detalhe-item">
+
+                        <span class="detalhe-label">
+                            Cliente
+                        </span>
+
+                        <strong id="modalChamadoCliente">
+                            -
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="detalhe-item">
+
+                        <span class="detalhe-label">
+                            Prioridade
+                        </span>
+
+                        <span
+                            id="modalChamadoPrioridade"
+                            class="ticket-priority"
+                        >
+                            -
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="detalhe-item">
+
+                        <span class="detalhe-label">
+                            Status
+                        </span>
+
+                        <span
+                            id="modalChamadoStatus"
+                            class="ticket-status"
+                        >
+                            -
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="detalhe-item">
+
+                        <label
+                            for="novoStatusChamado"
+                            class="detalhe-label"
+                        >
+                            Alterar status
+                        </label>
+
+                        <select id="novoStatusChamado">
+
+                            <option value="aberto">
+                                Aberto
+                            </option>
+
+                            <option value="andamento">
+                                Em andamento
+                            </option>
+
+                            <option value="aguardando">
+                                Aguardando
+                            </option>
+
+                            <option value="resolvido">
+                                Resolvido
+                            </option>
+
+                            <option value="fechado">
+                                Fechado
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="detalhe-item">
+
+                        <span class="detalhe-label">
+                            Responsável
+                        </span>
+
+                        <strong id="modalChamadoResponsavel">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DESCRIÇÃO -->
+
+                <div class="detalhe-descricao">
+
+                    <span class="detalhe-label">
+                        Descrição
+                    </span>
+
+                    <p id="modalChamadoDescricao">
+                        -
+                    </p>
+
+                </div>
+
+
+
+                <!-- =========================================
+                     TIMELINE
+                ========================================== -->
+
+                <div class="chamado-timeline">
+
+                    <div class="timeline-header">
+
+                        <h3>
+                            Histórico de interações
+                        </h3>
+
+                        <p>
+                            Acompanhe as movimentações deste chamado.
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        id="timelineChamado"
+                        class="timeline-list"
+                    ></div>
+
+
+
+                    <!-- NOVA INTERAÇÃO -->
+
+                    <div class="nova-interacao">
+
+                        <h3>
+                            Adicionar interação
+                        </h3>
+
+                        <form id="formNovaInteracao">
+
+
+                            <div class="form-group">
+
+                                <label for="tipoInteracao">
+                                    Tipo de interação
+                                </label>
+
+                                <select
+                                    id="tipoInteracao"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Selecione o tipo
+                                    </option>
+
+                                    <option value="Comentário">
+                                        Comentário
+                                    </option>
+
+                                    <option value="Atualização de status">
+                                        Atualização de status
+                                    </option>
+
+                                    <option value="Solução aplicada">
+                                        Solução aplicada
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+
+                            <div class="form-group">
+
+                                <label for="descricaoInteracao">
+                                    Descrição
+                                </label>
+
+                                <textarea
+                                    id="descricaoInteracao"
+                                    rows="4"
+                                    placeholder="Descreva a interação..."
+                                    required
+                                ></textarea>
+
+                            </div>
+
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Adicionar interação
+                            </button>
+
+                        </form>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         ANEXOS
+                    ========================================== -->
+
+                    <div class="anexos-chamado">
+
+                        <h3>
+                            Anexos
+                        </h3>
+
+
+                        <div class="upload-area">
+
+                            <label
+                                for="imagensChamado"
+                                class="upload-label"
+                            >
+
+                                <span class="upload-icon">
+                                    📎
+                                </span>
+
+                                <span class="upload-text">
+                                    Adicionar imagens
+                                </span>
+
+                                <span class="upload-description">
+                                    Selecione uma ou mais imagens relacionadas ao chamado.
+                                </span>
+
+                            </label>
+
+
+                            <input
+                                type="file"
+                                id="imagensChamado"
+                                accept="image/*"
+                                multiple
+                            >
+
+                        </div>
+
+
+                        <div
+                            id="previewImagens"
+                            class="preview-imagens"
+                        ></div>
+
+                    </div>
+
+                </div>
+
             </div>
-    
-            <button type="submit" class="btn-primary">
-                Adicionar interação
-            </button>
-    
-        </form>
-    
-    </div>
 
-       <!-- =========================================
-         ANEXOS DO CHAMADO
-    ========================================= -->
 
-    <div class="anexos-chamado">
 
-        <h3>Anexos</h3>
+            <!-- RODAPÉ -->
 
-        <div class="upload-area">
+            <div class="modal-footer">
 
-            <label for="imagensChamado" class="upload-label">
+                <button
+                    type="button"
+                    id="btnFecharModalChamadoFooter"
+                    class="btn btn-secondary"
+                >
+                    Fechar
+                </button>
 
-                <span class="upload-icon">📎</span>
 
-                <span class="upload-text">
-                    Adicionar imagens
-                </span>
+                <button
+                    type="button"
+                    id="btnSalvarAlteracoesChamado"
+                    class="btn btn-primary"
+                >
+                    Salvar alterações
+                </button>
 
-                <span class="upload-description">
-                    Selecione uma ou mais imagens relacionadas ao chamado.
-                </span>
-
-            </label>
-
-            <input
-                type="file"
-                id="imagensChamado"
-                accept="image/*"
-                multiple
-            >
+            </div>
 
         </div>
 
-        <div
-            id="previewImagens"
-            class="preview-imagens"
-        ></div>
-
     </div>
-
- 
-
-</div>
-
-    </div>
-
-
-    <div class="modal-footer">
-
-        <button
-            type="button"
-            id="btnFecharModalChamadoFooter"
-            class="btn btn-secondary"
-        >
-            Fechar
-        </button>
-
-    </div>
-
-</div>
-
-</div>
 
 
 
@@ -802,8 +934,8 @@ aria-labelledby="modalChamadoTitulo"
          JAVASCRIPT
     ========================================== -->
 
-    <script src="../javascript/auth.js"></script>
-    <script src="../javascript/chamado.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/chamado.js"></script>
 
 </body>
 
