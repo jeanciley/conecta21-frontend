@@ -1,5 +1,3 @@
-import { estaAutenticado, logout } from './auth.js';
-
 // =========================================
 // DASHBOARD - CONECTA21
 // Usa: GET /api/dashboard e GET /api/chamados/kanban
@@ -175,6 +173,5 @@ async function carregarAtraso() {
     }
 }
 
-// Inicia o carregamento quando o script é executado
 carregarDashboard();
 carregarAtraso();
