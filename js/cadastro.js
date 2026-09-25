@@ -1,160 +1,308 @@
-import { EmpresaService } from './services/empresaService.js';
-
 // ========================================
 // ELEMENTOS DO FORMULÁRIO
 // ========================================
-const cadastroForm = document.getElementById("cadastroForm");
-const btnCadastrar = document.getElementById("btnCadastrar");
 
-const nomeFantasia = document.getElementById("nomeFantasia");
-const cnpj = document.getElementById("cnpj");
-const nomeUsuario = document.getElementById("nomeUsuario");
-const emailUsuario = document.getElementById("emailUsuario");
-const senhaUsuario = document.getElementById("senhaUsuario");
+const cadastroForm = document.getElementById("cadastroForm");
+
+const nome = document.getElementById("nome");
+const email = document.getElementById("email");
+const senha = document.getElementById("senha");
 const confirmarSenha = document.getElementById("confirmarSenha");
 const termos = document.getElementById("termos");
+
 
 // ========================================
 // ELEMENTOS DE ERRO
 // ========================================
-const nomeFantasiaError = document.getElementById("nomeFantasiaError");
-const cnpjError = document.getElementById("cnpjError");
-const nomeUsuarioError = document.getElementById("nomeUsuarioError");
-const emailUsuarioError = document.getElementById("emailUsuarioError");
-const senhaUsuarioError = document.getElementById("senhaUsuarioError");
+
+const nomeError = document.getElementById("nomeError");
+const emailError = document.getElementById("emailError");
+const senhaError = document.getElementById("senhaError");
 const confirmarSenhaError = document.getElementById("confirmarSenhaError");
 const termosError = document.getElementById("termosError");
+
 
 // ========================================
 // FUNÇÕES AUXILIARES
 // ========================================
+
 function mostrarErro(input, elementoErro, mensagem) {
+
     input.classList.add("input-error");
     input.classList.remove("input-success");
+
     elementoErro.textContent = mensagem;
 }
 
+
 function mostrarSucesso(input, elementoErro) {
+
     input.classList.remove("input-error");
     input.classList.add("input-success");
+
     elementoErro.textContent = "";
 }
+
 
 function limparEstado(input, elementoErro) {
+
     input.classList.remove("input-error");
     input.classList.remove("input-success");
+
     elementoErro.textContent = "";
 }
 
+
 // ========================================
-// VALIDAÇÕES
+// VALIDAR NOME
 // ========================================
-function validarNomeFantasia() {
-    if (nomeFantasia.value.trim() === "") {
-        mostrarErro(nomeFantasia, nomeFantasiaError, "Informe o nome da empresa.");
+
+function validarNome() {
+
+    const valor = nome.value.trim();
+
+    if (valor === "") {
+
+        mostrarErro(
+            nome,
+            nomeError,
+            "Informe seu nome completo."
+        );
+
         return false;
     }
-    mostrarSucesso(nomeFantasia, nomeFantasiaError);
+
+    if (valor.length < 3) {
+
+        mostrarErro(
+            nome,
+            nomeError,
+            "O nome deve possuir pelo menos 3 caracteres."
+        );
+
+        return false;
+    }
+
+    mostrarSucesso(nome, nomeError);
+
     return true;
 }
 
-function validarCnpj() {
-    const valor = cnpj.value.replace(/\D/g, ''); // Remove não-números
-    if (valor.length !== 14) {
-        mostrarErro(cnpj, cnpjError, "O CNPJ deve ter 14 números.");
+
+// ========================================
+// VALIDAR E-MAIL
+// ========================================
+
+function validarEmail() {
+
+    const valor = email.value.trim();
+
+    if (valor === "") {
+
+        mostrarErro(
+            email,
+            emailError,
+            "Informe seu e-mail."
+        );
+
         return false;
     }
-    mostrarSucesso(cnpj, cnpjError);
+
+    const emailValido =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailValido.test(valor)) {
+
+        mostrarErro(
+            email,
+            emailError,
+            "Informe um e-mail válido."
+        );
+
+        return false;
+    }
+
+    mostrarSucesso(email, emailError);
+
     return true;
 }
 
-function validarNomeUsuario() {
-    if (nomeUsuario.value.trim().length < 3) {
-        mostrarErro(nomeUsuario, nomeUsuarioError, "O nome deve possuir pelo menos 3 caracteres.");
+
+// ========================================
+// VALIDAR SENHA
+// ========================================
+
+function validarSenha() {
+
+    const valor = senha.value;
+
+    if (valor === "") {
+
+        mostrarErro(
+            senha,
+            senhaError,
+            "Informe uma senha."
+        );
+
         return false;
     }
-    mostrarSucesso(nomeUsuario, nomeUsuarioError);
+
+    if (valor.length < 8) {
+
+        mostrarErro(
+            senha,
+            senhaError,
+            "A senha deve possuir pelo menos 8 caracteres."
+        );
+
+        return false;
+    }
+
+    mostrarSucesso(senha, senhaError);
+
     return true;
 }
 
-function validarEmailUsuario() {
-    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailValido.test(emailUsuario.value.trim())) {
-        mostrarErro(emailUsuario, emailUsuarioError, "Informe um e-mail válido.");
-        return false;
-    }
-    mostrarSucesso(emailUsuario, emailUsuarioError);
-    return true;
-}
 
-function validarSenhaUsuario() {
-    const senhaForte = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$/;
-    if (!senhaForte.test(senhaUsuario.value)) {
-        mostrarErro(senhaUsuario, senhaUsuarioError, "Mínimo 8 caracteres, 1 maiúscula, 1 minúscula, 1 número e 1 especial.");
-        return false;
-    }
-    mostrarSucesso(senhaUsuario, senhaUsuarioError);
-    return true;
-}
+// ========================================
+// VALIDAR CONFIRMAÇÃO DA SENHA
+// ========================================
 
 function validarConfirmacaoSenha() {
-    if (confirmarSenha.value !== senhaUsuario.value || confirmarSenha.value === "") {
-        mostrarErro(confirmarSenha, confirmarSenhaError, "As senhas não são iguais.");
+
+    const valor = confirmarSenha.value;
+
+    if (valor === "") {
+
+        mostrarErro(
+            confirmarSenha,
+            confirmarSenhaError,
+            "Confirme sua senha."
+        );
+
         return false;
     }
-    mostrarSucesso(confirmarSenha, confirmarSenhaError);
+
+    if (valor !== senha.value) {
+
+        mostrarErro(
+            confirmarSenha,
+            confirmarSenhaError,
+            "As senhas não são iguais."
+        );
+
+        return false;
+    }
+
+    mostrarSucesso(
+        confirmarSenha,
+        confirmarSenhaError
+    );
+
     return true;
 }
+
+
+// ========================================
+// VALIDAR TERMOS
+// ========================================
 
 function validarTermos() {
+
     if (!termos.checked) {
-        termosError.textContent = "Você precisa aceitar os termos para continuar.";
+
+        termosError.textContent =
+            "Você precisa aceitar os termos para continuar.";
+
         return false;
     }
+
     termosError.textContent = "";
+
     return true;
 }
 
+
 // ========================================
-// ENVIO DO FORMULÁRIO API
+// EVENTOS EM TEMPO REAL
 // ========================================
-cadastroForm.addEventListener("submit", async function (event) {
-    event.preventDefault();
 
-    const nomeFantasiaOk = validarNomeFantasia();
-    const cnpjOk = validarCnpj();
-    const nomeUsuarioOk = validarNomeUsuario();
-    const emailUsuarioOk = validarEmailUsuario();
-    const senhaUsuarioOk = validarSenhaUsuario();
-    const confirmacaoOk = validarConfirmacaoSenha();
-    const termosOk = validarTermos();
+nome.addEventListener("blur", validarNome);
 
-    if (!nomeFantasiaOk || !cnpjOk || !nomeUsuarioOk || !emailUsuarioOk || !senhaUsuarioOk || !confirmacaoOk || !termosOk) {
-        return;
+email.addEventListener("blur", validarEmail);
+
+senha.addEventListener("blur", validarSenha);
+
+confirmarSenha.addEventListener(
+    "blur",
+    validarConfirmacaoSenha
+);
+
+senha.addEventListener(
+    "input",
+    () => {
+
+        if (confirmarSenha.value !== "") {
+            validarConfirmacaoSenha();
+        }
+
     }
+);
 
-    // Payload idêntico ao solicitado pelo seu DTO
-    const dadosEmpresa = {
-        nomeFantasia: nomeFantasia.value.trim(),
-        cnpj: cnpj.value.replace(/\D/g, ''), // Envia apenas os números
-        nomeUsuario: nomeUsuario.value.trim(),
-        emailUsuario: emailUsuario.value.trim(),
-        senhaUsuario: senhaUsuario.value
-    };
 
-    try {
-        btnCadastrar.disabled = true;
-        btnCadastrar.textContent = 'Criando conta da Empresa...';
+// ========================================
+// ENVIO DO FORMULÁRIO
+// ========================================
 
-        await EmpresaService.cadastrar(dadosEmpresa);
+cadastroForm.addEventListener(
+    "submit",
+    function (event) {
 
-        alert("Empresa cadastrada com sucesso!");
-        window.location.href = 'login.html';
+        event.preventDefault();
 
-    } catch (error) {
-        alert(error.message);
-    } finally {
-        btnCadastrar.disabled = false;
-        btnCadastrar.textContent = 'Criar conta da Empresa';
+        const nomeValido = validarNome();
+        const emailValido = validarEmail();
+        const senhaValida = validarSenha();
+        const confirmacaoValida =
+            validarConfirmacaoSenha();
+        const termosValidos = validarTermos();
+
+
+        if (
+            !nomeValido ||
+            !emailValido ||
+            !senhaValida ||
+            !confirmacaoValida ||
+            !termosValidos
+        ) {
+
+            return;
+        }
+
+
+        // ========================================
+        // TEMPORÁRIO
+        // ========================================
+        // Nesta etapa ainda não enviaremos
+        // os dados para o Backend.
+        //
+        // Isso será implementado quando
+        // criarmos o services/api.js.
+
+
+        alert(
+            "Cadastro validado com sucesso!"
+        );
+
+        cadastroForm.reset();
+
+        limparEstado(nome, nomeError);
+        limparEstado(email, emailError);
+        limparEstado(senha, senhaError);
+        limparEstado(
+            confirmarSenha,
+            confirmarSenhaError
+        );
+
     }
-});
+);
