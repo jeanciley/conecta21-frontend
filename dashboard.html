@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Conecta21</title>
+
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/sla.css">
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+    <!-- =========================================
+         MENU LATERAL
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+
+            <span>Conecta</span><strong>21</strong>
+
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <a href="dashboard.html" class="menu-item active">
+                Dashboard
+            </a>
+
+            <a href="equipe.html" class="menu-item">
+                Equipe
+            </a>
+
+            <a href="chamado.html" class="menu-item">
+                Chamados
+            </a>
+
+            <a href="sla.html" class="menu-item">
+                SLA
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <button id="btnLogout" class="logout-button">
+                Sair
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         CONTEÚDO PRINCIPAL
+    ========================================== -->
+
+    <main class="dashboard-main">
+
+
+        <!-- Cabeçalho -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>Dashboard</h1>
+
+                <p>
+                    Visão geral dos atendimentos do Conecta21.
+                </p>
+
+            </div>
+
+
+            <div class="user-area">
+
+                <span class="user-name">
+                    Usuário
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             CARDS DE MÉTRICAS
+        ========================================== -->
+
+        <section class="metrics-grid">
+
+
+            <div class="metric-card">
+
+                <span class="metric-label">
+                    Chamados abertos
+                </span>
+
+                <strong class="metric-value" id="metricAbertos">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <span class="metric-label">
+                    Em atendimento
+                </span>
+
+                <strong class="metric-value" id="metricAndamento">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="metric-card">
+
+                <span class="metric-label">
+                    Resolvidos
+                </span>
+
+                <strong class="metric-value" id="metricResolvidos">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div class="metric-card metric-card-alert">
+
+                <span class="metric-label">
+                    Em atraso (SLA)
+                </span>
+
+                <strong class="metric-value" id="metricAtraso">
+                    —
+                </strong>
+
+            </div>
+
+
+        </section>
+
+        <div id="dashboardMsg" class="dashboard-msg" role="status" hidden></div>
+
+
+
+        <!-- =========================================
+             ÁREA DE CONTEÚDO
+        ========================================== -->
+
+        <section class="dashboard-content">
+
+
+            <div class="dashboard-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>Chamados em atraso</h2>
+
+                        <p>
+                            Atendimentos que estouraram o SLA.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="listaAtraso">
+                    <div class="empty-state">
+
+                        <p>
+                            Carregando...
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="dashboard-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>Chamados por categoria</h2>
+
+                        <p>
+                            Distribuição dos atendimentos (30 dias).
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="listaCategorias">
+                    <div class="empty-state">
+
+                        <p>
+                            Carregando...
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =========================================
+             RELATÓRIOS
+        ========================================== -->
+
+        <section class="dashboard-panel relatorio-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>Relatórios</h2>
+
+                    <p>
+                        Exporte os chamados em CSV (formato suportado pela API).
+                    </p>
+
+                </div>
+
+            </div>
+
+            <p class="relatorio-desc">
+                O arquivo contém ID, título, status, prioridade, data de abertura
+                e data limite do SLA de todos os chamados da sua empresa.
+            </p>
+
+            <div class="relatorio-actions">
+                <button type="button" id="btnBaixarCsv" class="btn btn-primary">
+                    Baixar relatório CSV
+                </button>
+                <span id="relatorioLoading" class="relatorio-loading" hidden>Gerando arquivo...</span>
+            </div>
+
+            <div id="relatorioMsg" class="relatorio-msg" role="status" hidden></div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- JavaScript -->
+
+    <script src="js/auth.js"></script>
+    <script src="js/services/api.js"></script>
+    <script src="js/sla.js"></script>
+    <script src="js/relatorio.js"></script>
+    <script src="js/dashboard.js"></script>
+
+</body>
+
+</html>
