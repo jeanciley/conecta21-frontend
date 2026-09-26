@@ -1,20 +1,15 @@
-import { apiRequest } from './api.js';
-
-export const EquipeService = {
+const EquipeService = {
     async cadastrarMembro(dadosUsuario) {
         try {
-            const response = await apiRequest('/usuarios', {
+            const response = await apiRequest('/api/usuarios', {
                 method: 'POST',
                 body: JSON.stringify(dadosUsuario)
             });
 
             if (!response) throw new Error("Não foi possível estabelecer ligação ao servidor.");
             if (!response.ok) {
-                let mensagem = "Erro ao registar o utilizador.";
-                try {
-                    const erro = await response.json();
-                    if (erro.message) mensagem = erro.message;
-                } catch (e) { }
+                let mensagem = "Erro ao cadastrar o usuário.";
+                try { mensagem = (await response.text()) || mensagem; } catch (e) { }
                 throw new Error(mensagem);
             }
             return true;
@@ -27,7 +22,7 @@ export const EquipeService = {
     // NOVO MÉTODO: Carregar a lista do backend
     async listar() {
         try {
-            const response = await apiRequest('/usuarios', {
+            const response = await apiRequest('/api/usuarios', {
                 method: 'GET'
             });
 
@@ -43,7 +38,7 @@ export const EquipeService = {
 
     async obterPerfilLogado() {
         try {
-            const response = await apiRequest('/usuarios/me', {
+            const response = await apiRequest('/api/usuarios/me', {
                 method: 'GET'
             });
 

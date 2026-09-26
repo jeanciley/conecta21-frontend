@@ -1,7 +1,6 @@
 // =========================================
 // CHAMADOS - CONECTA21 (Sprint 3)
-// Lista via GET /api/chamados/kanban (com SLA)
-// + GET /api/chamados (detalhes/descricao).
+// Lista paginada via GET /api/chamados (inclui prioridade e SLA).
 // =========================================
 
 if (!estaAutenticado()) {
@@ -27,11 +26,10 @@ const tituloChamado =
 const clienteChamado =
     document.getElementById("clienteChamado");
 
-const prioridadeChamado =
-    document.getElementById("prioridadeChamado");
-
 const responsavelChamado =
     document.getElementById("responsavelChamado");
+const categoriaChamado = document.getElementById("categoriaChamado");
+document.getElementById("prioridadeChamado")?.closest(".form-group")?.remove();
 
 const descricaoChamado =
     document.getElementById("descricaoChamado");
@@ -41,9 +39,6 @@ const tituloChamadoError =
 
 const clienteChamadoError =
     document.getElementById("clienteChamadoError");
-
-const prioridadeChamadoError =
-    document.getElementById("prioridadeChamadoError");
 
 const responsavelChamadoError =
     document.getElementById("responsavelChamadoError");
@@ -56,6 +51,8 @@ const buscarChamado =
 
 const filtroStatus =
     document.getElementById("filtroStatus");
+const statusInicial = new URLSearchParams(window.location.search).get("status");
+if (statusInicial) filtroStatus.value = statusInicial;
 
 const filtroPrioridade =
     document.getElementById("filtroPrioridade");
@@ -193,8 +190,7 @@ function numeroChamado(chamado) {
 
 // =========================================
 // CARREGAR CHAMADOS DA API
-// Kanban tem prioridade + dataLimiteResolucao (SLA).
-// Lista paginada tem descricao + fechamento.
+// A listagem paginada retorna detalhe, prioridade e prazo SLA.
 // =========================================
 
 async function carregarChamados() {
@@ -202,65 +198,30 @@ async function carregarChamados() {
     chamadosTableBody.innerHTML =
         '<tr><td colspan="8"><div class="empty-state"><p>Carregando chamados...</p></div></td></tr>';
 
-    let porId = {};
-
-    try {
-        const kanban = await apiGetJson("/api/chamados/kanban");
-        const lanes = []
-            .concat(kanban.abertos || [])
-            .concat(kanban.emAndamento || [])
-            .concat(kanban.emAtraso || [])
-            .concat(kanban.resolvidos || []);
-
-        lanes.forEach(function (card) {
-            porId[card.id] = {
-                id: card.id,
-                titulo: card.titulo,
-                prioridade: card.prioridade,
-                status: card.status,
-                solicitanteId: card.solicitanteId,
-                tecnicoId: card.tecnicoId,
-                dataAbertura: card.dataAbertura,
-                dataLimiteResolucao: card.dataLimiteResolucao
-            };
-        });
-    } catch (erro) {
-        if (erro && erro.status === 401) {
-            return;
-        }
-    }
-
     try {
         const pagina = await apiGetJson("/api/chamados?page=0&size=100&sort=dataAbertura,DESC");
-        const conteudo = pagina && pagina.content ? pagina.content : [];
-
-        conteudo.forEach(function (item) {
-            const existente = porId[item.id] || {};
-            porId[item.id] = {
-                ...existente,
-                id: item.id,
-                titulo: item.titulo || existente.titulo,
-                descricao: item.descricao,
-                status: item.status || existente.status,
-                solicitanteId: item.solicitanteId ?? existente.solicitanteId,
-                tecnicoId: item.tecnicoId ?? existente.tecnicoId,
-                dataAbertura: item.dataAbertura || existente.dataAbertura,
-                dataFechamento: item.dataFechamento,
-                tipo: item.tipo,
-                prioridade: existente.prioridade || item.prioridade || null,
-                dataLimiteResolucao:
-                    existente.dataLimiteResolucao || item.dataLimiteResolucao || null
-            };
+        chamados = (pagina && pagina.content ? pagina.content : []).map(function (item) {
+            return { ...item, cliente: item.solicitanteNome, responsavel: item.tecnicoNome };
         });
     } catch (erro) {
         if (erro && erro.status === 401) {
             return;
         }
+        mostrarChamadosMsg(getMensagemErroAmigavel(erro && erro.status ? erro.status : 0), "error");
+        chamados = [];
     }
 
-    chamados = Object.values(porId).sort(function (a, b) {
+    chamados.sort(function (a, b) {
         return (b.id || 0) - (a.id || 0);
     });
+
+    const prioridadesDisponiveis = [...new Set(chamados.map(chamado => chamado.prioridade).filter(Boolean))];
+    if (filtroPrioridade) {
+        const selecionada = filtroPrioridade.value;
+        filtroPrioridade.innerHTML = '<option value="todas">Todas</option>' + prioridadesDisponiveis
+            .map(p => '<option value="' + escapeHtmlChamado(p) + '">' + escapeHtmlChamado(formatarPrioridade(p)) + '</option>').join("");
+        if (prioridadesDisponiveis.includes(selecionada)) filtroPrioridade.value = selecionada;
+    }
 
     if (chamados.length === 0) {
         mostrarChamadosMsg(
@@ -281,7 +242,6 @@ function validarFormulario() {
 
     tituloChamadoError.textContent = "";
     clienteChamadoError.textContent = "";
-    prioridadeChamadoError.textContent = "";
     responsavelChamadoError.textContent = "";
     descricaoChamadoError.textContent = "";
 
@@ -290,18 +250,8 @@ function validarFormulario() {
         valido = false;
     }
 
-    if (clienteChamado.value.trim() === "") {
-        clienteChamadoError.textContent = "O cliente é obrigatório.";
-        valido = false;
-    }
-
-    if (prioridadeChamado.value === "") {
-        prioridadeChamadoError.textContent = "Selecione uma prioridade.";
-        valido = false;
-    }
-
-    if (responsavelChamado.value.trim() === "") {
-        responsavelChamadoError.textContent = "O responsável é obrigatório.";
+    if (!categoriaChamado || categoriaChamado.value === "") {
+        mostrarChamadosMsg("Selecione uma categoria para definir o SLA do atendimento.", "error");
         valido = false;
     }
 
@@ -340,8 +290,8 @@ novoChamadoForm.addEventListener("submit", async function (event) {
             body: JSON.stringify({
                 titulo: tituloChamado.value.trim(),
                 descricao: descricaoChamado.value.trim(),
-                prioridade: prioridadeChamado.value.toUpperCase(),
-                tipo: "SUPORTE_EXTERNO"
+                categoriaId: Number(categoriaChamado.value),
+                tecnicoId: responsavelChamado.value ? Number(responsavelChamado.value) : null
             })
         });
 
@@ -382,13 +332,40 @@ novoChamadoForm.addEventListener("submit", async function (event) {
 
 btnNovoChamado.addEventListener("click", function () {
     formNovoChamado.hidden = false;
+    carregarOpcoesChamado();
 });
+
+async function carregarOpcoesChamado() {
+    try {
+        const [perfil, usuarios, categorias] = await Promise.all([
+            apiGetJson("/api/usuarios/me"),
+            apiGetJson("/api/usuarios"),
+            apiGetJson("/api/categorias")
+        ]);
+        clienteChamado.value = perfil.nome;
+        if (perfil.perfil === "USUARIO") {
+            document.body.classList.add("cliente-view");
+            filtroPrioridade.closest(".filter-group").hidden = true;
+            modalChamadoPrioridade.closest(".detalhe-item").hidden = true;
+        }
+        responsavelChamado.closest(".form-group").hidden = perfil.perfil !== "ADMIN";
+        responsavelChamado.innerHTML = '<option value="">Sem responsável</option>' +
+            usuarios.filter(u => u.perfil === "TECNICO").map(u =>
+                '<option value="' + escapeHtmlChamado(u.id) + '">' + escapeHtmlChamado(u.nome) + '</option>'
+            ).join("");
+        if (categoriaChamado) {
+            categoriaChamado.innerHTML = '<option value="">Selecione a categoria</option>' +
+                categorias.map(c => '<option value="' + escapeHtmlChamado(c.id) + '">' + escapeHtmlChamado(c.nome) + '</option>').join("");
+        }
+    } catch (erro) {
+        mostrarChamadosMsg(getMensagemErroAmigavel(erro && erro.status ? erro.status : 0), "error");
+    }
+}
 
 btnCancelarChamado.addEventListener("click", function () {
     novoChamadoForm.reset();
     tituloChamadoError.textContent = "";
     clienteChamadoError.textContent = "";
-    prioridadeChamadoError.textContent = "";
     responsavelChamadoError.textContent = "";
     descricaoChamadoError.textContent = "";
     formNovoChamado.hidden = true;
@@ -583,12 +560,14 @@ async function renderizarTimeline(chamadoId) {
         if (pagina && pagina.content) {
             interacoes = pagina.content.map(function (item) {
                 return {
+                    id: item.id,
                     autor: item.autorNome || ("Usuário #" + item.autorId),
-                    tipo: "Interação",
+                    tipo: item.tipo || "Comentário",
                     data: item.dataCriacao
                         ? new Date(item.dataCriacao).toLocaleString("pt-BR")
                         : "—",
-                    descricao: item.mensagem
+                    descricao: item.mensagem,
+                    anexos: item.anexos || []
                 };
             });
             interacoesCache[chamadoId] = interacoes;
@@ -622,6 +601,12 @@ async function renderizarTimeline(chamadoId) {
             '<p class="timeline-description">' +
             escapeHtmlChamado(interacao.descricao) +
             "</p></div>";
+        if (interacao.anexos && interacao.anexos.length) {
+            item.innerHTML += '<div class="timeline-attachments">' + interacao.anexos.map(function (anexo) {
+                const endpoint = "/api/chamados/" + chamadoId + "/interacoes/" + interacao.id + "/anexos/" + anexo.id;
+                return '<button type="button" class="btn btn-secondary btn-anexo-download" data-endpoint="' + escapeHtmlChamado(endpoint) + '" data-filename="' + escapeHtmlChamado(anexo.nomeArquivo) + '">' + escapeHtmlChamado(anexo.nomeArquivo) + '</button>';
+            }).join("") + '</div>';
+        }
         timelineChamado.appendChild(item);
     });
 }
@@ -629,6 +614,16 @@ async function renderizarTimeline(chamadoId) {
 // =========================================
 // NOVA INTERAÇÃO: POST /api/chamados/{id}/interacoes
 // =========================================
+
+timelineChamado.addEventListener("click", async function (event) {
+    const botao = event.target.closest(".btn-anexo-download");
+    if (!botao) return;
+    try {
+        await apiDownload(botao.dataset.endpoint, botao.dataset.filename);
+    } catch (erro) {
+        mostrarChamadosMsg("Não foi possível baixar o anexo.", "error");
+    }
+});
 
 formNovaInteracao.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -643,12 +638,24 @@ formNovaInteracao.addEventListener("submit", async function (event) {
         return;
     }
 
+    if (!tipoInteracao.value) {
+        mostrarChamadosMsg("Selecione o tipo de interação.", "error");
+        return;
+    }
+
+    const dados = new FormData();
+    dados.append("mensagem", descricao);
+    dados.append("tipo", tipoInteracao.value);
+    Array.from(imagensChamado && imagensChamado.files ? imagensChamado.files : []).forEach(function (arquivo) {
+        dados.append("imagens", arquivo);
+    });
+
     try {
         const response = await apiRequest(
             "/api/chamados/" + chamadoAtual.id + "/interacoes",
             {
                 method: "POST",
-                body: JSON.stringify({ mensagem: descricao })
+                body: dados
             }
         );
 
@@ -658,26 +665,19 @@ formNovaInteracao.addEventListener("submit", async function (event) {
         }
 
         if (response && !response.ok && response.status !== 201) {
-            mostrarChamadosMsg("Não foi possível salvar a interação.", "error");
+            let detalhe = "Não foi possível salvar a interação.";
+            try { detalhe = (await response.text()) || detalhe; } catch (e) { }
+            mostrarChamadosMsg(detalhe, "error");
             return;
         }
 
         delete interacoesCache[chamadoAtual.id];
         formNovaInteracao.reset();
+        if (imagensChamado) imagensChamado.value = "";
+        if (previewImagens) previewImagens.innerHTML = "";
         await renderizarTimeline(chamadoAtual.id);
     } catch (erro) {
-        const local = {
-            autor: nomeResponsavel(chamadoAtual),
-            tipo: tipoInteracao.value || "Comentário",
-            data: new Date().toLocaleString("pt-BR"),
-            descricao: descricao
-        };
-        if (!interacoesCache[chamadoAtual.id]) {
-            interacoesCache[chamadoAtual.id] = [];
-        }
-        interacoesCache[chamadoAtual.id].push(local);
-        formNovaInteracao.reset();
-        await renderizarTimeline(chamadoAtual.id);
+        mostrarChamadosMsg("Não foi possível salvar a interação no servidor.", "error");
     }
 });
 

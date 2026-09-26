@@ -981,3 +981,5 @@ tbody tr:hover {
     background-color: #fecaca;
     color: #991b1b;
 }
+.cliente-view .table-container table th:nth-child(4),
+.cliente-view .table-container table td:nth-child(4) { display:none; }
