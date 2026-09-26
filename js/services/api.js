@@ -1,14 +1,15 @@
 const API_URL = "http://localhost:8080";
 
 async function apiRequest(endpoint, options = {}) {
-    const token = obterToken();
+    const { skipAuthRedirect = false, ...requestOptions } = options;
+    const token = typeof obterToken === "function" ? obterToken() : null;
 
-    const headers = { ...options.headers };
+    const headers = { ...requestOptions.headers };
 
     const isFormData =
-        typeof FormData !== "undefined" && options.body instanceof FormData;
+        typeof FormData !== "undefined" && requestOptions.body instanceof FormData;
 
-    if (!isFormData && options.body && !headers["Content-Type"]) {
+    if (!isFormData && requestOptions.body && !headers["Content-Type"]) {
         headers["Content-Type"] = "application/json";
     }
 
@@ -17,11 +18,11 @@ async function apiRequest(endpoint, options = {}) {
     }
 
     const response = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
+        ...requestOptions,
         headers
     });
 
-    if (response.status === 401) {
+    if (response.status === 401 && !skipAuthRedirect) {
         logout();
         return response;
     }

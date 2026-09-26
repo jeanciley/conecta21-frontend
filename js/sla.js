@@ -7,12 +7,6 @@
 // aqui só apresentação.
 // =========================================
 
-const SLA_HORAS = {
-    ALTA: 4,
-    MEDIA: 24,
-    BAIXA: 48
-};
-
 function normalizarStatusSla(status) {
     return String(status || "")
         .trim()
@@ -222,4 +216,10 @@ function cssPrioridade(valor) {
         return "critica";
     }
     return v || "baixa";
+}
+
+function cssPrioridade(valor) {
+    const v = String(valor || "").trim().toLowerCase();
+    if (v === "alta" || v === "media" || v === "baixa" || v === "critica") return v;
+    return "personalizada";
 }

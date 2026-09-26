@@ -514,3 +514,5 @@
 
 
 }
+.auth-page:has(#accountForm) .auth-container { grid-template-columns: 1fr; }
+.auth-page:has(#accountForm) .auth-form-section { min-height: 100vh; }

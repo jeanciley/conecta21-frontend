@@ -187,6 +187,15 @@
 
                 </form>
 
+                <form id="forgotForm" hidden novalidate>
+                    <div class="form-group">
+                        <label for="forgotEmail">E-mail da sua conta</label>
+                        <input type="email" id="forgotEmail" autocomplete="email" required>
+                    </div>
+                    <div id="forgotMessage" class="login-message" role="status"></div>
+                    <button type="submit" class="btn btn-primary auth-submit">Enviar link de recuperação</button>
+                </form>
+
 
                 <!-- Cadastro -->
                 <div class="auth-switch">

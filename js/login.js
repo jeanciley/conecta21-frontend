@@ -228,8 +228,9 @@ loginForm.addEventListener("submit", async function (event) {
     btnEntrar.textContent = "Entrando...";
 
     try {
-        const response = await fetch(`${API_URL}/api/auth`, {
+        const response = await apiRequest("/api/auth", {
             method: "POST",
+            skipAuthRedirect: true,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 email: emailInput.value.trim(),
@@ -293,4 +294,36 @@ esqueciSenha.addEventListener("click", function (event) {
         "A recuperação de senha será implementada posteriormente."
     );
 
+});
+
+const forgotForm = document.getElementById("forgotForm");
+const forgotEmail = document.getElementById("forgotEmail");
+const forgotMessage = document.getElementById("forgotMessage");
+
+document.addEventListener("click", function (event) {
+    if (!event.target.closest || !event.target.closest("#esqueciSenha")) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    forgotForm.hidden = !forgotForm.hidden;
+    if (!forgotForm.hidden) { forgotEmail.value = emailInput.value.trim(); forgotEmail.focus(); }
+}, true);
+
+forgotForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(forgotEmail.value.trim())) {
+        forgotMessage.textContent = "Informe um e-mail válido.";
+        forgotMessage.className = "login-message error";
+        return;
+    }
+    const submit = forgotForm.querySelector('button[type="submit"]');
+    submit.disabled = true;
+    try {
+        const response = await apiRequest("/api/auth/esqueci-senha", { method: "POST", skipAuthRedirect: true, body: JSON.stringify({ email: forgotEmail.value.trim() }) });
+        if (!response.ok) throw new Error("request_failed");
+        forgotMessage.textContent = "Se houver uma conta para esse e-mail, enviaremos um link de redefinição.";
+        forgotMessage.className = "login-message success";
+    } catch (error) {
+        forgotMessage.textContent = "Não foi possível enviar agora. Tente novamente mais tarde.";
+        forgotMessage.className = "login-message error";
+    } finally { submit.disabled = false; }
 });

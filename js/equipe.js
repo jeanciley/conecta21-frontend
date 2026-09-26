@@ -1,6 +1,3 @@
-import { estaAutenticado, logout } from './auth.js';
-import { EquipeService } from './services/equipeService.js';
-
 // =========================================
 // VERIFICAÇÃO DE AUTENTICAÇÃO
 // =========================================
@@ -25,17 +22,20 @@ const btnLogout = document.getElementById("btnLogout");
 const nomeUsuario = document.getElementById("nomeUsuario");
 const emailUsuario = document.getElementById("emailUsuario");
 const tipoUsuario = document.getElementById("tipoUsuario");
-const senhaUsuario = document.getElementById("senhaUsuario");
+document.getElementById("senhaUsuario")?.closest(".form-group")?.remove();
 
 const nomeUsuarioError = document.getElementById("nomeUsuarioError");
 const emailUsuarioError = document.getElementById("emailUsuarioError");
 const tipoUsuarioError = document.getElementById("tipoUsuarioError");
-const senhaUsuarioError = document.getElementById("senhaUsuarioError");
 
 // =========================================
 // LISTA DE USUÁRIOS (Sincronizada com o Backend)
 // =========================================
 let usuarios = [];
+
+function escapeHtmlEquipe(valor) {
+    return String(valor == null ? "" : valor).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
 
 async function inicializarEquipe() {
     try {
@@ -46,7 +46,7 @@ async function inicializarEquipe() {
             nome: u.nome,
             email: u.email,
             tipo: u.perfil ? u.perfil.toLowerCase() : 'usuario',
-            status: u.status || 'Ativo'
+            status: u.ativo === false ? 'Aguardando ativação' : 'Ativo'
         }));
         
         renderizarUsuarios();
@@ -83,7 +83,6 @@ function limparErros() {
     nomeUsuarioError.textContent = "";
     emailUsuarioError.textContent = "";
     tipoUsuarioError.textContent = "";
-    senhaUsuarioError.textContent = "";
 }
 
 // =========================================
@@ -112,12 +111,6 @@ function validarFormulario() {
         valido = false;
     }
 
-    const senhaForte = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$\%^&+=!]).{8,}$/;
-    if (!senhaForte.test(senhaUsuario.value)) {
-        senhaUsuarioError.textContent = "Mínimo de 8 caracteres, contendo 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial.";
-        valido = false;
-    }
-
     return valido;
 }
 
@@ -134,7 +127,6 @@ usuarioForm.addEventListener("submit", async function (event) {
     const payload = {
         nome: nomeUsuario.value.trim(),
         email: emailUsuario.value.trim(),
-        senha: senhaUsuario.value,
         perfil: perfilEnum
     };
 
@@ -147,7 +139,7 @@ usuarioForm.addEventListener("submit", async function (event) {
 
         await EquipeService.cadastrarMembro(payload);
 
-        alert("Usuário cadastrado com sucesso!");
+        alert("Usuário cadastrado. O link de ativação foi enviado por e-mail.");
 
         usuarioForm.reset();
         limparErros();
@@ -193,11 +185,11 @@ function renderizarUsuarios() {
         usuariosFiltrados.forEach(function (usuario) {
             const linha = document.createElement("tr");
             linha.innerHTML = `
-                <td><strong>${usuario.nome}</strong></td>
-                <td>${usuario.email}</td>
-                <td><span class="user-type ${usuario.tipo}">${usuario.tipo === "tecnico" ? "Técnico" : "Usuário"}</span></td>
-                <td><span class="user-status">${usuario.status}</span></td>
-                <td><button type="button" class="btn btn-secondary btn-visualizar" data-email="${usuario.email}">Visualizar</button></td>
+                <td><strong>${escapeHtmlEquipe(usuario.nome)}</strong></td>
+                <td>${escapeHtmlEquipe(usuario.email)}</td>
+                <td><span class="user-type ${escapeHtmlEquipe(usuario.tipo)}">${usuario.tipo === "tecnico" ? "Técnico" : usuario.tipo === "admin" ? "Administrador" : "Usuário"}</span></td>
+                <td><span class="user-status">${escapeHtmlEquipe(usuario.status)}</span></td>
+                <td><button type="button" class="btn btn-secondary btn-visualizar" data-email="${escapeHtmlEquipe(usuario.email)}">Visualizar</button></td>
             `;
             usuariosTableBody.appendChild(linha);
         });
@@ -237,7 +229,7 @@ usuariosTableBody.addEventListener("click", function (event) {
     modalUsuarioTitulo.textContent = usuario.nome;
     modalNome.textContent = usuario.nome;
     modalEmail.textContent = usuario.email;
-    modalTipo.textContent = usuario.tipo === "tecnico" ? "Técnico" : "Usuário";
+    modalTipo.textContent = usuario.tipo === "tecnico" ? "Técnico" : usuario.tipo === "admin" ? "Administrador" : "Usuário";
     modalStatus.textContent = usuario.status;
     
     modalUsuario.hidden = false;
@@ -259,6 +251,7 @@ async function inicializarPagina() {
         
         // Exibe apenas o primeiro nome para manter o layout limpo
         const primeiroNome = perfil.nome.split(' ')[0];
+        if (perfil.perfil !== "ADMIN") btnNovoUsuario.hidden = true;
         nomeUsuarioLogado.textContent = primeiroNome;
 
         await inicializarEquipe();

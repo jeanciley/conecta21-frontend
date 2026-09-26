@@ -1,6 +1,6 @@
 // =========================================
 // DASHBOARD - CONECTA21
-// Usa: GET /api/dashboard e GET /api/chamados/kanban
+// Usa: GET /api/dashboard e GET /api/chamados com filtros suportados.
 // =========================================
 
 if (!estaAutenticado()) {
@@ -22,6 +22,8 @@ const metricAtraso = document.getElementById("metricAtraso");
 const dashboardMsg = document.getElementById("dashboardMsg");
 const listaAtraso = document.getElementById("listaAtraso");
 const listaCategorias = document.getElementById("listaCategorias");
+const statusChart = document.getElementById("statusChart");
+const slaChart = document.getElementById("slaChart");
 
 function mostrarDashboardMsg(texto, tipo) {
     if (!dashboardMsg) {
@@ -70,6 +72,15 @@ async function carregarDashboard() {
         }
 
         renderizarCategorias(dados.chamadosPorCategoria || {});
+        renderizarBarras(statusChart, dados.chamadosPorStatus || {}, {
+            ABERTO: "Aberto", EM_ANDAMENTO: "Em atendimento", RESOLVIDO: "Resolvido", EM_ATRASO: "Em atraso"
+        });
+        renderizarBarras(slaChart, {
+            "Resposta cumprida": dados.slaRespostaCumprido || 0,
+            "Resposta violada": dados.slaRespostaViolado || 0,
+            "Resolução cumprida": dados.slaCumpridos || 0,
+            "Resolução violada": dados.slaViolados || 0
+        });
     } catch (erro) {
         const status = erro && erro.status ? erro.status : 0;
 
@@ -99,6 +110,27 @@ async function carregarDashboard() {
     }
 }
 
+function renderizarBarras(container, valores, rotulos) {
+    if (!container) return;
+    const entradas = Object.entries(valores);
+    if (!entradas.length) {
+        container.innerHTML = '<div class="empty-state"><p>Sem dados disponíveis.</p></div>';
+        return;
+    }
+    const maximo = Math.max(1, ...entradas.map(item => Number(item[1]) || 0));
+    container.innerHTML = entradas.map(([chave, valor]) => {
+        const numero = Number(valor) || 0;
+        const largura = numero === 0 ? 0 : Math.max(3, numero / maximo * 100);
+        const label = rotulos && rotulos[chave] ? rotulos[chave] : chave;
+        const status = { ABERTO: "aberto", EM_ANDAMENTO: "andamento", RESOLVIDO: "resolvido", EM_ATRASO: "em_atraso" }[chave];
+        const clicavel = Boolean(status) || /violada/i.test(chave);
+        const href = 'chamado.html?status=' + (status || "em_atraso");
+        const tag = clicavel ? 'a href="' + href + '"' : "div";
+        return '<' + tag + ' class="analytics-bar" title="' + escapeHtml(label + ': ' + numero) + '"><span>' + escapeHtml(label) + '</span>' +
+            '<div class="analytics-track"><div class="analytics-fill" style="width:' + largura + '%"></div></div><strong class="analytics-value">' + numero + '</strong></' + (clicavel ? "a" : "div") + ">";
+    }).join("");
+}
+
 function renderizarCategorias(porCategoria) {
     if (!listaCategorias) {
         return;
@@ -113,19 +145,14 @@ function renderizarCategorias(porCategoria) {
         return;
     }
 
-    const itens = entradas
-        .map(function (par) {
-            return (
-                '<li class="categoria-item"><span>' +
-                escapeHtml(par[0]) +
-                "</span><strong>" +
-                escapeHtml(par[1]) +
-                "</strong></li>"
-            );
-        })
-        .join("");
-
-    listaCategorias.innerHTML = '<ul class="categoria-list">' + itens + "</ul>";
+    const maximo = Math.max(1, ...entradas.map(par => Number(par[1]) || 0));
+    const itens = entradas.map(function (par) {
+        const numero = Number(par[1]) || 0;
+        const largura = numero === 0 ? 0 : Math.max(3, numero / maximo * 100);
+        return '<div class="analytics-bar" title="' + escapeHtml(par[0] + ': ' + numero) + '"><span>' + escapeHtml(par[0]) + '</span>' +
+            '<div class="analytics-track"><div class="analytics-fill" style="width:' + largura + '%"></div></div><strong class="analytics-value">' + numero + '</strong></div>';
+    }).join("");
+    listaCategorias.innerHTML = '<div class="analytics-bars">' + itens + '</div>';
 }
 
 async function carregarAtraso() {
@@ -134,8 +161,8 @@ async function carregarAtraso() {
     }
 
     try {
-        const kanban = await apiGetJson("/api/chamados/kanban?limite=5");
-        const emAtraso = (kanban && kanban.emAtraso) || [];
+        const pagina = await apiGetJson("/api/chamados?status=EM_ATRASO&page=0&size=5&sort=dataAbertura,DESC");
+        const emAtraso = (pagina && pagina.content) || [];
 
         if (emAtraso.length === 0) {
             listaAtraso.innerHTML =
