@@ -46,9 +46,10 @@
                 Chamados
             </a>
 
-            <a href="sla.html" class="menu-item">
-                SLA
-            </a>
+            <a href="sla.html" class="menu-item">SLA e categorias</a>
+            <a href="faq.html" class="menu-item">Base de conhecimento</a>
+            <a href="internos.html" class="menu-item" data-permission="CHAMADOS_INTERNOS">Chamados internos</a>
+            <a href="perfis.html" class="menu-item" data-admin-only>Perfis</a>
 
         </nav>
 
@@ -166,7 +167,7 @@
                 <div id="statusChart" class="analytics-bars" role="group" aria-label="Distribuição dos chamados por status"></div>
             </article>
             <article class="dashboard-panel analytics-panel">
-                <div class="panel-header"><div><h2>Desempenho dos SLAs</h2><p>Chamados cumpridos e violados.</p></div></div>
+                <div class="panel-header"><div><h2>SLA de resolução</h2><p>Chamados encerrados no prazo ou atrasados.</p></div></div>
                 <div id="slaChart" class="analytics-bars" role="group" aria-label="SLAs cumpridos e violados"></div>
             </article>
         </section>
@@ -259,7 +260,7 @@
                     <h2>Relatórios</h2>
 
                     <p>
-                        Exporte os chamados em CSV (formato suportado pela API).
+                    Baixe os dados dos chamados em CSV ou PDF.
                     </p>
 
                 </div>
@@ -267,11 +268,12 @@
             </div>
 
             <p class="relatorio-desc">
-                O arquivo contém ID, título, status, prioridade, data de abertura
-                e data limite do SLA de todos os chamados da sua empresa.
+                O arquivo contém os chamados disponíveis ao seu perfil, incluindo título,
+                status, prioridade, data de abertura e prazo de resolução.
             </p>
 
             <div class="relatorio-actions">
+                <button type="button" id="btnBaixarPdf" class="btn btn-secondary">Baixar em PDF</button>
                 <button type="button" id="btnBaixarCsv" class="btn btn-primary">
                     Baixar relatório CSV
                 </button>
@@ -291,6 +293,7 @@
 
     <script src="js/auth.js"></script>
     <script src="js/services/api.js"></script>
+    <script src="js/navigation.js"></script>
     <script src="js/sla.js"></script>
     <script src="js/relatorio.js"></script>
     <script src="js/dashboard.js"></script>
