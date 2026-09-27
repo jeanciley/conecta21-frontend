@@ -337,9 +337,10 @@ btnNovoChamado.addEventListener("click", function () {
 
 async function carregarOpcoesChamado() {
     try {
-        const [perfil, usuarios, categorias] = await Promise.all([
-            apiGetJson("/api/usuarios/me"),
-            apiGetJson("/api/usuarios"),
+        const perfil = await apiGetJson("/api/usuarios/me");
+        const permissoes = perfil.permissoes || [];
+        const [usuarios, categorias] = await Promise.all([
+            permissoes.includes("GERENCIAR_CHAMADOS") ? apiGetJson("/api/usuarios") : Promise.resolve([]),
             apiGetJson("/api/categorias")
         ]);
         clienteChamado.value = perfil.nome;
@@ -348,9 +349,9 @@ async function carregarOpcoesChamado() {
             filtroPrioridade.closest(".filter-group").hidden = true;
             modalChamadoPrioridade.closest(".detalhe-item").hidden = true;
         }
-        responsavelChamado.closest(".form-group").hidden = perfil.perfil !== "ADMIN";
+        responsavelChamado.closest(".form-group").hidden = !permissoes.includes("GERENCIAR_CHAMADOS");
         responsavelChamado.innerHTML = '<option value="">Sem responsável</option>' +
-            usuarios.filter(u => u.perfil === "TECNICO").map(u =>
+            usuarios.filter(u => u.perfil === "TECNICO" || (u.permissoes || []).includes("CHAMADOS_INTERNOS") || (u.permissoes || []).includes("GERENCIAR_CHAMADOS")).map(u =>
                 '<option value="' + escapeHtmlChamado(u.id) + '">' + escapeHtmlChamado(u.nome) + '</option>'
             ).join("");
         if (categoriaChamado) {

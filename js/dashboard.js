@@ -76,10 +76,8 @@ async function carregarDashboard() {
             ABERTO: "Aberto", EM_ANDAMENTO: "Em atendimento", RESOLVIDO: "Resolvido", EM_ATRASO: "Em atraso"
         });
         renderizarBarras(slaChart, {
-            "Resposta cumprida": dados.slaRespostaCumprido || 0,
-            "Resposta violada": dados.slaRespostaViolado || 0,
-            "Resolução cumprida": dados.slaCumpridos || 0,
-            "Resolução violada": dados.slaViolados || 0
+            "No prazo": dados.slaCumpridos || 0,
+            "Atrasados": dados.slaViolados || 0
         });
     } catch (erro) {
         const status = erro && erro.status ? erro.status : 0;
@@ -123,8 +121,8 @@ function renderizarBarras(container, valores, rotulos) {
         const largura = numero === 0 ? 0 : Math.max(3, numero / maximo * 100);
         const label = rotulos && rotulos[chave] ? rotulos[chave] : chave;
         const status = { ABERTO: "aberto", EM_ANDAMENTO: "andamento", RESOLVIDO: "resolvido", EM_ATRASO: "em_atraso" }[chave];
-        const clicavel = Boolean(status) || /violada/i.test(chave);
-        const href = 'chamado.html?status=' + (status || "em_atraso");
+        const clicavel = Boolean(status);
+        const href = 'chamado.html?status=' + (status || "");
         const tag = clicavel ? 'a href="' + href + '"' : "div";
         return '<' + tag + ' class="analytics-bar" title="' + escapeHtml(label + ': ' + numero) + '"><span>' + escapeHtml(label) + '</span>' +
             '<div class="analytics-track"><div class="analytics-fill" style="width:' + largura + '%"></div></div><strong class="analytics-value">' + numero + '</strong></' + (clicavel ? "a" : "div") + ">";
