@@ -50,6 +50,9 @@
             <a href="sla.html" class="menu-item">
                 SLA
             </a>
+            <a href="faq.html" class="menu-item">Base de conhecimento</a>
+            <a href="internos.html" class="menu-item" data-permission="CHAMADOS_INTERNOS">Chamados internos</a>
+            <a href="perfis.html" class="menu-item" data-admin-only>Perfis</a>
 
         </nav>
 
@@ -192,10 +195,6 @@
                         Alta
                     </option>
 
-                    <option value="critica">
-                        Crítica
-                    </option>
-
                 </select>
 
             </div>
@@ -263,7 +262,8 @@ hidden
             <input
                 type="text"
                 id="clienteChamado"
-                placeholder="Digite o nome do cliente"
+                placeholder="Solicitante autenticado"
+                readonly
             >
 
             <small
@@ -298,10 +298,6 @@ hidden
                     Alta
                 </option>
 
-                <option value="critica">
-                    Crítica
-                </option>
-
             </select>
 
             <small
@@ -318,11 +314,7 @@ hidden
                 Responsável
             </label>
 
-            <input
-                type="text"
-                id="responsavelChamado"
-                placeholder="Digite o responsável"
-            >
+            <select id="responsavelChamado"><option value="">Sem responável</option></select>
 
             <small
                 id="responsavelChamadoError"
@@ -334,6 +326,12 @@ hidden
 
     </div>
 
+    <div class="form-group">
+        <label for="categoriaChamado">Categoria</label>
+        <select id="categoriaChamado">
+            <option value="">Sem categoria</option>
+        </select>
+    </div>
 
     <div class="form-group form-group-full">
 
@@ -782,7 +780,7 @@ aria-labelledby="modalChamadoTitulo"
             <input
                 type="file"
                 id="imagensChamado"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/gif,image/webp"
                 multiple
             >
 
@@ -826,6 +824,7 @@ aria-labelledby="modalChamadoTitulo"
 
     <script src="js/auth.js"></script>
     <script src="js/services/api.js"></script>
+    <script src="js/navigation.js"></script>
     <script src="js/sla.js"></script>
     <script src="js/chamado.js"></script>
 

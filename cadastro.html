@@ -83,6 +83,12 @@
 
                 <form id="cadastroForm" novalidate>
 
+                    <div class="form-group">
+                        <label for="nomeFantasia">Nome da empresa</label>
+                        <input type="text" id="nomeFantasia" name="nomeFantasia" placeholder="Digite o nome da empresa" required>
+                        <small class="form-error" id="nomeFantasiaError"></small>
+                    </div>
+
                     <!-- NOME -->
                     <div class="form-group">
 
@@ -142,7 +148,7 @@
                         >
 
                         <small class="form-help">
-                            A senha deve possuir pelo menos 8 caracteres.
+                            Use ao menos 8 caracteres, com maiúscula, minúscula, número e caractere especial.
                         </small>
 
                         <small class="form-error" id="senhaError"></small>
@@ -230,6 +236,8 @@
     </main>
 
 
+    <script src="js/auth.js"></script>
+    <script src="js/services/api.js"></script>
     <script src="js/cadastro.js"></script>
 
 </body>

@@ -3,6 +3,8 @@
 // ========================================
 
 const cadastroForm = document.getElementById("cadastroForm");
+const nomeFantasia = document.getElementById("nomeFantasia");
+const nomeFantasiaError = document.getElementById("nomeFantasiaError");
 
 const nome = document.getElementById("nome");
 const email = document.getElementById("email");
@@ -158,6 +160,11 @@ function validarSenha() {
         return false;
     }
 
+    if (!/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$/.test(valor)) {
+        mostrarErro(senha, senhaError, "Use maiúscula, minúscula, número e caractere especial.");
+        return false;
+    }
+
     mostrarSucesso(senha, senhaError);
 
     return true;
@@ -256,9 +263,14 @@ senha.addEventListener(
 
 cadastroForm.addEventListener(
     "submit",
-    function (event) {
+    async function (event) {
 
         event.preventDefault();
+
+        if (!nomeFantasia.value.trim()) {
+            mostrarErro(nomeFantasia, nomeFantasiaError, "Informe o nome da empresa.");
+            return;
+        }
 
         const nomeValido = validarNome();
         const emailValido = validarEmail();
@@ -280,29 +292,33 @@ cadastroForm.addEventListener(
         }
 
 
-        // ========================================
-        // TEMPORÁRIO
-        // ========================================
-        // Nesta etapa ainda não enviaremos
-        // os dados para o Backend.
-        //
-        // Isso será implementado quando
-        // criarmos o services/api.js.
-
-
-        alert(
-            "Cadastro validado com sucesso!"
-        );
-
-        cadastroForm.reset();
-
-        limparEstado(nome, nomeError);
-        limparEstado(email, emailError);
-        limparEstado(senha, senhaError);
-        limparEstado(
-            confirmarSenha,
-            confirmarSenhaError
-        );
+        const botao = cadastroForm.querySelector('button[type="submit"]');
+        const textoOriginal = botao.textContent;
+        botao.disabled = true;
+        botao.textContent = "Criando conta...";
+        try {
+            const response = await apiRequest("/api/empresas", {
+                method: "POST",
+                body: JSON.stringify({
+                    nomeFantasia: nomeFantasia.value.trim(),
+                    nomeUsuario: nome.value.trim(),
+                    emailUsuario: email.value.trim(),
+                    senhaUsuario: senha.value
+                })
+            });
+            if (!response.ok) {
+                let mensagem = "Não foi possível criar a conta. Confira os dados e tente novamente.";
+                try { mensagem = (await response.text()) || mensagem; } catch (e) { }
+                mostrarErro(nomeFantasia, nomeFantasiaError, mensagem);
+                return;
+            }
+            window.location.href = "login.html";
+        } catch (erro) {
+            mostrarErro(nomeFantasia, nomeFantasiaError, "Não foi possível conectar ao servidor.");
+        } finally {
+            botao.disabled = false;
+            botao.textContent = textoOriginal;
+        }
 
     }
 );

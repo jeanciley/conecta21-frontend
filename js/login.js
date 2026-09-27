@@ -144,24 +144,26 @@ toggleSenha.addEventListener("click", function () {
     if (senhaInput.type === "password") {
 
         senhaInput.type = "text";
-
-        toggleSenha.textContent = "Ocultar";
+        toggleSenha.innerHTML = '<svg class="password-eye-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 3l18 18"></path><path d="M10.6 10.6a2 2 0 002.8 2.8"></path><path d="M9.9 5.2A10.8 10.8 0 0112 5c6.4 0 10 7 10 7a16 16 0 01-3.1 3.8M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7a10.8 10.8 0 004-.8"></path></svg>';
 
         toggleSenha.setAttribute(
             "aria-label",
             "Ocultar senha"
         );
+        toggleSenha.setAttribute("aria-pressed", "true");
+        toggleSenha.title = "Ocultar senha";
 
     } else {
 
         senhaInput.type = "password";
-
-        toggleSenha.textContent = "Mostrar";
+        toggleSenha.innerHTML = '<svg class="password-eye-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
 
         toggleSenha.setAttribute(
             "aria-label",
             "Mostrar senha"
         );
+        toggleSenha.setAttribute("aria-pressed", "false");
+        toggleSenha.title = "Mostrar senha";
     }
 });
 
@@ -228,8 +230,9 @@ loginForm.addEventListener("submit", async function (event) {
     btnEntrar.textContent = "Entrando...";
 
     try {
-        const response = await fetch(`${API_URL}/api/auth`, {
+        const response = await apiRequest("/api/auth", {
             method: "POST",
+            skipAuthRedirect: true,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 email: emailInput.value.trim(),
@@ -293,4 +296,36 @@ esqueciSenha.addEventListener("click", function (event) {
         "A recuperação de senha será implementada posteriormente."
     );
 
+});
+
+const forgotForm = document.getElementById("forgotForm");
+const forgotEmail = document.getElementById("forgotEmail");
+const forgotMessage = document.getElementById("forgotMessage");
+
+document.addEventListener("click", function (event) {
+    if (!event.target.closest || !event.target.closest("#esqueciSenha")) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    forgotForm.hidden = !forgotForm.hidden;
+    if (!forgotForm.hidden) { forgotEmail.value = emailInput.value.trim(); forgotEmail.focus(); }
+}, true);
+
+forgotForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(forgotEmail.value.trim())) {
+        forgotMessage.textContent = "Informe um e-mail válido.";
+        forgotMessage.className = "login-message error";
+        return;
+    }
+    const submit = forgotForm.querySelector('button[type="submit"]');
+    submit.disabled = true;
+    try {
+        const response = await apiRequest("/api/auth/esqueci-senha", { method: "POST", skipAuthRedirect: true, body: JSON.stringify({ email: forgotEmail.value.trim() }) });
+        if (!response.ok) throw new Error("request_failed");
+        forgotMessage.textContent = "Se houver uma conta para esse e-mail, enviaremos um link de redefinição.";
+        forgotMessage.className = "login-message success";
+    } catch (error) {
+        forgotMessage.textContent = "Não foi possível enviar agora. Tente novamente mais tarde.";
+        forgotMessage.className = "login-message error";
+    } finally { submit.disabled = false; }
 });

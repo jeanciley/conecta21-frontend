@@ -229,3 +229,13 @@
         width: 100%;
     }
 }
+.sla-admin-grid { display:grid; grid-template-columns:1fr; gap:24px; }
+.sla-admin-card { padding:24px; background:#fff; border:1px solid #e2e8f0; border-radius:14px; box-shadow:0 4px 18px rgba(15,23,42,.04); }
+.sla-editor-form { display:flex; flex-wrap:wrap; align-items:end; gap:16px; margin:0 0 24px; }
+.sla-editor-form label { display:grid; gap:7px; color:#334155; font-size:14px; font-weight:600; }
+.sla-editor-form input:not([type=checkbox]), .sla-editor-form select { min-width:180px; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; color:#0f172a; background:#fff; font:inherit; }
+.sla-editor-form input:focus, .sla-editor-form select:focus { outline:3px solid #dbeafe; border-color:#2563eb; }
+.sla-editor-form .sla-check { display:flex; align-items:center; gap:8px; min-height:40px; }
+.sla-editor-form button { min-height:40px; }
+.sla-edit { padding:7px 12px; }
+@media(max-width:640px){.sla-admin-card{padding:18px}.sla-editor-form{align-items:stretch;flex-direction:column}.sla-editor-form input:not([type=checkbox]),.sla-editor-form select{width:100%;box-sizing:border-box}}

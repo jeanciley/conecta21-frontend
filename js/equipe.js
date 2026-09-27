@@ -1,6 +1,3 @@
-import { estaAutenticado, logout } from './auth.js';
-import { EquipeService } from './services/equipeService.js';
-
 // =========================================
 // VERIFICAÇÃO DE AUTENTICAÇÃO
 // =========================================
@@ -25,17 +22,20 @@ const btnLogout = document.getElementById("btnLogout");
 const nomeUsuario = document.getElementById("nomeUsuario");
 const emailUsuario = document.getElementById("emailUsuario");
 const tipoUsuario = document.getElementById("tipoUsuario");
-const senhaUsuario = document.getElementById("senhaUsuario");
+document.getElementById("senhaUsuario")?.closest(".form-group")?.remove();
 
 const nomeUsuarioError = document.getElementById("nomeUsuarioError");
 const emailUsuarioError = document.getElementById("emailUsuarioError");
 const tipoUsuarioError = document.getElementById("tipoUsuarioError");
-const senhaUsuarioError = document.getElementById("senhaUsuarioError");
 
 // =========================================
 // LISTA DE USUÁRIOS (Sincronizada com o Backend)
 // =========================================
 let usuarios = [];
+
+function escapeHtmlEquipe(valor) {
+    return String(valor == null ? "" : valor).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
 
 async function inicializarEquipe() {
     try {
@@ -45,8 +45,10 @@ async function inicializarEquipe() {
             id: u.id,
             nome: u.nome,
             email: u.email,
-            tipo: u.perfil ? u.perfil.toLowerCase() : 'usuario',
-            status: u.status || 'Ativo'
+            tipo: u.perfilCustomizadoId ? `custom:${u.perfilCustomizadoId}` : (u.perfil ? u.perfil.toLowerCase() : 'usuario'),
+            perfilNome: u.perfilNome || u.perfil || 'Cliente',
+            excluido: Boolean(u.excluido),
+            status: u.excluido ? 'Excluído' : u.ativo === false ? 'Aguardando ativação' : 'Ativo'
         }));
         
         renderizarUsuarios();
@@ -83,7 +85,6 @@ function limparErros() {
     nomeUsuarioError.textContent = "";
     emailUsuarioError.textContent = "";
     tipoUsuarioError.textContent = "";
-    senhaUsuarioError.textContent = "";
 }
 
 // =========================================
@@ -112,12 +113,6 @@ function validarFormulario() {
         valido = false;
     }
 
-    const senhaForte = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$\%^&+=!]).{8,}$/;
-    if (!senhaForte.test(senhaUsuario.value)) {
-        senhaUsuarioError.textContent = "Mínimo de 8 caracteres, contendo 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial.";
-        valido = false;
-    }
-
     return valido;
 }
 
@@ -129,13 +124,14 @@ usuarioForm.addEventListener("submit", async function (event) {
 
     if (!validarFormulario()) return;
 
-    const perfilEnum = tipoUsuario.value.toUpperCase();
+    const valorPerfil = tipoUsuario.value;
+    const perfilCustomizadoId = valorPerfil.startsWith("CUSTOM:") ? Number(valorPerfil.slice(7)) : null;
 
     const payload = {
         nome: nomeUsuario.value.trim(),
         email: emailUsuario.value.trim(),
-        senha: senhaUsuario.value,
-        perfil: perfilEnum
+        perfil: perfilCustomizadoId ? "USUARIO" : valorPerfil,
+        perfilCustomizadoId
     };
 
     const btnSubmit = usuarioForm.querySelector('button[type="submit"]');
@@ -147,7 +143,7 @@ usuarioForm.addEventListener("submit", async function (event) {
 
         await EquipeService.cadastrarMembro(payload);
 
-        alert("Usuário cadastrado com sucesso!");
+        alert("Usuário cadastrado. O link de ativação foi enviado por e-mail.");
 
         usuarioForm.reset();
         limparErros();
@@ -193,11 +189,11 @@ function renderizarUsuarios() {
         usuariosFiltrados.forEach(function (usuario) {
             const linha = document.createElement("tr");
             linha.innerHTML = `
-                <td><strong>${usuario.nome}</strong></td>
-                <td>${usuario.email}</td>
-                <td><span class="user-type ${usuario.tipo}">${usuario.tipo === "tecnico" ? "Técnico" : "Usuário"}</span></td>
-                <td><span class="user-status">${usuario.status}</span></td>
-                <td><button type="button" class="btn btn-secondary btn-visualizar" data-email="${usuario.email}">Visualizar</button></td>
+                <td><strong>${escapeHtmlEquipe(usuario.nome)}</strong></td>
+                <td>${escapeHtmlEquipe(usuario.email)}</td>
+                <td><span class="user-type ${escapeHtmlEquipe(usuario.tipo)}">${escapeHtmlEquipe(usuario.perfilNome)}</span></td>
+                <td><span class="user-status">${escapeHtmlEquipe(usuario.status)}</span></td>
+                <td><div class="button-group"><button type="button" class="btn btn-secondary btn-visualizar" data-email="${escapeHtmlEquipe(usuario.email)}">Visualizar</button>${usuario.excluido ? "" : `<button type="button" class="btn btn-secondary btn-excluir-usuario" data-id="${usuario.id}">Excluir</button>`}</div></td>
             `;
             usuariosTableBody.appendChild(linha);
         });
@@ -228,6 +224,17 @@ const btnFecharModal = document.getElementById("btnFecharModal");
 const btnFecharModalFooter = document.getElementById("btnFecharModalFooter");
 
 usuariosTableBody.addEventListener("click", function (event) {
+    const btnExcluir = event.target.closest(".btn-excluir-usuario");
+    if (btnExcluir) {
+        const usuario = usuarios.find(u => u.id === Number(btnExcluir.dataset.id));
+        if (usuario && confirm(`Excluir o acesso de ${usuario.nome}?`)) {
+            apiRequest(`/api/usuarios/${usuario.id}`, { method: "DELETE" }).then(async response => {
+                if (!response.ok) { alert(getMensagemErroAmigavel(response.status)); return; }
+                await inicializarEquipe();
+            }).catch(() => alert("Não foi possível excluir o usuário."));
+        }
+        return;
+    }
     if (!event.target.classList.contains("btn-visualizar")) return;
 
     const email = event.target.dataset.email;
@@ -237,7 +244,7 @@ usuariosTableBody.addEventListener("click", function (event) {
     modalUsuarioTitulo.textContent = usuario.nome;
     modalNome.textContent = usuario.nome;
     modalEmail.textContent = usuario.email;
-    modalTipo.textContent = usuario.tipo === "tecnico" ? "Técnico" : "Usuário";
+    modalTipo.textContent = usuario.tipo === "tecnico" ? "Técnico" : usuario.tipo === "admin" ? "Administrador" : "Usuário";
     modalStatus.textContent = usuario.status;
     
     modalUsuario.hidden = false;
@@ -259,7 +266,15 @@ async function inicializarPagina() {
         
         // Exibe apenas o primeiro nome para manter o layout limpo
         const primeiroNome = perfil.nome.split(' ')[0];
+        if (!(perfil.permissoes || []).includes("GERENCIAR_USUARIOS")) btnNovoUsuario.hidden = true;
+        document.querySelectorAll("[data-admin-only]").forEach(x => x.hidden = perfil.perfil !== "ADMIN");
+        document.querySelectorAll("[data-permission]").forEach(x => x.hidden = !(perfil.permissoes || []).includes(x.dataset.permission));
         nomeUsuarioLogado.textContent = primeiroNome;
+
+        if ((perfil.permissoes || []).includes("GERENCIAR_USUARIOS")) {
+            const perfis = await apiGetJson("/api/perfis");
+            perfis.filter(p => p.ativo).forEach(p => tipoUsuario.add(new Option(p.nome, `CUSTOM:${p.id}`)));
+        }
 
         await inicializarEquipe();
     } catch (error) {

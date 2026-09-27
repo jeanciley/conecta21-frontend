@@ -14,7 +14,6 @@
 
 .auth-container {
     min-height: 100vh;
-
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
@@ -27,9 +26,7 @@
 .auth-info {
     display: flex;
     flex-direction: column;
-
     padding: 50px;
-
     background-color: #0f172a;
     color: white;
 }
@@ -40,7 +37,6 @@
 
 .auth-info-content {
     max-width: 540px;
-
     margin: auto;
 }
 
@@ -50,7 +46,6 @@
 
 .auth-info h1 {
     margin-bottom: 24px;
-
     font-size: clamp(42px, 4vw, 58px);
     line-height: 1.05;
     letter-spacing: -2px;
@@ -58,11 +53,8 @@
 
 .auth-info-content > p {
     max-width: 500px;
-
     margin-bottom: 35px;
-
     color: #cbd5e1;
-
     font-size: 17px;
 }
 
@@ -81,25 +73,19 @@
     display: flex;
     align-items: center;
     gap: 12px;
-
     color: #e2e8f0;
-
     font-size: 15px;
 }
 
 .benefit-icon {
     width: 25px;
     height: 25px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
-
     background-color: #2563eb;
     color: white;
-
     font-size: 13px;
     font-weight: bold;
 }
@@ -113,9 +99,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
     padding: 50px 30px;
-
     background-color: white;
 }
 
@@ -135,9 +119,7 @@
 
 .auth-form-header h2 {
     margin-bottom: 8px;
-
     color: #0f172a;
-
     font-size: 32px;
     line-height: 1.2;
 }
@@ -157,11 +139,8 @@
 
 .form-group label {
     display: block;
-
     margin-bottom: 7px;
-
     color: #334155;
-
     font-size: 14px;
     font-weight: 600;
 }
@@ -169,24 +148,15 @@
 .form-group input {
     width: 100%;
     height: 48px;
-
     padding: 0 14px;
-
     border: 1px solid #cbd5e1;
     border-radius: 8px;
-
     background-color: white;
-
     color: #0f172a;
-
     font-family: inherit;
     font-size: 15px;
-
     outline: none;
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-group input::placeholder {
@@ -195,9 +165,7 @@
 
 .form-group input:focus {
     border-color: #2563eb;
-
-    box-shadow:
-        0 0 0 3px rgba(37, 99, 235, 0.10);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
 }
 
 
@@ -207,121 +175,57 @@
 
 .form-help {
     display: block;
-
     margin-top: 6px;
-
     color: #64748b;
-
     font-size: 12px;
 }
 
 .form-error {
     display: block;
-
     min-height: 18px;
-
     margin-top: 5px;
-
     color: #dc2626;
-
     font-size: 12px;
 }
 
-
 /* INPUT COM ERRO */
-
 .input-error {
     border-color: #dc2626 !important;
-
     background-color: #fef2f2 !important;
 }
 
-
 /* INPUT VÁLIDO */
-
 .input-success {
     border-color: #16a34a !important;
 }
 
 
 /* ========================================
-   TERMOS
-======================================== */
-
-.terms-group {
-    margin: 5px 0 20px;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-
-    color: #475569;
-
-    font-size: 13px;
-
-    cursor: pointer;
-}
-
-.checkbox-label input {
-    width: 17px;
-    height: 17px;
-
-    margin-top: 1px;
-
-    accent-color: #2563eb;
-
-    cursor: pointer;
-}
-
-
-/* ========================================
-   BOTÃO DE CADASTRO
+   BOTÃO PRINCIPAL
 ======================================== */
 
 .auth-submit {
     width: 100%;
     height: 50px;
-
     border: none;
-
     font-family: inherit;
     font-size: 15px;
+    background-color: #2563eb;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.auth-submit:hover {
+    background-color: #1d4ed8;
 }
 
 .auth-submit:disabled {
     background-color: #94a3b8;
-
     cursor: not-allowed;
-
     transform: none;
-}
-
-
-/* ========================================
-   RODAPÉ DO FORMULÁRIO
-======================================== */
-
-.auth-footer {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-
-    margin-top: 24px;
-
-    color: #64748b;
-
-    font-size: 14px;
-}
-
-.auth-footer a {
-    color: #2563eb;
-    font-weight: 600;
-}
-
-.auth-footer a:hover {
-    color: #1d4ed8;
 }
 
 
@@ -329,188 +233,171 @@
    VOLTAR
 ======================================== */
 
-.back-link {
-    display: block;
-
-    margin-top: 25px;
-
-    text-align: center;
-
+.auth-back {
+    display: inline-block;
+    margin-bottom: 25px;
     color: #64748b;
-
-    font-size: 13px;
+    font-size: 14px;
+    text-decoration: none;
 }
 
-.back-link:hover {
+.auth-back:hover {
     color: #2563eb;
 }
 
 
-/* ========================================
-   RESPONSIVIDADE
-======================================== */
-
-@media (max-width: 900px) {
-
-    .auth-container {
-        grid-template-columns: 1fr;
-    }
-
-    .auth-info {
-        display: none;
-    }
-
-    .auth-form-section {
-        min-height: 100vh;
-    }
-
-}
-
-
-@media (max-width: 500px) {
-
-    .auth-form-section {
-        padding: 35px 18px;
-    }
-
-    .auth-form-header h2 {
-        font-size: 28px;
-    }
-
-    /* =========================================
-   LOGIN
+/* =========================================
+   ESTILOS ESPECÍFICOS: LOGIN
 ========================================= */
 
+/* 1. Ícone do olho DENTRO do campo de senha */
 .password-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
     width: 100%;
 }
 
 .password-wrapper input {
-    padding-right: 80px;
+    width: 100%;
+    padding-right: 45px; 
 }
 
 .toggle-password {
     position: absolute;
     right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-
-    border: none;
     background: transparent;
-
-    color: var(--primary);
-
-    font-size: 0.85rem;
-    font-weight: 600;
-
+    border: none;
     cursor: pointer;
-}
-
-.toggle-password:hover {
-    text-decoration: underline;
-}
-
-.login-options {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    padding: 0;
+    height: 100%;
+}
 
-    gap: 15px;
+.password-eye-icon {
+    width: 22px;
+    height: 22px;
+    stroke: #6b7280;
+    stroke-width: 2;
+    fill: none;
+    transition: stroke 0.2s;
+}
 
-    margin-top: 8px;
+.toggle-password:hover .password-eye-icon {
+    stroke: #2563eb;
+}
+
+/* 2. Empilhar o "Lembrar de mim" e "Esqueci a senha" */
+.login-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    margin-top: 10px;
     margin-bottom: 20px;
-
-    font-size: 0.9rem;
 }
 
 .checkbox-container {
     display: flex;
     align-items: center;
     gap: 8px;
-
     cursor: pointer;
+    color: #475569;
+    font-size: 14px;
 }
 
 .checkbox-container input {
-    width: auto;
+    width: 17px;
+    height: 17px;
+    margin: 0;
     cursor: pointer;
+    accent-color: #2563eb;
 }
 
-.login-options a {
-    color: var(--primary);
-    font-weight: 600;
+/* 3 e 4. Links Principais (Esqueci a senha e Criar conta) */
+.auth-link-primary {
+    color: #2563eb !important;
+    font-weight: 600 !important;
     text-decoration: none;
+    font-size: 14px;
 }
 
-.login-options a:hover {
+.auth-link-primary:hover {
+    color: #1d4ed8 !important;
     text-decoration: underline;
 }
 
+.auth-link-primary:focus-visible { 
+    border-radius: 3px; 
+    outline: 2px solid #2563eb; 
+    outline-offset: 3px; 
+}
+
+
+/* Área do Criar Conta */
+.auth-switch {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.auth-switch p { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    gap: 6px; 
+    color: #64748b; /* Cinza neutro */
+    font-size: 14px;
+}
+
+/* Mensagens de Sucesso e Erro */
 .login-message {
     display: none;
-
     padding: 12px 14px;
-
     margin-bottom: 16px;
-
     border-radius: 8px;
-
-    font-size: 0.9rem;
+    font-size: 14px;
 }
 
 .login-message.error {
     display: block;
-
     background-color: #fee2e2;
     color: #b91c1c;
 }
 
 .login-message.success {
     display: block;
-
     background-color: #dcfce7;
     color: #15803d;
 }
 
-.auth-submit {
-    width: 100%;
-}
 
-.auth-switch {
-    text-align: center;
+/* ========================================
+   RESPONSIVIDADE (CORRIGIDA)
+======================================== */
 
-    margin-top: 24px;
-
-    font-size: 0.9rem;
-
-    color: var(--text-light);
-}
-
-.auth-switch a {
-    color: var(--primary);
-
-    font-weight: 600;
-
-    text-decoration: none;
-}
-
-.auth-switch a:hover {
-    text-decoration: underline;
-}
-
-
-/* =========================================
-   RESPONSIVIDADE LOGIN
-========================================= */
-
-@media (max-width: 600px) {
-
-    .login-options {
-        flex-direction: column;
-        align-items: flex-start;
+@media (max-width: 900px) {
+    .auth-container {
+        grid-template-columns: 1fr;
+    }
+    .auth-info {
+        display: none;
+    }
+    .auth-form-section {
+        min-height: 100vh;
     }
 }
 
-
+@media (max-width: 500px) {
+    .auth-form-section {
+        padding: 35px 18px;
+    }
+    .auth-form-header h2 {
+        font-size: 28px;
+    }
 }
+
+/* Regras extras de layout para a página baseada na presença do form */
+.auth-page:has(#accountForm) .auth-container { grid-template-columns: 1fr; }
+.auth-page:has(#accountForm) .auth-form-section { min-height: 100vh; }
