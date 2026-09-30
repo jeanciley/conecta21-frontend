@@ -1,1 +1,437 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chamados internos | Conecta21</title><link rel="stylesheet" href="assets/css/styles.css"><link rel="stylesheet" href="assets/css/dashboard.css"><link rel="stylesheet" href="assets/css/faq.css"></head><body class="dashboard-page"><aside class="sidebar"><div class="sidebar-logo"><span>Conecta</span><strong>21</strong></div><nav class="sidebar-menu"><a href="dashboard.html" class="menu-item">Dashboard</a><a href="equipe.html" class="menu-item">Equipe</a><a href="chamado.html" class="menu-item">Chamados</a><a href="sla.html" class="menu-item">SLA e categorias</a><a href="faq.html" class="menu-item">Base de conhecimento</a><a href="internos.html" class="menu-item active" data-permission="CHAMADOS_INTERNOS">Chamados internos</a><a href="perfis.html" class="menu-item" data-admin-only>Perfis</a></nav><div class="sidebar-footer"><button id="btnLogout" class="logout-button">Sair</button></div></aside><main class="dashboard-main"><header class="dashboard-header"><div><h1>Chamados internos</h1><p>Solicitações de suporte entre integrantes da empresa.</p></div><button id="novoInternoBtn" class="btn btn-primary">Novo chamado interno</button></header><div id="internosMsg" class="faq-message" role="status" hidden></div><section id="internoEditor" class="dashboard-panel" hidden><div class="panel-header"><div><h2>Abrir chamado interno</h2><p>O sistema atribuirá a prioridade definida na categoria.</p></div></div><form id="internoForm" class="faq-form"><label>Título<input id="internoTitulo" maxlength="150" required></label><label>Categoria<select id="internoCategoria" required></select></label><label class="faq-content">Descrição<textarea id="internoDescricao" rows="5" required></textarea></label><div class="button-group"><button id="cancelarInterno" type="button" class="btn btn-secondary">Cancelar</button><button class="btn btn-primary">Enviar chamado</button></div></form></section><section class="faq-list-section"><div class="panel-header"><div><h2>Solicitações da equipe</h2><p>Chamados internos da sua empresa.</p></div></div><div class="table-container"><table><thead><tr><th>#</th><th>Título</th><th>Categoria</th><th>Prioridade</th><th>Status</th><th>Abertura</th></tr></thead><tbody id="internosTabela"></tbody></table></div></section></main><script src="js/auth.js"></script><script src="js/services/api.js"></script><script src="js/internos.js"></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Chamados internos | Conecta21</title>
+
+    <link
+        rel="stylesheet"
+        href="assets/css/styles.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/dashboard.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/faq.css"
+    >
+
+</head>
+
+<body class="dashboard-page">
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+
+            <span>Conecta</span>
+
+            <strong>21</strong>
+
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <a
+                href="dashboard.html"
+                class="menu-item"
+            >
+                Dashboard
+            </a>
+
+            <a
+                href="equipe.html"
+                class="menu-item"
+            >
+                Equipe
+            </a>
+
+            <a
+                href="chamado.html"
+                class="menu-item"
+            >
+                Chamados
+            </a>
+
+            <a
+                href="sla.html"
+                class="menu-item"
+            >
+                SLA e categorias
+            </a>
+
+            <a
+                href="faq.html"
+                class="menu-item"
+            >
+                Base de conhecimento
+            </a>
+
+            <a
+                href="internos.html"
+                class="menu-item active"
+                data-permission="CHAMADOS_INTERNOS"
+            >
+                Chamados internos
+            </a>
+
+            <a
+                href="perfis.html"
+                class="menu-item"
+                data-admin-only
+            >
+                Perfis
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <button
+                id="btnLogout"
+                class="logout-button"
+            >
+                Sair
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================
+         CONTEÚDO PRINCIPAL
+    ========================================== -->
+
+    <main class="dashboard-main">
+
+
+        <!-- =====================================
+             CABEÇALHO
+        ====================================== -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Chamados internos
+                </h1>
+
+                <p>
+                    Solicitações de suporte entre integrantes da empresa.
+                </p>
+
+            </div>
+
+
+            <div class="internos-header-actions">
+
+
+                <!-- MENU DO USUÁRIO -->
+
+                <div class="user-area">
+
+                    <button
+                        type="button"
+                        id="btnUserMenu"
+                        class="user-menu-trigger"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        aria-controls="userMenu"
+                    >
+
+                        <span
+                            class="user-avatar"
+                            id="userAvatar"
+                            aria-hidden="true"
+                        >
+                            <span id="userInitials">
+                                U
+                            </span>
+                        </span>
+
+
+                        <span class="user-info">
+
+                            <span
+                                class="user-name"
+                                id="dashboardUserName"
+                            >
+                                Usuário
+                            </span>
+
+                            <span
+                                class="user-profile"
+                                id="dashboardUserProfile"
+                            >
+                                Carregando...
+                            </span>
+
+                        </span>
+
+
+                        <span
+                            class="user-menu-arrow"
+                            aria-hidden="true"
+                        >
+                            ▾
+                        </span>
+
+                    </button>
+
+
+                    <!-- DROPDOWN -->
+
+                    <div
+                        id="userMenu"
+                        class="user-menu"
+                        hidden
+                    >
+
+                        <a
+                            href="perfil.html"
+                            class="user-menu-item"
+                        >
+
+                            <span class="user-menu-icon">
+                                👤
+                            </span>
+
+                            <span>
+                                Perfil
+                            </span>
+
+                        </a>
+
+
+                        <button
+                            type="button"
+                            id="btnUserLogout"
+                            class="user-menu-item user-menu-logout"
+                        >
+
+                            <span class="user-menu-icon">
+                                ↪
+                            </span>
+
+                            <span>
+                                Sair
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NOVO CHAMADO -->
+
+                <button
+                    id="novoInternoBtn"
+                    class="btn btn-primary"
+                >
+                    Novo chamado interno
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================================
+             MENSAGEM
+        ========================================== -->
+
+        <div
+            id="internosMsg"
+            class="faq-message"
+            role="status"
+            hidden
+        ></div>
+
+
+        <!-- =========================================
+             EDITOR
+        ========================================== -->
+
+        <section
+            id="internoEditor"
+            class="dashboard-panel"
+            hidden
+        >
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Abrir chamado interno
+                    </h2>
+
+                    <p>
+                        O sistema atribuirá a prioridade definida na categoria.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form
+                id="internoForm"
+                class="faq-form"
+            >
+
+                <label>
+
+                    Título
+
+                    <input
+                        id="internoTitulo"
+                        maxlength="150"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Categoria
+
+                    <select
+                        id="internoCategoria"
+                        required
+                    ></select>
+
+                </label>
+
+
+                <label class="faq-content">
+
+                    Descrição
+
+                    <textarea
+                        id="internoDescricao"
+                        rows="5"
+                        required
+                    ></textarea>
+
+                </label>
+
+
+                <div class="button-group">
+
+                    <button
+                        id="cancelarInterno"
+                        type="button"
+                        class="btn btn-secondary"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        class="btn btn-primary"
+                    >
+                        Enviar chamado
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- =========================================
+             LISTA DE CHAMADOS
+        ========================================== -->
+
+        <section class="faq-list-section">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Solicitações da equipe
+                    </h2>
+
+                    <p>
+                        Chamados internos da sua empresa.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Título</th>
+
+                            <th>Categoria</th>
+
+                            <th>Prioridade</th>
+
+                            <th>Status</th>
+
+                            <th>Abertura</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="internosTabela"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script src="js/auth.js"></script>
+
+    <script src="js/services/api.js"></script>
+
+    <script src="js/internos.js"></script>
+
+</body>
+
+</html>

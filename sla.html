@@ -5,14 +5,32 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>SLA | Conecta21</title>
 
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/dashboard.css">
-    <link rel="stylesheet" href="assets/css/chamado.css">
-    <link rel="stylesheet" href="assets/css/sla.css">
+    <link
+        rel="stylesheet"
+        href="assets/css/styles.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/dashboard.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/chamado.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/sla.css"
+    >
 
 </head>
 
@@ -28,38 +46,75 @@
 
         <div class="sidebar-logo">
 
-            <span>Conecta</span><strong>21</strong>
+            <span>Conecta</span>
+
+            <strong>21</strong>
 
         </div>
 
 
         <nav class="sidebar-menu">
 
-            <a href="dashboard.html" class="menu-item">
+            <a
+                href="dashboard.html"
+                class="menu-item"
+            >
                 Dashboard
             </a>
 
-            <a href="equipe.html" class="menu-item">
+            <a
+                href="equipe.html"
+                class="menu-item"
+            >
                 Equipe
             </a>
 
-            <a href="chamado.html" class="menu-item">
+            <a
+                href="chamado.html"
+                class="menu-item"
+            >
                 Chamados
             </a>
 
-            <a href="sla.html" class="menu-item active">
+            <a
+                href="sla.html"
+                class="menu-item active"
+            >
                 SLA
             </a>
-            <a href="faq.html" class="menu-item">Base de conhecimento</a>
-            <a href="internos.html" class="menu-item" data-permission="CHAMADOS_INTERNOS">Chamados internos</a>
-            <a href="perfis.html" class="menu-item" data-admin-only>Perfis</a>
+
+            <a
+                href="faq.html"
+                class="menu-item"
+            >
+                Base de conhecimento
+            </a>
+
+            <a
+                href="internos.html"
+                class="menu-item"
+                data-permission="CHAMADOS_INTERNOS"
+            >
+                Chamados internos
+            </a>
+
+            <a
+                href="perfis.html"
+                class="menu-item"
+                data-admin-only
+            >
+                Perfis
+            </a>
 
         </nav>
 
 
         <div class="sidebar-footer">
 
-            <button id="btnLogout" class="logout-button">
+            <button
+                id="btnLogout"
+                class="logout-button"
+            >
                 Sair
             </button>
 
@@ -76,11 +131,17 @@
     <main class="sla-main">
 
 
+        <!-- =====================================
+             CABEÇALHO
+        ====================================== -->
+
         <header class="sla-header">
 
             <div>
 
-                <h1>Configurações de SLA</h1>
+                <h1>
+                    Configurações de SLA
+                </h1>
 
                 <p>
                     Prazos de resolução por prioridade definidos no backend.
@@ -88,11 +149,128 @@
 
             </div>
 
+
+            <!-- =================================
+                 MENU DO USUÁRIO
+            ================================== -->
+
+            <div class="sla-header-actions">
+
+                <div class="user-area">
+
+                    <button
+                        type="button"
+                        id="btnUserMenu"
+                        class="user-menu-trigger"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        aria-controls="userMenu"
+                    >
+
+                        <span
+                            class="user-avatar"
+                            id="userAvatar"
+                            aria-hidden="true"
+                        >
+                            <span id="userInitials">
+                                U
+                            </span>
+                        </span>
+
+
+                        <span class="user-info">
+
+                            <span
+                                class="user-name"
+                                id="dashboardUserName"
+                            >
+                                Usuário
+                            </span>
+
+                            <span
+                                class="user-profile"
+                                id="dashboardUserProfile"
+                            >
+                                Carregando...
+                            </span>
+
+                        </span>
+
+
+                        <span
+                            class="user-menu-arrow"
+                            aria-hidden="true"
+                        >
+                            ▾
+                        </span>
+
+                    </button>
+
+
+                    <!-- DROPDOWN DO USUÁRIO -->
+
+                    <div
+                        id="userMenu"
+                        class="user-menu"
+                        hidden
+                    >
+
+                        <a
+                            href="perfil.html"
+                            class="user-menu-item"
+                        >
+
+                            <span class="user-menu-icon">
+                                👤
+                            </span>
+
+                            <span>
+                                Perfil
+                            </span>
+
+                        </a>
+
+
+                        <button
+                            type="button"
+                            id="btnUserLogout"
+                            class="user-menu-item user-menu-logout"
+                        >
+
+                            <span class="user-menu-icon">
+                                ↪
+                            </span>
+
+                            <span>
+                                Sair
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </header>
 
 
-        <div id="slaMsg" class="sla-msg" role="status" hidden></div>
+        <!-- =========================================
+             MENSAGEM
+        ========================================== -->
 
+        <div
+            id="slaMsg"
+            class="sla-msg"
+            role="status"
+            hidden
+        ></div>
+
+
+        <!-- =========================================
+             CONFIGURAÇÕES DE SLA
+        ========================================== -->
 
         <section class="dashboard-panel">
 
@@ -100,15 +278,19 @@
 
                 <div>
 
-                    <h2>Prazos por prioridade</h2>
+                    <h2>
+                        Prazos por prioridade
+                    </h2>
 
                     <p>
-                        Prazos configuráveis por prioridade, vinculados às categorias de chamado.
+                        Prazos configuráveis por prioridade,
+                        vinculados às categorias de chamado.
                     </p>
 
                 </div>
 
             </div>
+
 
             <div class="table-container">
 
@@ -117,37 +299,86 @@
                     <thead>
 
                         <tr>
-                            <th>Prioridade</th>
-                            <th>Prazo</th>
-                            <th>Horas</th>
+
+                            <th>
+                                Prioridade
+                            </th>
+
+                            <th>
+                                Prazo
+                            </th>
+
+                            <th>
+                                Horas
+                            </th>
+
                         </tr>
 
                     </thead>
 
+
                     <tbody id="slaTableBody">
 
                         <tr>
+
                             <td>
-                                <span class="ticket-priority alta">Alta</span>
+
+                                <span class="ticket-priority alta">
+                                    Alta
+                                </span>
+
                             </td>
-                            <td>4 horas</td>
-                            <td>4h</td>
+
+                            <td>
+                                4 horas
+                            </td>
+
+                            <td>
+                                4h
+                            </td>
+
                         </tr>
 
-                        <tr>
-                            <td>
-                                <span class="ticket-priority media">Média</span>
-                            </td>
-                            <td>24 horas</td>
-                            <td>24h</td>
-                        </tr>
 
                         <tr>
+
                             <td>
-                                <span class="ticket-priority baixa">Baixa</span>
+
+                                <span class="ticket-priority media">
+                                    Média
+                                </span>
+
                             </td>
-                            <td>48 horas</td>
-                            <td>48h</td>
+
+                            <td>
+                                24 horas
+                            </td>
+
+                            <td>
+                                24h
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+
+                                <span class="ticket-priority baixa">
+                                    Baixa
+                                </span>
+
+                            </td>
+
+                            <td>
+                                48 horas
+                            </td>
+
+                            <td>
+                                48h
+                            </td>
+
                         </tr>
 
                     </tbody>
@@ -156,17 +387,66 @@
 
             </div>
 
+
+            <!-- =====================================
+                 AVISO
+            ====================================== -->
+
             <div class="sla-aviso">
-                A API atual não possui endpoint de leitura/edição de SLA
-                (valores fixos em <code>PrioridadeChamado: ALTA(4), MEDIA(24), BAIXA(48)</code>).
-                Esta tela é somente visualização. A edição dependerá de
-                endpoint futuro no backend.
+
+                A API atual não possui endpoint de
+                leitura/edição de SLA
+                (valores fixos em
+                <code>
+                    PrioridadeChamado: ALTA(4), MEDIA(24), BAIXA(48)
+                </code>
+                ).
+
+                Esta tela é somente visualização.
+                A edição dependerá de endpoint futuro
+                no backend.
+
             </div>
 
+
+            <!-- =====================================
+                 LEGENDA
+            ====================================== -->
+
             <div class="sla-legenda">
-                <span class="sla-badge sla-normal"><span class="sla-icon">✓</span> Dentro do SLA</span>
-                <span class="sla-badge sla-proximo"><span class="sla-icon">⚠</span> Próximo do vencimento</span>
-                <span class="sla-badge sla-atrasado"><span class="sla-icon">!</span> EM ATRASO</span>
+
+                <span class="sla-badge sla-normal">
+
+                    <span class="sla-icon">
+                        ✓
+                    </span>
+
+                    Dentro do SLA
+
+                </span>
+
+
+                <span class="sla-badge sla-proximo">
+
+                    <span class="sla-icon">
+                        ⚠
+                    </span>
+
+                    Próximo do vencimento
+
+                </span>
+
+
+                <span class="sla-badge sla-atrasado">
+
+                    <span class="sla-icon">
+                        !
+                    </span>
+
+                    EM ATRASO
+
+                </span>
+
             </div>
 
         </section>
@@ -176,9 +456,16 @@
 
 
 
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
     <script src="js/auth.js"></script>
+
     <script src="js/services/api.js"></script>
+
     <script src="js/navigation.js"></script>
+
     <script src="js/sla-config.js"></script>
 
 </body>

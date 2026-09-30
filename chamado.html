@@ -79,33 +79,138 @@
     <main class="chamado-main">
 
 
+<!-- =========================================
+     CABEÇALHO
+========================================== -->
+
+<header class="chamado-header">
+
+    <div>
+
+        <h1>Atendimento de Chamados</h1>
+
+        <p>
+            Gerencie e acompanhe as solicitações
+            de atendimento.
+        </p>
+
+    </div>
+
+
+    <div class="chamado-header-actions">
+
         <!-- =========================================
-             CABEÇALHO
+             MENU DO USUÁRIO
         ========================================== -->
 
-        <header class="chamado-header">
-
-            <div>
-
-                <h1>Atendimento de Chamados</h1>
-
-                <p>
-                    Gerencie e acompanhe as solicitações
-                    de atendimento.
-                </p>
-
-            </div>
-
+        <div class="user-area">
 
             <button
                 type="button"
-                id="btnNovoChamado"
-                class="btn btn-primary"
+                id="btnUserMenu"
+                class="user-menu-trigger"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-controls="userMenu"
             >
-                + Novo chamado
+
+                <span
+                    class="user-avatar"
+                    id="userAvatar"
+                    aria-hidden="true"
+                >
+                    <span id="userInitials">U</span>
+                </span>
+
+
+                <span class="user-info">
+
+                    <span
+                        class="user-name"
+                        id="dashboardUserName"
+                    >
+                        Usuário
+                    </span>
+
+
+                    <span
+                        class="user-profile"
+                        id="dashboardUserProfile"
+                    >
+                        Carregando...
+                    </span>
+
+                </span>
+
+
+                <span
+                    class="user-menu-arrow"
+                    aria-hidden="true"
+                >
+                    ▾
+                </span>
+
             </button>
 
-        </header>
+
+            <div
+                id="userMenu"
+                class="user-menu"
+                hidden
+            >
+
+                <a
+                    href="perfil.html"
+                    class="user-menu-item"
+                >
+
+                    <span class="user-menu-icon">
+                        👤
+                    </span>
+
+                    <span>
+                        Perfil
+                    </span>
+
+                </a>
+
+
+                <button
+                    type="button"
+                    id="btnUserLogout"
+                    class="user-menu-item user-menu-logout"
+                >
+
+                    <span class="user-menu-icon">
+                        ↪
+                    </span>
+
+                    <span>
+                        Sair
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+             NOVO CHAMADO
+        ========================================== -->
+
+        <button
+            type="button"
+            id="btnNovoChamado"
+            class="btn btn-primary"
+        >
+            + Novo chamado
+        </button>
+
+    </div>
+
+</header>
 
 
 
