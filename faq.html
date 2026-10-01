@@ -1,8 +1,419 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Base de conhecimento | Conecta21</title><link rel="stylesheet" href="assets/css/styles.css"><link rel="stylesheet" href="assets/css/dashboard.css"><link rel="stylesheet" href="assets/css/faq.css"></head>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Base de conhecimento | Conecta21</title>
+
+    <link
+        rel="stylesheet"
+        href="assets/css/styles.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/dashboard.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/faq.css"
+    >
+
+</head>
+
 <body class="dashboard-page">
-<aside class="sidebar"><a href="dashboard.html" class="sidebar-logo" aria-label="Voltar ao Dashboard"><span>Conecta</span><strong>21</strong></a><nav class="sidebar-menu"><a href="dashboard.html" class="menu-item">Dashboard</a><a href="equipe.html" class="menu-item">Equipe</a><a href="chamado.html" class="menu-item">Chamados</a><a href="sla.html" class="menu-item">SLA</a><a href="faq.html" class="menu-item active">Base de conhecimento</a><a href="internos.html" class="menu-item" data-permission="CHAMADOS_INTERNOS">Chamados internos</a><a href="perfis.html" class="menu-item" data-admin-only>Perfis</a></nav><div class="sidebar-footer"><button id="btnLogout" class="logout-button">Sair</button></div></aside>
-<main class="dashboard-main"><header class="dashboard-header"><div><h1>Base de conhecimento</h1><p>Encontre respostas rápidas antes de abrir um chamado.</p></div><div class="faq-search"><label for="faqBusca">Buscar artigos</label><input id="faqBusca" type="search" placeholder="Digite uma dúvida"></div></header><div id="faqMensagem" class="faq-message" role="status" hidden></div>
-<section id="faqEditor" class="dashboard-panel" hidden><div class="panel-header"><div><h2 id="faqEditorTitulo">Novo artigo</h2><p>Organize as respostas por categoria.</p></div></div><form id="faqForm" class="faq-form"><input id="faqId" type="hidden"><label>Título<input id="faqTitulo" maxlength="150" required></label><label>Categoria<select id="faqCategoria" required></select></label><label class="faq-content">Conteúdo<textarea id="faqConteudo" rows="6" required></textarea></label><div class="button-group"><button id="faqCancelar" type="button" class="btn btn-secondary" hidden>Cancelar edição</button><button type="submit" class="btn btn-primary">Salvar artigo</button></div></form></section>
-<section class="faq-list-section"><div class="panel-header"><div><h2>Artigos</h2><p id="faqContagem">Carregando artigos...</p></div></div><div id="faqLista" class="faq-list"></div></section></main>
-<script src="js/auth.js"></script><script src="js/services/api.js"></script><script src="js/faq.js"></script></body></html>
+
+<!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <a href="dashboard.html" class="sidebar-logo" aria-label="Voltar ao Dashboard">
+            <span>Conecta</span>
+            <strong>21</strong>
+        </a>
+
+        <nav class="sidebar-menu">
+
+            <a
+                href="dashboard.html"
+                class="menu-item"
+            >
+                Dashboard
+            </a>
+
+            <a
+                href="equipe.html"
+                class="menu-item"
+            >
+                Equipe
+            </a>
+
+            <a
+                href="chamado.html"
+                class="menu-item"
+            >
+                Chamados
+            </a>
+
+            <a
+                href="sla.html"
+                class="menu-item"
+            >
+                SLA e categorias
+            </a>
+
+            <a
+                href="faq.html"
+                class="menu-item active"
+            >
+                Base de conhecimento
+            </a>
+
+            <a
+                href="internos.html"
+                class="menu-item"
+                data-permission="CHAMADOS_INTERNOS"
+            >
+                Chamados internos
+            </a>
+
+            <a
+                href="perfis.html"
+                class="menu-item"
+                data-admin-only
+            >
+                Perfis
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+
+            <button
+                id="btnLogout"
+                class="logout-button"
+            >
+                Sair
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================
+         CONTEÚDO PRINCIPAL
+    ========================================== -->
+
+    <main class="dashboard-main">
+
+        <!-- =====================================
+             CABEÇALHO
+        ====================================== -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>Base de conhecimento</h1>
+
+                <p>
+                    Encontre respostas rápidas antes de abrir um chamado.
+                </p>
+
+            </div>
+
+
+            <!-- =================================
+                 AÇÕES DO CABEÇALHO
+            ================================== -->
+
+            <div class="faq-header-actions">
+
+                <!-- MENU DO USUÁRIO -->
+
+                <div class="user-area">
+
+                    <button
+                        type="button"
+                        id="btnUserMenu"
+                        class="user-menu-trigger"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        aria-controls="userMenu"
+                    >
+
+                        <span
+                            class="user-avatar"
+                            id="userAvatar"
+                            aria-hidden="true"
+                        >
+                            <span id="userInitials">U</span>
+                        </span>
+
+                        <span class="user-info">
+
+                            <span
+                                class="user-name"
+                                id="dashboardUserName"
+                            >
+                                Usuário
+                            </span>
+
+                            <span
+                                class="user-profile"
+                                id="dashboardUserProfile"
+                            >
+                                Carregando...
+                            </span>
+
+                        </span>
+
+                        <span
+                            class="user-menu-arrow"
+                            aria-hidden="true"
+                        >
+                            ▾
+                        </span>
+
+                    </button>
+
+
+                    <!-- MENU DROPDOWN -->
+
+                    <div
+                        id="userMenu"
+                        class="user-menu"
+                        hidden
+                    >
+
+                        <a
+                            href="perfil.html"
+                            class="user-menu-item"
+                        >
+
+                            <span class="user-menu-icon">
+                                👤
+                            </span>
+
+                            <span>
+                                Perfil
+                            </span>
+
+                        </a>
+
+
+                        <button
+                            type="button"
+                            id="btnUserLogout"
+                            class="user-menu-item user-menu-logout"
+                        >
+
+                            <span class="user-menu-icon">
+                                ↪
+                            </span>
+
+                            <span>
+                                Sair
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BUSCA -->
+
+                <div class="faq-search">
+
+                    <label for="faqBusca">
+                        Buscar artigos
+                    </label>
+
+                    <input
+                        id="faqBusca"
+                        type="search"
+                        placeholder="Digite uma dúvida"
+                    >
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================
+             MENSAGEM
+        ====================================== -->
+
+        <div
+            id="faqMensagem"
+            class="faq-message"
+            role="status"
+            hidden
+        >
+        </div>
+
+
+        <!-- =====================================
+             EDITOR DE ARTIGO
+        ====================================== -->
+
+        <section
+            id="faqEditor"
+            class="dashboard-panel"
+            hidden
+        >
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2 id="faqEditorTitulo">
+                        Novo artigo
+                    </h2>
+
+                    <p>
+                        Organize as respostas por categoria.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form
+                id="faqForm"
+                class="faq-form"
+            >
+
+                <input
+                    id="faqId"
+                    type="hidden"
+                >
+
+
+                <label>
+
+                    Título
+
+                    <input
+                        id="faqTitulo"
+                        maxlength="150"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Categoria
+
+                    <select
+                        id="faqCategoria"
+                        required
+                    >
+                    </select>
+
+                </label>
+
+
+                <label class="faq-content">
+
+                    Conteúdo
+
+                    <textarea
+                        id="faqConteudo"
+                        rows="6"
+                        required
+                    ></textarea>
+
+                </label>
+
+
+                <div class="button-group">
+
+                    <button
+                        id="faqCancelar"
+                        type="button"
+                        class="btn btn-secondary"
+                        hidden
+                    >
+                        Cancelar edição
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Salvar artigo
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- =====================================
+             LISTA DE ARTIGOS
+        ====================================== -->
+
+        <section class="faq-list-section">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Artigos
+                    </h2>
+
+                    <p id="faqContagem">
+                        Carregando artigos...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="faqLista"
+                class="faq-list"
+            >
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script src="js/auth.js"></script>
+
+    <script src="js/services/api.js"></script>
+
+    <script src="js/faq.js"></script>
+
+</body>
+
+</html>

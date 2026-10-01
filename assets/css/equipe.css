@@ -873,3 +873,49 @@ tbody tr:hover {
     }
 
 }
+
+/* =========================================
+   AÇÕES DO CABEÇALHO
+========================================= */
+
+.equipe-header-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 20px;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE DO CABEÇALHO
+========================================= */
+
+@media (max-width: 850px) {
+
+    .equipe-header-actions {
+        width: 100%;
+
+        justify-content: space-between;
+
+        gap: 15px;
+    }
+
+}
+
+
+@media (max-width: 550px) {
+
+    .equipe-header-actions {
+        width: 100%;
+
+        flex-wrap: wrap;
+
+        justify-content: space-between;
+
+        gap: 12px;
+    }
+
+}

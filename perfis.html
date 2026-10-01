@@ -1,1 +1,497 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Perfis | Conecta21</title><link rel="stylesheet" href="assets/css/styles.css"><link rel="stylesheet" href="assets/css/dashboard.css"><link rel="stylesheet" href="assets/css/faq.css"></head><body class="dashboard-page"><aside class="sidebar"><a href="dashboard.html" class="sidebar-logo" aria-label="Voltar ao Dashboard"><span>Conecta</span><strong>21</strong></a><nav class="sidebar-menu"><a href="dashboard.html" class="menu-item">Dashboard</a><a href="equipe.html" class="menu-item">Equipe</a><a href="chamado.html" class="menu-item">Chamados</a><a href="sla.html" class="menu-item">SLA</a><a href="faq.html" class="menu-item">Base de conhecimento</a><a href="internos.html" class="menu-item" data-permission="CHAMADOS_INTERNOS">Chamados internos</a><a href="perfis.html" class="menu-item active" data-admin-only>Perfis</a></nav><div class="sidebar-footer"><button id="btnLogout" class="logout-button">Sair</button></div></aside><main class="dashboard-main"><header class="dashboard-header"><div><h1>Perfis e permissões</h1><p>Defina o que cada função pode consultar ou administrar.</p></div></header><div id="perfisMsg" class="faq-message" role="status" hidden></div><section class="dashboard-panel"><div class="panel-header"><div><h2 id="perfilTitulo">Criar perfil</h2><p>As permissões são aplicadas pela API em cada operação.</p></div></div><form id="perfilForm" class="faq-form"><input id="perfilId" type="hidden"><label>Nome do perfil<input id="perfilNome" maxlength="60" required></label><label>Descrição<input id="perfilDescricao" maxlength="255"></label><fieldset class="permission-list"><legend>Permissões</legend><label><input type="checkbox" value="CHAMADOS_INTERNOS"> Abrir e consultar chamados internos</label><label><input type="checkbox" value="GERENCIAR_CHAMADOS"> Atribuir chamados</label><label><input type="checkbox" value="GERENCIAR_CATEGORIAS"> Gerenciar categorias</label><label><input type="checkbox" value="GERENCIAR_PRIORIDADES"> Gerenciar prioridades e SLA</label><label><input type="checkbox" value="GERENCIAR_USUARIOS"> Gerenciar usuários</label><label><input type="checkbox" value="GERENCIAR_FAQ"> Gerenciar base de conhecimento</label><label><input type="checkbox" value="GERAR_RELATORIOS"> Gerar relatórios</label></fieldset><label class="profile-active"><input id="perfilAtivo" type="checkbox" checked> Perfil ativo</label><div class="button-group"><button id="perfilCancelar" type="button" class="btn btn-secondary" hidden>Cancelar edição</button><button type="submit" class="btn btn-primary">Salvar perfil</button></div></form></section><section class="faq-list-section"><div class="panel-header"><div><h2>Perfis cadastrados</h2></div></div><div id="perfisLista" class="category-grid"></div></section></main><script src="js/auth.js"></script><script src="js/services/api.js"></script><script src="js/perfis.js"></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1"
+    >
+
+    <title>Perfis | Conecta21</title>
+
+    <link
+        rel="stylesheet"
+        href="assets/css/styles.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/dashboard.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/faq.css"
+    >
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <span>Conecta</span>
+            <strong>21</strong>
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <a
+                href="dashboard.html"
+                class="menu-item"
+            >
+                Dashboard
+            </a>
+
+            <a
+                href="equipe.html"
+                class="menu-item"
+            >
+                Equipe
+            </a>
+
+            <a
+                href="chamado.html"
+                class="menu-item"
+            >
+                Chamados
+            </a>
+
+            <a
+                href="sla.html"
+                class="menu-item"
+            >
+                SLA e categorias
+            </a>
+
+            <a
+                href="faq.html"
+                class="menu-item"
+            >
+                Base de conhecimento
+            </a>
+
+            <a
+                href="internos.html"
+                class="menu-item"
+                data-permission="CHAMADOS_INTERNOS"
+            >
+                Chamados internos
+            </a>
+
+            <a
+                href="perfis.html"
+                class="menu-item active"
+                data-admin-only
+            >
+                Perfis
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <button
+                id="btnLogout"
+                class="logout-button"
+            >
+                Sair
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================
+         CONTEÚDO PRINCIPAL
+    ========================================== -->
+
+    <main class="dashboard-main">
+
+
+        <!-- =====================================
+             CABEÇALHO
+        ====================================== -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Perfis e permissões
+                </h1>
+
+                <p>
+                    Defina o que cada função pode
+                    consultar ou administrar.
+                </p>
+
+            </div>
+
+
+            <!-- =================================
+                 MENU DO USUÁRIO
+            ================================== -->
+
+            <div class="perfis-header-actions">
+
+                <div class="user-area">
+
+                    <button
+                        type="button"
+                        id="btnUserMenu"
+                        class="user-menu-trigger"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        aria-controls="userMenu"
+                    >
+
+                        <span
+                            class="user-avatar"
+                            id="userAvatar"
+                            aria-hidden="true"
+                        >
+                            <span id="userInitials">
+                                U
+                            </span>
+                        </span>
+
+
+                        <span class="user-info">
+
+                            <span
+                                class="user-name"
+                                id="dashboardUserName"
+                            >
+                                Usuário
+                            </span>
+
+                            <span
+                                class="user-profile"
+                                id="dashboardUserProfile"
+                            >
+                                Carregando...
+                            </span>
+
+                        </span>
+
+
+                        <span
+                            class="user-menu-arrow"
+                            aria-hidden="true"
+                        >
+                            ▾
+                        </span>
+
+                    </button>
+
+
+                    <!-- DROPDOWN -->
+
+                    <div
+                        id="userMenu"
+                        class="user-menu"
+                        hidden
+                    >
+
+                        <a
+                            href="perfil.html"
+                            class="user-menu-item"
+                        >
+
+                            <span class="user-menu-icon">
+                                👤
+                            </span>
+
+                            <span>
+                                Perfil
+                            </span>
+
+                        </a>
+
+
+                        <button
+                            type="button"
+                            id="btnUserLogout"
+                            class="user-menu-item user-menu-logout"
+                        >
+
+                            <span class="user-menu-icon">
+                                ↪
+                            </span>
+
+                            <span>
+                                Sair
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================
+             MENSAGEM
+        ====================================== -->
+
+        <div
+            id="perfisMsg"
+            class="faq-message"
+            role="status"
+            hidden
+        >
+        </div>
+
+
+        <!-- =====================================
+             FORMULÁRIO DE PERFIL
+        ====================================== -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2 id="perfilTitulo">
+                        Criar perfil
+                    </h2>
+
+                    <p>
+                        As permissões são aplicadas
+                        pela API em cada operação.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form
+                id="perfilForm"
+                class="faq-form"
+            >
+
+                <input
+                    id="perfilId"
+                    type="hidden"
+                >
+
+
+                <label>
+
+                    Nome do perfil
+
+                    <input
+                        id="perfilNome"
+                        maxlength="60"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Descrição
+
+                    <input
+                        id="perfilDescricao"
+                        maxlength="255"
+                    >
+
+                </label>
+
+
+                <fieldset class="permission-list">
+
+                    <legend>
+                        Permissões
+                    </legend>
+
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            value="CHAMADOS_INTERNOS"
+                        >
+
+                        Abrir e consultar chamados internos
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            value="GERENCIAR_CHAMADOS"
+                        >
+
+                        Atribuir chamados
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            value="GERENCIAR_CATEGORIAS"
+                        >
+
+                        Gerenciar categorias
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            value="GERENCIAR_PRIORIDADES"
+                        >
+
+                        Gerenciar prioridades e SLA
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            value="GERENCIAR_USUARIOS"
+                        >
+
+                        Gerenciar usuários
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            value="GERENCIAR_FAQ"
+                        >
+
+                        Gerenciar base de conhecimento
+
+                    </label>
+
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            value="GERAR_RELATORIOS"
+                        >
+
+                        Gerar relatórios
+
+                    </label>
+
+                </fieldset>
+
+
+                <label class="profile-active">
+
+                    <input
+                        id="perfilAtivo"
+                        type="checkbox"
+                        checked
+                    >
+
+                    Perfil ativo
+
+                </label>
+
+
+                <div class="button-group">
+
+                    <button
+                        id="perfilCancelar"
+                        type="button"
+                        class="btn btn-secondary"
+                        hidden
+                    >
+                        Cancelar edição
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Salvar perfil
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- =====================================
+             PERFIS CADASTRADOS
+        ====================================== -->
+
+        <section class="faq-list-section">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Perfis cadastrados
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="perfisLista"
+                class="category-grid"
+            >
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script src="js/auth.js"></script>
+
+    <script src="js/services/api.js"></script>
+
+    <script src="js/perfis.js"></script>
+
+</body>
+
+</html>

@@ -2,35 +2,27 @@
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Dashboard | Conecta21</title>
 
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="stylesheet" href="assets/css/sla.css">
-
 </head>
-
 
 <body class="dashboard-page">
 
-
-    <!-- =========================================
-         MENU LATERAL
-    ========================================== -->
-
     <aside class="sidebar">
 
+        <div class="sidebar-logo">
+            <span>Conecta</span><strong>21</strong>
+        </div>
         <a href="dashboard.html" class="sidebar-logo" aria-label="Voltar ao Dashboard">
 
             <span>Conecta</span><strong>21</strong>
 
         </a>
-
 
         <nav class="sidebar-menu">
 
@@ -51,8 +43,23 @@
             <a href="internos.html" class="menu-item" data-permission="CHAMADOS_INTERNOS">Chamados internos</a>
             <a href="perfis.html" class="menu-item" data-admin-only>Perfis</a>
 
-        </nav>
+            <a href="faq.html" class="menu-item">
+                Base de conhecimento
+            </a>
 
+            <a href="internos.html"
+               class="menu-item"
+               data-permission="CHAMADOS_INTERNOS">
+                Chamados internos
+            </a>
+
+            <a href="perfis.html"
+               class="menu-item"
+               data-admin-only>
+                Perfis
+            </a>
+
+        </nav>
 
         <div class="sidebar-footer">
 
@@ -65,15 +72,7 @@
     </aside>
 
 
-
-    <!-- =========================================
-         CONTEÚDO PRINCIPAL
-    ========================================== -->
-
     <main class="dashboard-main">
-
-
-        <!-- Cabeçalho -->
 
         <header class="dashboard-header">
 
@@ -88,24 +87,109 @@
             </div>
 
 
+            <!-- =========================================
+                 MENU DO USUÁRIO
+                 ========================================= -->
+
             <div class="user-area">
 
-                <span class="user-name">
-                    Usuário
-                </span>
+                <button
+                    type="button"
+                    id="btnUserMenu"
+                    class="user-menu-trigger"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls="userMenu"
+                >
+
+                    <!-- Avatar -->
+                    <span
+                        class="user-avatar"
+                        id="userAvatar"
+                        aria-hidden="true"
+                    >
+                        <span id="userInitials">U</span>
+                    </span>
+
+
+                    <!-- Informações do usuário -->
+                    <span class="user-info">
+
+                        <span
+                            class="user-name"
+                            id="dashboardUserName"
+                        >
+                            Usuário
+                        </span>
+
+                        <span
+                            class="user-profile"
+                            id="dashboardUserProfile"
+                        >
+                            Carregando...
+                        </span>
+
+                    </span>
+
+
+                    <!-- Indicador do menu -->
+                    <span
+                        class="user-menu-arrow"
+                        aria-hidden="true"
+                    >
+                        ▾
+                    </span>
+
+                </button>
+
+
+                <!-- Dropdown -->
+                <div
+                    id="userMenu"
+                    class="user-menu"
+                    hidden
+                >
+
+                    <a
+                        href="perfil.html"
+                        class="user-menu-item"
+                    >
+                        <span class="user-menu-icon">
+                            👤
+                        </span>
+
+                        <span>
+                            Perfil
+                        </span>
+                    </a>
+
+
+                    <button
+                        type="button"
+                        id="btnUserLogout"
+                        class="user-menu-item user-menu-logout"
+                    >
+                        <span class="user-menu-icon">
+                            ↪
+                        </span>
+
+                        <span>
+                            Sair
+                        </span>
+                    </button>
+
+                </div>
 
             </div>
 
         </header>
 
 
-
         <!-- =========================================
-             CARDS DE MÉTRICAS
-        ========================================== -->
+             MÉTRICAS
+             ========================================= -->
 
         <section class="metrics-grid">
-
 
             <div class="metric-card">
 
@@ -113,7 +197,10 @@
                     Chamados abertos
                 </span>
 
-                <strong class="metric-value" id="metricAbertos">
+                <strong
+                    class="metric-value"
+                    id="metricAbertos"
+                >
                     —
                 </strong>
 
@@ -126,7 +213,10 @@
                     Em atendimento
                 </span>
 
-                <strong class="metric-value" id="metricAndamento">
+                <strong
+                    class="metric-value"
+                    id="metricAndamento"
+                >
                     —
                 </strong>
 
@@ -139,7 +229,10 @@
                     Resolvidos
                 </span>
 
-                <strong class="metric-value" id="metricResolvidos">
+                <strong
+                    class="metric-value"
+                    id="metricResolvidos"
+                >
                     —
                 </strong>
 
@@ -152,36 +245,101 @@
                     Em atraso (SLA)
                 </span>
 
-                <strong class="metric-value" id="metricAtraso">
+                <strong
+                    class="metric-value"
+                    id="metricAtraso"
+                >
                     —
                 </strong>
 
             </div>
 
-
         </section>
-
-        <section class="analytics-grid" aria-label="Indicadores analíticos">
-            <article class="dashboard-panel analytics-panel">
-                <div class="panel-header"><div><h2>Chamados por status</h2><p>Panorama dos chamados registrados.</p></div></div>
-                <div id="statusChart" class="analytics-bars" role="group" aria-label="Distribuição dos chamados por status"></div>
-            </article>
-            <article class="dashboard-panel analytics-panel">
-                <div class="panel-header"><div><h2>SLA de resolução</h2><p>Chamados encerrados no prazo ou atrasados.</p></div></div>
-                <div id="slaChart" class="analytics-bars" role="group" aria-label="SLAs cumpridos e violados"></div>
-            </article>
-        </section>
-
-        <div id="dashboardMsg" class="dashboard-msg" role="status" hidden></div>
-
 
 
         <!-- =========================================
-             ÁREA DE CONTEÚDO
-        ========================================== -->
+             GRÁFICOS
+             ========================================= -->
+
+        <section
+            class="analytics-grid"
+            aria-label="Indicadores analíticos"
+        >
+
+            <article class="dashboard-panel analytics-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>
+                            Chamados por status
+                        </h2>
+
+                        <p>
+                            Panorama dos chamados registrados.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="statusChart"
+                    class="analytics-bars"
+                    role="group"
+                    aria-label="Distribuição dos chamados por status"
+                ></div>
+
+            </article>
+
+
+            <article class="dashboard-panel analytics-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h2>
+                            SLA de resolução
+                        </h2>
+
+                        <p>
+                            Chamados encerrados no prazo ou atrasados.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="slaChart"
+                    class="analytics-bars"
+                    role="group"
+                    aria-label="SLAs cumpridos e violados"
+                ></div>
+
+            </article>
+
+        </section>
+
+
+        <div
+            id="dashboardMsg"
+            class="dashboard-msg"
+            role="status"
+            hidden
+        ></div>
+
+
+        <!-- =========================================
+             CONTEÚDO PRINCIPAL
+             ========================================= -->
 
         <section class="dashboard-content">
 
+
+            <!-- Chamados em atraso -->
 
             <div class="dashboard-panel">
 
@@ -189,7 +347,9 @@
 
                     <div>
 
-                        <h2>Chamados em atraso</h2>
+                        <h2>
+                            Chamados em atraso
+                        </h2>
 
                         <p>
                             Atendimentos que estouraram o SLA.
@@ -199,8 +359,8 @@
 
                 </div>
 
-
                 <div id="listaAtraso">
+
                     <div class="empty-state">
 
                         <p>
@@ -208,11 +368,13 @@
                         </p>
 
                     </div>
+
                 </div>
 
             </div>
 
 
+            <!-- Chamados por categoria -->
 
             <div class="dashboard-panel">
 
@@ -220,7 +382,9 @@
 
                     <div>
 
-                        <h2>Chamados por categoria</h2>
+                        <h2>
+                            Chamados por categoria
+                        </h2>
 
                         <p>
                             Distribuição dos atendimentos (30 dias).
@@ -230,8 +394,8 @@
 
                 </div>
 
-
                 <div id="listaCategorias">
+
                     <div class="empty-state">
 
                         <p>
@@ -239,17 +403,17 @@
                         </p>
 
                     </div>
+
                 </div>
 
             </div>
-
 
         </section>
 
 
         <!-- =========================================
              RELATÓRIOS
-        ========================================== -->
+             ========================================= -->
 
         <section class="dashboard-panel relatorio-panel">
 
@@ -257,45 +421,85 @@
 
                 <div>
 
-                    <h2>Relatórios</h2>
+                    <h2>
+                        Relatórios
+                    </h2>
 
                     <p>
-                    Baixe os dados dos chamados em CSV ou PDF.
+                        Baixe os dados dos chamados em CSV ou PDF.
                     </p>
 
                 </div>
 
             </div>
 
+
             <p class="relatorio-desc">
-                O arquivo contém os chamados disponíveis ao seu perfil, incluindo título,
-                status, prioridade, data de abertura e prazo de resolução.
+
+                O arquivo contém os chamados disponíveis ao seu perfil,
+                incluindo título, status, prioridade, data de abertura
+                e prazo de resolução.
+
             </p>
 
+
             <div class="relatorio-actions">
-                <button type="button" id="btnBaixarPdf" class="btn btn-secondary">Baixar em PDF</button>
-                <button type="button" id="btnBaixarCsv" class="btn btn-primary">
+
+                <button
+                    type="button"
+                    id="btnBaixarPdf"
+                    class="btn btn-secondary"
+                >
+                    Baixar em PDF
+                </button>
+
+
+                <button
+                    type="button"
+                    id="btnBaixarCsv"
+                    class="btn btn-primary"
+                >
                     Baixar relatório CSV
                 </button>
-                <span id="relatorioLoading" class="relatorio-loading" hidden>Gerando arquivo...</span>
+
+
+                <span
+                    id="relatorioLoading"
+                    class="relatorio-loading"
+                    hidden
+                >
+                    Gerando arquivo...
+                </span>
+
             </div>
 
-            <div id="relatorioMsg" class="relatorio-msg" role="status" hidden></div>
+
+            <div
+                id="relatorioMsg"
+                class="relatorio-msg"
+                role="status"
+                hidden
+            ></div>
 
         </section>
-
 
     </main>
 
 
-
-    <!-- JavaScript -->
+    <!-- =========================================
+         JAVASCRIPT
+         ========================================= -->
 
     <script src="js/auth.js"></script>
+
     <script src="js/services/api.js"></script>
+
     <script src="js/navigation.js"></script>
+
     <script src="js/sla.js"></script>
+
     <script src="js/relatorio.js"></script>
+
     <script src="js/dashboard.js"></script>
 
 </body>

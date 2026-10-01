@@ -19,3 +19,129 @@
 .permission-list label,.profile-active { display:flex!important; grid-template-columns:auto 1fr!important; align-items:center; gap:9px!important; color:#334155; font-size:14px!important; font-weight:500!important; }
 .permission-list input,.profile-active input { width:auto!important; min-height:auto!important; accent-color:#1d4ed8; }
 .profile-active { align-self:center; }
+
+/* =========================================
+   AÇÕES DO CABEÇALHO - CHAMADOS INTERNOS
+========================================= */
+
+.internos-header-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 20px;
+
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 850px) {
+
+    .internos-header-actions {
+
+        width: 100%;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+    }
+
+}
+
+
+@media (max-width: 550px) {
+
+    .internos-header-actions {
+
+        width: 100%;
+
+        flex-wrap: wrap;
+
+        justify-content: space-between;
+
+        gap: 12px;
+
+    }
+
+}
+/* =========================================
+   CABEÇALHO - BASE DE CONHECIMENTO
+========================================= */
+
+.faq-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 850px) {
+
+    .faq-header-actions {
+        width: 100%;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+}
+
+
+@media (max-width: 550px) {
+
+    .faq-header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+}
+/* =========================================
+   CABEÇALHO - PERFIS
+========================================= */
+
+.perfis-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 850px) {
+
+    .perfis-header-actions {
+        width: 100%;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+}
+
+
+@media (max-width: 550px) {
+
+    .perfis-header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+}

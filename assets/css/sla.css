@@ -241,3 +241,56 @@
 .sla-editor-form button { min-height:40px; }
 .sla-edit { padding:7px 12px; }
 @media(max-width:640px){.sla-admin-card{padding:18px}.sla-editor-form{align-items:stretch;flex-direction:column}.sla-editor-form input:not([type=checkbox]),.sla-editor-form select{width:100%;box-sizing:border-box}}
+
+
+/* =========================================
+   AÇÕES DO CABEÇALHO
+========================================= */
+
+.sla-header-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 20px;
+
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 850px) {
+
+    .sla-header-actions {
+
+        width: 100%;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+    }
+
+}
+
+
+@media (max-width: 550px) {
+
+    .sla-header-actions {
+
+        width: 100%;
+
+        flex-wrap: wrap;
+
+        justify-content: flex-end;
+
+        gap: 12px;
+
+    }
+
+}
