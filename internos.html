@@ -1,1 +1,787 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chamados internos | Conecta21</title><link rel="stylesheet" href="assets/css/styles.css"><link rel="stylesheet" href="assets/css/dashboard.css"><link rel="stylesheet" href="assets/css/faq.css"></head><body class="dashboard-page"><aside class="sidebar"><a href="dashboard.html" class="sidebar-logo" aria-label="Voltar ao Dashboard"><span>Conecta</span><strong>21</strong></a><nav class="sidebar-menu"><a href="dashboard.html" class="menu-item">Dashboard</a><a href="equipe.html" class="menu-item">Equipe</a><a href="chamado.html" class="menu-item">Chamados</a><a href="sla.html" class="menu-item">SLA</a><a href="faq.html" class="menu-item">Base de conhecimento</a><a href="internos.html" class="menu-item active" data-permission="CHAMADOS_INTERNOS">Chamados internos</a><a href="perfis.html" class="menu-item" data-admin-only>Perfis</a></nav><div class="sidebar-footer"><button id="btnLogout" class="logout-button">Sair</button></div></aside><main class="dashboard-main"><header class="dashboard-header"><div><h1>Chamados internos</h1><p>Solicitações de suporte entre integrantes da empresa.</p></div><button id="novoInternoBtn" class="btn btn-primary">Novo chamado interno</button></header><div id="internosMsg" class="faq-message" role="status" hidden></div><section id="internoEditor" class="dashboard-panel" hidden><div class="panel-header"><div><h2>Abrir chamado interno</h2><p>O sistema atribuirá a prioridade definida na categoria.</p></div></div><form id="internoForm" class="faq-form"><label>Título<input id="internoTitulo" maxlength="150" required></label><label>Categoria<select id="internoCategoria" required></select></label><label class="faq-content">Descrição<textarea id="internoDescricao" rows="5" required></textarea></label><div class="button-group"><button id="cancelarInterno" type="button" class="btn btn-secondary">Cancelar</button><button class="btn btn-primary">Enviar chamado</button></div></form></section><section class="faq-list-section"><div class="panel-header"><div><h2>Solicitações da equipe</h2><p>Chamados internos da sua empresa.</p></div></div><div class="table-container"><table><thead><tr><th>#</th><th>Título</th><th>Categoria</th><th>Prioridade</th><th>Status</th><th>Abertura</th></tr></thead><tbody id="internosTabela"></tbody></table></div></section></main><script src="js/auth.js"></script><script src="js/services/api.js"></script><script src="js/internos.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Chamados internos | Conecta21</title>
+
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/chamado.css">
+    <link rel="stylesheet" href="assets/css/sla.css">
+
+</head>
+
+
+<body class="chamado-page">
+
+
+    <!-- =========================================
+         MENU LATERAL
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <a href="dashboard.html" class="sidebar-logo" aria-label="Voltar ao Dashboard">
+
+            <span>Conecta</span><strong>21</strong>
+
+        </a>
+
+
+        <nav class="sidebar-menu">
+
+            <a href="dashboard.html" class="menu-item">
+                Dashboard
+            </a>
+
+            <a href="equipe.html" class="menu-item">
+                Equipe
+            </a>
+
+            <a href="chamado.html" class="menu-item">
+                Chamados
+            </a>
+
+            <a href="sla.html" class="menu-item">
+                SLA
+            </a>
+            <a href="faq.html" class="menu-item">Base de conhecimento</a>
+            <a href="internos.html" class="menu-item active" data-permission="CHAMADOS_INTERNOS">Chamados internos</a>
+            <a href="perfis.html" class="menu-item" data-admin-only>Perfis</a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <button
+                id="btnLogout"
+                class="logout-button"
+            >
+                Sair
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         CONTEÚDO PRINCIPAL
+    ========================================== -->
+
+    <main class="chamado-main">
+
+
+        <!-- =========================================
+             CABEÇALHO
+        ========================================== -->
+
+        <header class="chamado-header">
+
+            <div>
+
+                <h1>Chamados internos</h1>
+
+                <p>
+                    Solicitações de suporte entre integrantes da empresa.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="novoInternoBtn"
+                class="btn btn-primary"
+            >
+                + Novo chamado interno
+            </button>
+
+        </header>
+
+
+
+        <!-- =========================================
+             FILTROS
+        ========================================== -->
+
+        <section class="chamado-filters">
+
+            <div class="search-group">
+
+                <label for="buscarInterno">
+                    Buscar chamado
+                </label>
+
+                <input
+                    type="search"
+                    id="buscarInterno"
+                    placeholder="Número, título ou categoria"
+                >
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label for="filtroStatusInterno">
+                    Status
+                </label>
+
+                <select id="filtroStatusInterno">
+
+                    <option value="todos">
+                        Todos
+                    </option>
+
+                    <option value="aberto">
+                        Aberto
+                    </option>
+
+                    <option value="andamento">
+                        Em andamento
+                    </option>
+
+                    <option value="aguardando">
+                        Aguardando
+                    </option>
+
+                    <option value="resolvido">
+                        Resolvido
+                    </option>
+
+                    <option value="fechado">
+                        Fechado
+                    </option>
+
+                    <option value="em_atraso">
+                        Em atraso
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label for="filtroPrioridadeInterno">
+                    Prioridade
+                </label>
+
+                <select id="filtroPrioridadeInterno">
+
+                    <option value="todas">
+                        Todas
+                    </option>
+
+                    <option value="baixa">
+                        Baixa
+                    </option>
+
+                    <option value="media">
+                        Média
+                    </option>
+
+                    <option value="alta">
+                        Alta
+                    </option>
+
+                </select>
+
+            </div>
+
+        </section>
+
+         <!-- =========================================
+      FORMULÁRIO NOVO CHAMADO INTERNO
+========================================== -->
+
+<section
+id="internoEditor"
+class="chamado-form"
+hidden
+>
+
+<div class="panel-header">
+
+    <div>
+
+        <h2>Abrir chamado interno</h2>
+
+        <p>
+            O sistema atribuirá a prioridade definida na categoria.
+        </p>
+
+    </div>
+
+</div>
+
+
+<form id="internoForm">
+
+
+    <div class="form-grid">
+
+
+        <div class="form-group">
+
+            <label for="internoTitulo">
+                Título
+            </label>
+
+            <input
+                type="text"
+                id="internoTitulo"
+                maxlength="150"
+                placeholder="Digite o título do chamado interno"
+                required
+            >
+
+            <small
+                id="internoTituloError"
+                class="form-error"
+            ></small>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="internoCategoria">
+                Categoria
+            </label>
+
+            <select id="internoCategoria" required>
+                <option value="">Selecione a categoria</option>
+            </select>
+
+            <small
+                id="internoCategoriaError"
+                class="form-error"
+            ></small>
+
+        </div>
+
+
+    </div>
+
+    <div class="form-group form-group-full">
+
+        <label for="internoDescricao">
+            Descrição
+        </label>
+
+        <textarea
+            id="internoDescricao"
+            rows="5"
+            placeholder="Descreva detalhadamente a solicitação interna"
+            required
+        ></textarea>
+
+        <small
+            id="internoDescricaoError"
+            class="form-error"
+        ></small>
+
+    </div>
+
+
+    <div class="form-actions">
+
+        <button
+            type="button"
+            id="cancelarInterno"
+            class="btn btn-secondary"
+        >
+            Cancelar
+        </button>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Enviar chamado
+        </button>
+
+    </div>
+
+
+</form>
+
+</section>
+
+
+
+        <!-- =========================================
+             LISTA DE CHAMADOS INTERNOS
+        ========================================== -->
+
+        <section class="chamado-panel">
+
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>Solicitações da equipe</h2>
+
+                    <p>
+                        Chamados internos da sua empresa.
+                    </p>
+
+                </div>
+
+
+                <span
+                    id="totalInternos"
+                    class="total-chamados"
+                >
+                    0 chamados
+                </span>
+
+            </div>
+
+
+            <div id="internosMsg" class="sla-msg" role="status" hidden></div>
+
+
+
+            <!-- Tabela -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Chamado
+                            </th>
+
+                            <th>
+                                Título
+                            </th>
+
+                            <th>
+                                Categoria
+                            </th>
+
+                            <th>
+                                Prioridade
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                SLA
+                            </th>
+
+                            <th>
+                                Abertura
+                            </th>
+
+                            <th>
+                                Ações
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="internosTabela">
+
+                        <tr>
+
+                            <td colspan="8">
+
+                                <div class="empty-state">
+
+                                    <p>
+                                        Carregando chamados...
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </section>
+
+
+
+    </main>
+
+
+    <!-- =========================================
+     MODAL DE DETALHES DO CHAMADO INTERNO
+========================================= -->
+
+<div
+id="modalInterno"
+class="modal-overlay"
+hidden
+role="dialog"
+aria-modal="true"
+aria-labelledby="modalInternoTitulo"
+>
+
+<div class="modal-window chamado-modal">
+
+    <div class="modal-header">
+
+        <div>
+            <h2 id="modalInternoTitulo">
+                Detalhes do chamado
+            </h2>
+
+            <p>
+                Informações da solicitação interna
+            </p>
+        </div>
+
+        <button
+            type="button"
+            id="btnFecharModalInterno"
+            class="modal-close"
+            aria-label="Fechar"
+        >
+            &times;
+        </button>
+
+    </div>
+
+
+    <div class="modal-content">
+
+        <div class="chamado-detalhes-grid">
+
+            <div class="detalhe-item">
+
+                <span class="detalhe-label">
+                    Número
+                </span>
+
+                <strong id="modalInternoNumero">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detalhe-item">
+
+                <span class="detalhe-label">
+                    Solicitante
+                </span>
+
+                <strong id="modalInternoSolicitante">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detalhe-item">
+
+                <span class="detalhe-label">
+                    Categoria
+                </span>
+
+                <strong id="modalInternoCategoria">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detalhe-item">
+
+                <span class="detalhe-label">
+                    Prioridade
+                </span>
+
+                <span
+                    id="modalInternoPrioridade"
+                    class="ticket-priority"
+                >
+                    -
+                </span>
+
+            </div>
+
+
+            <div class="detalhe-item">
+
+                <span class="detalhe-label">
+                    Status
+                </span>
+
+                <span
+                    id="modalInternoStatus"
+                    class="ticket-status"
+                >
+                    -
+                </span>
+
+            </div>
+
+
+            <div class="detalhe-item">
+
+                <label
+                    for="novoStatusInterno"
+                    class="detalhe-label"
+                >
+                    Alterar status
+                </label>
+
+                <select id="novoStatusInterno">
+
+                    <option value="ABERTO">
+                        Aberto
+                    </option>
+
+                    <option value="EM_ANDAMENTO">
+                        Em andamento
+                    </option>
+
+                    <option value="RESOLVIDO">
+                        Resolvido
+                    </option>
+
+                    <option value="EM_ATRASO">
+                        Em atraso
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="detalhe-item">
+
+                <span class="detalhe-label">
+                    SLA
+                </span>
+
+                <span id="modalInternoSla">
+                    -
+                </span>
+
+                <small id="modalInternoSlaLimite" class="form-help"></small>
+
+            </div>
+
+
+            <div class="detalhe-item">
+
+                <span class="detalhe-label">
+                    Responsável
+                </span>
+
+                <strong id="modalInternoResponsavel">
+                    -
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="detalhe-descricao">
+
+            <span class="detalhe-label">
+                Descrição
+            </span>
+
+            <p id="modalInternoDescricao">
+                -
+            </p>
+
+        </div>
+
+        <!-- =========================================
+      TIMELINE DE INTERAÇÕES
+========================================= -->
+
+<div class="chamado-timeline">
+
+    <div class="timeline-header">
+
+        <h3>
+            Histórico de interações
+        </h3>
+
+        <p>
+            Acompanhe as movimentações deste chamado.
+        </p>
+
+    </div>
+
+
+    <div
+        id="timelineInterno"
+        class="timeline-list"
+    >
+
+        <!-- As interações serão inseridas pelo JavaScript -->
+
+    </div>
+
+    <div class="nova-interacao">
+
+        <h3>Adicionar interação</h3>
+
+        <form id="formNovaInteracaoInterno">
+
+            <div class="form-group">
+
+                <label for="tipoInteracaoInterno">
+                    Tipo de interação
+                </label>
+
+                <select id="tipoInteracaoInterno" required>
+
+                    <option value="">
+                        Selecione o tipo
+                    </option>
+
+                    <option value="Comentário">
+                        Comentário
+                    </option>
+
+                    <option value="Atualização de status">
+                        Atualização de status
+                    </option>
+
+                    <option value="Solução aplicada">
+                        Solução aplicada
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="descricaoInteracaoInterno">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="descricaoInteracaoInterno"
+                    rows="4"
+                    placeholder="Descreva a interação..."
+                    required
+                ></textarea>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Adicionar interação
+            </button>
+
+        </form>
+
+    </div>
+
+       <!-- =========================================
+         ANEXOS DO CHAMADO
+    ========================================= -->
+
+    <div class="anexos-chamado">
+
+        <h3>Anexos</h3>
+
+        <div class="upload-area">
+
+            <label for="imagensInterno" class="upload-label">
+
+                <span class="upload-icon">📎</span>
+
+                <span class="upload-text">
+                    Adicionar imagens
+                </span>
+
+                <span class="upload-description">
+                    Selecione uma ou mais imagens relacionadas ao chamado.
+                </span>
+
+            </label>
+
+            <input
+                type="file"
+                id="imagensInterno"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                multiple
+            >
+
+        </div>
+
+        <div
+            id="previewImagensInterno"
+            class="preview-imagens"
+        ></div>
+
+    </div>
+
+
+
+</div>
+
+    </div>
+
+
+    <div class="modal-footer">
+
+        <button
+            type="button"
+            id="btnFecharModalInternoFooter"
+            class="btn btn-secondary"
+        >
+            Fechar
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script src="js/auth.js"></script>
+    <script src="js/services/api.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/sla.js"></script>
+    <script src="js/internos.js"></script>
+
+</body>
+
+</html>
