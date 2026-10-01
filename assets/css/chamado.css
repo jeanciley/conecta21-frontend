@@ -109,6 +109,22 @@
 }
 
 
+.btn-secondary {
+
+    background-color: #e5e7eb;
+
+    color: #374151;
+
+}
+
+
+.btn-secondary:hover {
+
+    background-color: #d1d5db;
+
+}
+
+
 /* =========================================
    FILTROS
 ========================================= */
@@ -983,3 +999,226 @@ tbody tr:hover {
 }
 .cliente-view .table-container table th:nth-child(4),
 .cliente-view .table-container table td:nth-child(4) { display:none; }
+
+/* =========================================
+   MODAL DE DETALHES DO CHAMADO - CENTRALIZADO
+   Mesmo padrão visual do modal da Equipe
+========================================= */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1000;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.modal-overlay[hidden] {
+    display: none;
+}
+
+.modal-window.chamado-modal {
+    width: 100%;
+    max-width: 760px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    animation: modalEntrada 0.2s ease-out;
+}
+
+@keyframes modalEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.chamado-modal .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.chamado-modal .modal-header h2 {
+    margin: 0 0 5px;
+    font-size: 22px;
+    color: #111827;
+}
+
+.chamado-modal .modal-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.chamado-modal .modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background-color: #f3f4f6;
+    color: #6b7280;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.chamado-modal .modal-close:hover {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
+.chamado-modal .modal-content {
+    display: block;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.chamado-modal .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 18px 24px;
+    border-top: 1px solid #e5e7eb;
+    background-color: #fafafa;
+}
+
+.chamado-modal .chamado-detalhes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.chamado-modal .detalhe-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px;
+    background-color: #f9fafb;
+    border: 1px solid #f0f1f3;
+    border-radius: 10px;
+    min-width: 0;
+}
+
+.chamado-modal .detalhe-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.chamado-modal .detalhe-item strong {
+    font-size: 14px;
+    color: #111827;
+    word-break: break-word;
+}
+
+.chamado-modal #novoStatusChamado {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #111827;
+    font-family: inherit;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+    transition: 0.2s;
+}
+
+.chamado-modal #novoStatusChamado:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.chamado-modal .detalhe-descricao {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 14px;
+    background-color: #f9fafb;
+    border: 1px solid #f0f1f3;
+    border-radius: 10px;
+}
+
+.chamado-modal .detalhe-descricao p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #111827;
+    word-break: break-word;
+}
+
+.chamado-modal .nova-interacao {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.chamado-modal .nova-interacao h3 {
+    margin: 0 0 16px;
+    font-size: 17px;
+    color: #111827;
+}
+
+.chamado-modal #formNovaInteracao {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.chamado-modal #formNovaInteracao button[type="submit"] {
+    align-self: flex-end;
+}
+
+@media (max-width: 550px) {
+    .modal-overlay {
+        padding: 12px;
+    }
+
+    .modal-window.chamado-modal {
+        max-height: 95vh;
+    }
+
+    .chamado-modal .modal-header {
+        padding: 20px;
+    }
+
+    .chamado-modal .modal-content {
+        padding: 20px;
+    }
+
+    .chamado-modal .modal-footer {
+        padding: 16px 20px;
+    }
+
+    .chamado-modal .chamado-detalhes-grid {
+        grid-template-columns: 1fr;
+    }
+}

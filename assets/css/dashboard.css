@@ -36,11 +36,20 @@
 /* Logo */
 
 .sidebar-logo {
+    display: block;
     font-size: 24px;
     font-weight: 700;
 
-    padding: 0 14px 35px;
+    padding: 0 14px;
+    margin: 0 0 35px;
 
+    color: #ffffff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.sidebar-logo:hover {
+    text-decoration: none;
     color: #ffffff;
 }
 
@@ -405,6 +414,31 @@
 .sidebar-footer { flex: 0 0 auto; position: sticky; bottom: 0; background: #111827; }
 .dashboard-main, .chamado-main, .equipe-main, .sla-main { width: min(100%, 1540px); max-width: 1540px; min-width: 0; margin-inline: auto; padding: clamp(22px, 3vw, 48px); box-sizing: border-box; }
 .button-group, .form-actions, .relatorio-actions { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:12px; }
+
+/* Botões padrão do sistema (mesmo padrão de Equipe/Chamados) */
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-primary {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+.btn-secondary {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+.btn-secondary:hover {
+    background-color: #d1d5db;
+}
 .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; margin-top:20px; }
 .category-card { display:flex; min-height:150px; flex-direction:column; justify-content:space-between; gap:18px; padding:20px; border:1px solid #dbe3ef; border-radius:12px; background:#fff; box-shadow:0 2px 6px rgba(15,23,42,.04); }
 .category-card h3 { margin:0 0 14px; color:#111827; font-size:17px; }
