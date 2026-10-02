@@ -27,6 +27,7 @@
         href="assets/css/faq.css"
     >
 
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon-conecta21.svg">
 </head>
 
 <body class="dashboard-page">
@@ -36,85 +37,7 @@
          SIDEBAR
     ========================================== -->
 
-    <aside class="sidebar">
-
-        <div class="sidebar-logo">
-
-            <span>Conecta</span>
-
-            <strong>21</strong>
-
-        </div>
-
-
-        <nav class="sidebar-menu">
-
-            <a
-                href="dashboard.html"
-                class="menu-item"
-            >
-                Dashboard
-            </a>
-
-            <a
-                href="equipe.html"
-                class="menu-item"
-            >
-                Equipe
-            </a>
-
-            <a
-                href="chamado.html"
-                class="menu-item"
-            >
-                Chamados
-            </a>
-
-            <a
-                href="sla.html"
-                class="menu-item"
-            >
-                SLA e categorias
-            </a>
-
-            <a
-                href="faq.html"
-                class="menu-item"
-            >
-                Base de conhecimento
-            </a>
-
-            <a
-                href="internos.html"
-                class="menu-item active"
-                data-permission="CHAMADOS_INTERNOS"
-            >
-                Chamados internos
-            </a>
-
-            <a
-                href="perfis.html"
-                class="menu-item"
-                data-admin-only
-            >
-                Perfis
-            </a>
-
-        </nav>
-
-
-        <div class="sidebar-footer">
-
-            <button
-                id="btnLogout"
-                class="logout-button"
-            >
-                Sair
-            </button>
-
-        </div>
-
-    </aside>
+    <aside id="appSidebar" class="sidebar" aria-label="Navegação principal"></aside>
 
 
     <!-- =========================================
@@ -268,6 +191,13 @@
             role="status"
             hidden
         ></div>
+
+        <section class="metrics-grid" aria-label="Indicadores de chamados internos">
+            <article class="metric-card"><span class="metric-label">Abertos</span><strong class="metric-value" id="internosMetricAbertos">—</strong></article>
+            <article class="metric-card"><span class="metric-label">Em andamento</span><strong class="metric-value" id="internosMetricAndamento">—</strong></article>
+            <article class="metric-card"><span class="metric-label">Resolvidos</span><strong class="metric-value" id="internosMetricResolvidos">—</strong></article>
+            <article class="metric-card metric-card-alert"><span class="metric-label">Em atraso (SLA)</span><strong class="metric-value" id="internosMetricAtraso">—</strong></article>
+        </section>
 
 
         <!-- =========================================
@@ -429,8 +359,10 @@
     <script src="js/auth.js"></script>
 
     <script src="js/services/api.js"></script>
+    <script src="js/navigation.js"></script>
 
     <script src="js/internos.js"></script>
+    <script src="js/profile-ui.js"></script>
 
 </body>
 

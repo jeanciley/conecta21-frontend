@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <radialGradient id="sphere" cx="34%" cy="26%" r="78%">
+      <stop offset="0" stop-color="#17aaff"/>
+      <stop offset=".58" stop-color="#0879e9"/>
+      <stop offset="1" stop-color="#064ba5"/>
+    </radialGradient>
+    <linearGradient id="edge" x1=".1" y1=".2" x2=".9" y2=".9">
+      <stop stop-color="#0062cb"/>
+      <stop offset="1" stop-color="#03397e"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+    <marker id="arrow" markerWidth="18" markerHeight="18" refX="13" refY="9" orient="auto">
+      <path d="M1 1 17 9 1 17 5 9Z" fill="#fff"/>
+    </marker>
+  </defs>
+  <path d="M129 18a105 105 0 0 1 94 151l24 65-72-29A105 105 0 1 1 129 18Z" fill="url(#edge)" opacity=".8" filter="url(#glow)"/>
+  <path d="M126 14a103 103 0 0 1 92 150l24 64-70-30A103 103 0 1 1 126 14Z" fill="url(#sphere)"/>
+  <path d="M49 100c7-42 42-72 83-73 29 0 55 13 70 35" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+  <path d="M28 127c27 42 62 51 92 26 21-18 39-49 68-83" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M42 156c31 29 62 34 87 19" fill="none" stroke="#cceeff" stroke-width="7" stroke-linecap="round"/>
+  <path d="M88 229c34 10 68 4 92-15" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="45" cy="109" r="10" fill="#fff"/><circle cx="101" cy="91" r="10" fill="#fff"/><circle cx="184" cy="157" r="11" fill="#fff"/>
+  <circle cx="207" cy="54" r="9" fill="#0878e8" stroke="#fff" stroke-width="3"/>
+</svg>

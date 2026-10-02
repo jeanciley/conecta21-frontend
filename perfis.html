@@ -27,6 +27,7 @@
         href="assets/css/faq.css"
     >
 
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon-conecta21.svg">
 </head>
 
 
@@ -37,82 +38,7 @@
          SIDEBAR
     ========================================== -->
 
-    <aside class="sidebar">
-
-        <div class="sidebar-logo">
-            <span>Conecta</span>
-            <strong>21</strong>
-        </div>
-
-
-        <nav class="sidebar-menu">
-
-            <a
-                href="dashboard.html"
-                class="menu-item"
-            >
-                Dashboard
-            </a>
-
-            <a
-                href="equipe.html"
-                class="menu-item"
-            >
-                Equipe
-            </a>
-
-            <a
-                href="chamado.html"
-                class="menu-item"
-            >
-                Chamados
-            </a>
-
-            <a
-                href="sla.html"
-                class="menu-item"
-            >
-                SLA e categorias
-            </a>
-
-            <a
-                href="faq.html"
-                class="menu-item"
-            >
-                Base de conhecimento
-            </a>
-
-            <a
-                href="internos.html"
-                class="menu-item"
-                data-permission="CHAMADOS_INTERNOS"
-            >
-                Chamados internos
-            </a>
-
-            <a
-                href="perfis.html"
-                class="menu-item active"
-                data-admin-only
-            >
-                Perfis
-            </a>
-
-        </nav>
-
-
-        <div class="sidebar-footer">
-
-            <button
-                id="btnLogout"
-                class="logout-button"
-            >
-                Sair
-            </button>
-
-        </div>
-
-    </aside>
+    <aside id="appSidebar" class="sidebar" aria-label="Navegação principal"></aside>
 
 
     <!-- =========================================
@@ -489,8 +415,10 @@
     <script src="js/auth.js"></script>
 
     <script src="js/services/api.js"></script>
+    <script src="js/navigation.js"></script>
 
     <script src="js/perfis.js"></script>
+    <script src="js/profile-ui.js"></script>
 
 </body>
 

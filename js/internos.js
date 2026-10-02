@@ -508,6 +508,14 @@ async function iniciarInternos() {
 
         }
 
+        if (perms.includes("CHAMADOS_INTERNOS")) {
+            const metricas = await apiGetJson("/api/dashboard/internos");
+            document.getElementById("internosMetricAbertos").textContent = metricas.chamadosAbertos ?? 0;
+            document.getElementById("internosMetricAndamento").textContent = metricas.chamadosEmAndamento ?? 0;
+            document.getElementById("internosMetricResolvidos").textContent = metricas.chamadosResolvidos ?? 0;
+            document.getElementById("internosMetricAtraso").textContent = metricas.chamadosEmAtraso ?? 0;
+        }
+
 
         // -------------------------------------
         // CARREGAR CATEGORIAS

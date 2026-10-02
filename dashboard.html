@@ -9,67 +9,12 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="stylesheet" href="assets/css/sla.css">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon-conecta21.svg">
 </head>
 
 <body class="dashboard-page">
 
-    <aside class="sidebar">
-
-        <div class="sidebar-logo">
-            <span>Conecta</span><strong>21</strong>
-        </div>
-        <a href="dashboard.html" class="sidebar-logo" aria-label="Voltar ao Dashboard">
-
-            <span>Conecta</span><strong>21</strong>
-
-        </a>
-
-        <nav class="sidebar-menu">
-
-            <a href="dashboard.html" class="menu-item active">
-                Dashboard
-            </a>
-
-            <a href="equipe.html" class="menu-item">
-                Equipe
-            </a>
-
-            <a href="chamado.html" class="menu-item">
-                Chamados
-            </a>
-
-            <a href="sla.html" class="menu-item">SLA</a>
-            <a href="faq.html" class="menu-item">Base de conhecimento</a>
-            <a href="internos.html" class="menu-item" data-permission="CHAMADOS_INTERNOS">Chamados internos</a>
-            <a href="perfis.html" class="menu-item" data-admin-only>Perfis</a>
-
-            <a href="faq.html" class="menu-item">
-                Base de conhecimento
-            </a>
-
-            <a href="internos.html"
-               class="menu-item"
-               data-permission="CHAMADOS_INTERNOS">
-                Chamados internos
-            </a>
-
-            <a href="perfis.html"
-               class="menu-item"
-               data-admin-only>
-                Perfis
-            </a>
-
-        </nav>
-
-        <div class="sidebar-footer">
-
-            <button id="btnLogout" class="logout-button">
-                Sair
-            </button>
-
-        </div>
-
-    </aside>
+    <aside id="appSidebar" class="sidebar" aria-label="Navegação principal"></aside>
 
 
     <main class="dashboard-main">
@@ -183,6 +128,13 @@
             </div>
 
         </header>
+
+        <div class="dashboard-tabs" role="tablist" aria-label="Tipo de chamados">
+            <button id="tabExternos" class="dashboard-tab active" type="button" role="tab" aria-selected="true" aria-controls="painelExternos">Chamados Externos</button>
+            <button id="tabInternos" class="dashboard-tab" type="button" role="tab" aria-selected="false" aria-controls="painelInternos" hidden>Chamados Internos</button>
+        </div>
+
+        <section id="painelExternos" class="dashboard-tab-panel" role="tabpanel" aria-labelledby="tabExternos" hidden>
 
 
         <!-- =========================================
@@ -483,6 +435,26 @@
 
         </section>
 
+        </section>
+
+        <section id="painelInternos" class="dashboard-tab-panel" role="tabpanel" aria-labelledby="tabInternos" hidden>
+            <section class="metrics-grid" aria-label="Métricas de chamados internos">
+                <article class="metric-card"><span class="metric-label">Chamados abertos</span><strong class="metric-value" id="metricAbertosInternos">—</strong></article>
+                <article class="metric-card"><span class="metric-label">Em atendimento</span><strong class="metric-value" id="metricAndamentoInternos">—</strong></article>
+                <article class="metric-card"><span class="metric-label">Resolvidos</span><strong class="metric-value" id="metricResolvidosInternos">—</strong></article>
+                <article class="metric-card metric-card-alert"><span class="metric-label">Em atraso (SLA)</span><strong class="metric-value" id="metricAtrasoInternos">—</strong></article>
+            </section>
+            <div id="dashboardMsgInternos" class="dashboard-msg" role="status" hidden></div>
+            <section class="analytics-grid" aria-label="Indicadores de chamados internos">
+                <article class="dashboard-panel analytics-panel"><div class="panel-header"><div><h2>Chamados internos por status</h2><p>Panorama dos chamados internos registrados.</p></div></div><div id="statusChartInternos" class="analytics-bars" role="group" aria-label="Distribuição dos chamados internos por status"></div></article>
+                <article class="dashboard-panel analytics-panel"><div class="panel-header"><div><h2>SLA de resolução</h2><p>Chamados internos no prazo ou atrasados.</p></div></div><div id="slaChartInternos" class="analytics-bars" role="group" aria-label="SLAs dos chamados internos"></div></article>
+            </section>
+            <section class="dashboard-content">
+                <article class="dashboard-panel"><div class="panel-header"><div><h2>Chamados internos em atraso</h2><p>Solicitações da equipe que estouraram o SLA.</p></div></div><div id="listaAtrasoInternos"><div class="empty-state"><p>Carregando...</p></div></div></article>
+                <article class="dashboard-panel"><div class="panel-header"><div><h2>Chamados internos por categoria</h2><p>Distribuição nos últimos 30 dias.</p></div></div><div id="listaCategoriasInternos"><div class="empty-state"><p>Carregando...</p></div></div></article>
+            </section>
+        </section>
+
     </main>
 
 
@@ -501,6 +473,7 @@
     <script src="js/relatorio.js"></script>
 
     <script src="js/dashboard.js"></script>
+    <script src="js/profile-ui.js"></script>
 
 </body>
 
