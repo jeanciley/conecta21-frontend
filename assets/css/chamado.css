@@ -923,7 +923,8 @@ tbody tr:hover {
     color: #6b7280;
 }
 
-#imagensChamado {
+#imagensChamado,
+#imagensInterno {
     display: none;
 }
 
@@ -1136,8 +1137,8 @@ tbody tr:hover {
     color: #111827;
     word-break: break-word;
 }
-
-.chamado-modal #novoStatusChamado {
+.chamado-modal #novoStatusChamado,
+.chamado-modal #novoStatusInterno {
     width: 100%;
     padding: 11px 12px;
     border: 1px solid #d1d5db;
@@ -1151,9 +1152,11 @@ tbody tr:hover {
     transition: 0.2s;
 }
 
-.chamado-modal #novoStatusChamado:focus {
+.chamado-modal #novoStatusChamado:focus,
+.chamado-modal #novoStatusInterno:focus {
     border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
 }
 
 .chamado-modal .detalhe-descricao {
@@ -1187,13 +1190,15 @@ tbody tr:hover {
     color: #111827;
 }
 
-.chamado-modal #formNovaInteracao {
+.chamado-modal #formNovaInteracao,
+.chamado-modal #formNovaInteracaoInterno {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-.chamado-modal #formNovaInteracao button[type="submit"] {
+.chamado-modal #formNovaInteracao button[type="submit"],
+.chamado-modal #formNovaInteracaoInterno button[type="submit"] {
     align-self: flex-end;
 }
 
