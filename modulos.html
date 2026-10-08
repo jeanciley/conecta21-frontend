@@ -1,0 +1,39 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Módulos | Conecta21</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/modulos.css">
+    <link rel="stylesheet" href="assets/css/page-header.css">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon-conecta21.svg">
+</head>
+<body class="dashboard-page">
+    <aside id="appSidebar" class="sidebar" aria-label="Navegação principal"></aside>
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div><h1>Módulos</h1><p>Gerencie os recursos opcionais disponíveis para sua empresa.</p></div>
+            <div class="user-area">
+                <button type="button" id="btnUserMenu" class="user-menu-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="userMenu">
+                    <span class="user-avatar" id="userAvatar" aria-hidden="true"><span id="userInitials">U</span></span>
+                    <span class="user-info"><span class="user-name" id="dashboardUserName">Carregando...</span><span class="user-profile" id="dashboardUserProfile">Minha conta</span></span>
+                    <span class="user-menu-arrow" aria-hidden="true">&#9662;</span>
+                </button>
+                <div id="userMenu" class="user-menu" hidden>
+                    <a href="perfil.html" class="user-menu-item"><span>Editar perfil</span></a>
+                    <button type="button" id="btnUserLogout" class="user-menu-item user-menu-logout"><span>Sair</span></button>
+                </div>
+            </div>
+        </header>
+        <div id="modulosMsg" class="faq-message" role="status" aria-live="polite" hidden></div>
+        <section id="modulosGrid" class="modulos-grid" aria-label="Catálogo de módulos" aria-live="polite"></section>
+    </main>
+    <script src="js/auth.js"></script>
+    <script src="js/services/api.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/modulos.js"></script>
+    <script src="js/profile-ui.js"></script>
+</body>
+</html>

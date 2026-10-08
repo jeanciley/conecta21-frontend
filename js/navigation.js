@@ -9,7 +9,8 @@
         { href: "equipe.html", label: "Equipe", short: "EQ", permission: "GERENCIAR_USUARIOS" },
         { href: "sla.html", label: "SLA e categorias", short: "SLA", permissions: ["GERENCIAR_CATEGORIAS", "GERENCIAR_PRIORIDADES"] },
         { href: "faq.html", label: "Base de conhecimento", short: "FAQ" },
-        { href: "perfis.html", label: "Perfis", short: "P", admin: true }
+        { href: "perfis.html", label: "Perfis", short: "P", admin: true },
+        { href: "modulos.html", label: "M\u00f3dulos", short: "M", admin: true }
     ];
 
     sidebar.innerHTML = `
