@@ -8,6 +8,10 @@
     box-sizing: border-box;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -88,10 +92,19 @@ a {
 /* LOGO */
 
 .logo {
+    display: inline-flex;
+    align-items: center;
     font-size: 26px;
     font-weight: 800;
     letter-spacing: -1px;
     color: var(--text);
+}
+
+.logo img {
+    display: block;
+    width: clamp(195px, 20vw, 250px);
+    max-width: 100%;
+    height: auto;
 }
 
 .logo span {
@@ -506,6 +519,10 @@ a {
 
 .footer .logo {
     color: white;
+}
+
+.footer .logo img {
+    width: clamp(195px, 18vw, 225px);
 }
 
 .footer p {

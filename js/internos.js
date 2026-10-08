@@ -30,6 +30,35 @@ const internoEditor =
 const internosTabela =
     document.getElementById("internosTabela");
 
+const modalChamadoInterno = document.getElementById("modalChamadoInterno");
+const modalInternoController = window.Conecta21TicketModal.bind(modalChamadoInterno);
+const modalInternoFields = {
+    titulo: document.getElementById("modalInternoTitulo"),
+    numero: document.getElementById("modalInternoNumeroHeader"),
+    statusHeader: document.getElementById("modalInternoStatusHeader"),
+    solicitante: document.getElementById("modalInternoSolicitante"),
+    categoria: document.getElementById("modalInternoCategoria"),
+    prioridade: document.getElementById("modalInternoPrioridade"),
+    status: document.getElementById("modalInternoStatus"),
+    sla: document.getElementById("modalInternoSla"),
+    slaLimite: document.getElementById("modalInternoSlaLimite"),
+    responsavel: document.getElementById("modalInternoResponsavel"),
+    abertura: document.getElementById("modalInternoAbertura"),
+    descricao: document.getElementById("modalInternoDescricao"),
+    statusControl: document.querySelector("[data-interno-status-control]"),
+    statusSelect: document.getElementById("novoStatusInterno"),
+    timeline: document.getElementById("timelineChamadoInterno"),
+    interactionForm: document.getElementById("formInteracaoInterno"),
+    interactionMessage: document.getElementById("mensagemInteracaoInterno"),
+    transferPanel: document.querySelector("[data-interno-transfer]"),
+    transferForm: document.getElementById("formTransferirInterno"),
+    transferSelect: document.getElementById("novoResponsavelInterno"),
+    transferMessage: document.querySelector("[data-interno-transfer-message]")
+};
+
+let usuarioAtualInterno = null;
+let chamadoInternoAtual = null;
+
 
 // =========================================
 // ELEMENTOS DO MENU DO USUÁRIO
@@ -342,73 +371,25 @@ async function carregarInternos() {
 
         const lista =
             pagina.content || [];
+        window.chamadosInternos = lista;
 
 
         internosTabela.innerHTML = lista.length
-
-            ? lista.map(c => `
-
-                <tr>
-
-                    <td>
-                        #${c.id}
-                    </td>
-
-                    <td>
-                        ${safeInterno(c.titulo)}
-                    </td>
-
-                    <td>
-                        ${safeInterno(
-                            c.categoriaNome || "—"
-                        )}
-                    </td>
-
-                    <td>
-                        ${safeInterno(
-                            c.prioridade || "—"
-                        )}
-                    </td>
-
-                    <td>
-                        ${safeInterno(c.status)}
-                    </td>
-
-                    <td>
-                        ${
-                            c.dataAbertura
-                                ? new Date(
-                                    c.dataAbertura
-                                ).toLocaleDateString(
-                                    "pt-BR"
-                                )
-                                : "—"
-                        }
-                    </td>
-
-                </tr>
-
-            `).join("")
-
-            : `
-
-                <tr>
-
-                    <td colspan="6">
-
-                        <div class="empty-state">
-
-                            <p>
-                                Nenhum chamado interno registrado.
-                            </p>
-
-                        </div>
-
-                    </td>
-
-                </tr>
-
-            `;
+            ? lista.map(chamado => {
+                const sla = getSlaStatus(chamado);
+                return `
+                    <tr>
+                        <td><strong>${safeInterno("#" + chamado.id)}</strong></td>
+                        <td>${safeInterno(chamado.titulo || "\u2014")}</td>
+                        <td>${safeInterno(chamado.categoriaNome || "\u2014")}</td>
+                        <td><span class="ticket-priority ${safeInterno(cssPrioridade(chamado.prioridade))}">${safeInterno(formatarPrioridade(chamado.prioridade))}</span></td>
+                        <td><span class="ticket-status ${safeInterno(cssStatus(chamado.status))}">${safeInterno(formatarStatus(chamado.status))}</span></td>
+                        <td>${renderSlaBadge(sla, describeSlaTooltip(chamado, sla))}</td>
+                        <td>${safeInterno(chamado.tecnicoNome || chamado.responsavel || chamado.responsavelNome || "N\u00e3o atribu\u00eddo")}</td>
+                        <td><button type="button" class="btn btn-secondary btn-visualizar-interno" data-id="${safeInterno(chamado.id)}">Visualizar</button></td>
+                    </tr>`;
+            }).join("")
+            : `<tr><td colspan="8"><div class="empty-state"><p>Nenhum chamado interno registrado.</p></div></td></tr>`;
 
     } catch (e) {
 
@@ -428,6 +409,140 @@ async function carregarInternos() {
 // INICIALIZAÇÃO
 // =========================================
 
+internosTabela.addEventListener("click", event => {
+    const button = event.target.closest(".btn-visualizar-interno");
+    if (!button) return;
+    const chamado = (window.chamadosInternos || []).find(item => String(item.id) === button.dataset.id);
+    if (!chamado) return;
+
+    const statusLabel = formatarStatus(chamado.status);
+    const statusClass = "ticket-status " + cssStatus(chamado.status);
+    const prioridadeLabel = formatarPrioridade(chamado.prioridade);
+    const prioridadeClass = "ticket-priority " + cssPrioridade(chamado.prioridade);
+    const sla = getSlaStatus(chamado);
+    const limite = chamado.dataLimiteResolucao || null;
+    chamadoInternoAtual = chamado;
+
+    modalInternoFields.titulo.textContent = chamado.titulo || "Detalhes do chamado interno";
+    modalInternoFields.numero.textContent = "#" + chamado.id;
+    modalInternoFields.statusHeader.textContent = statusLabel;
+    modalInternoFields.statusHeader.className = statusClass;
+    modalInternoFields.solicitante.textContent = chamado.solicitanteNome || (chamado.solicitanteId ? "Solicitante #" + chamado.solicitanteId : "\u2014");
+    modalInternoFields.categoria.textContent = chamado.categoriaNome || "\u2014";
+    modalInternoFields.prioridade.textContent = prioridadeLabel;
+    modalInternoFields.prioridade.className = prioridadeClass;
+    modalInternoFields.status.textContent = statusLabel;
+    modalInternoFields.status.className = statusClass;
+    modalInternoFields.sla.innerHTML = renderSlaBadge(sla, describeSlaTooltip(chamado, sla));
+    modalInternoFields.slaLimite.textContent = limite ? "Limite: " + new Date(limite).toLocaleString("pt-BR") : "Sem data limite retornada pela API.";
+    modalInternoFields.responsavel.textContent = chamado.tecnicoNome || chamado.responsavel || chamado.responsavelNome || "N\u00e3o atribu\u00eddo";
+    modalInternoFields.abertura.textContent = chamado.dataAbertura ? new Date(chamado.dataAbertura).toLocaleString("pt-BR") : "\u2014";
+    modalInternoFields.descricao.textContent = chamado.descricao || "Descri\u00e7\u00e3o n\u00e3o informada";
+    const podeGerenciar = usuarioAtualInterno && (["ADMIN", "TECNICO"].includes(usuarioAtualInterno.perfil)
+        || (usuarioAtualInterno.permissoes || []).includes("GERENCIAR_CHAMADOS"));
+    modalInternoFields.statusSelect.value = String(chamado.status || "ABERTO").toUpperCase();
+    modalInternoFields.statusControl.hidden = !podeGerenciar;
+    modalInternoFields.transferPanel.hidden = !podeGerenciar;
+    modalInternoFields.transferMessage.textContent = "";
+    modalInternoController.open();
+    carregarInteracoesInternas(chamado.id);
+    if (podeGerenciar) carregarResponsaveisInternos(chamado.id);
+});
+
+function mostrarStatusInterno(chamado) {
+    const label = formatarStatus(chamado.status);
+    const classe = "ticket-status " + cssStatus(chamado.status);
+    modalInternoFields.status.textContent = label;
+    modalInternoFields.status.className = classe;
+    modalInternoFields.statusHeader.textContent = label;
+    modalInternoFields.statusHeader.className = classe;
+    modalInternoFields.statusSelect.value = String(chamado.status || "ABERTO").toUpperCase();
+}
+
+async function carregarInteracoesInternas(chamadoId) {
+    modalInternoFields.timeline.innerHTML = '<div class="timeline-empty"><p>Carregando interações...</p></div>';
+    try {
+        const pagina = await apiGetJson(`/api/chamados/${chamadoId}/interacoes?page=0&size=50`);
+        const interacoes = pagina.content || [];
+        modalInternoFields.timeline.innerHTML = interacoes.length
+            ? interacoes.map(interacao => `
+                <article class="timeline-item">
+                    <div class="timeline-item-header"><strong>${safeInterno(interacao.autorNome || "Usuário")}</strong><span>${interacao.dataCriacao ? new Date(interacao.dataCriacao).toLocaleString("pt-BR") : ""}</span></div>
+                    <span class="timeline-type">${safeInterno(interacao.tipo || "Comentário")}</span>
+                    <p>${safeInterno(interacao.mensagem || "")}</p>
+                </article>`).join("")
+            : '<div class="timeline-empty"><p>Nenhuma interação registrada.</p></div>';
+    } catch (erro) {
+        modalInternoFields.timeline.innerHTML = '<div class="timeline-empty"><p>Não foi possível carregar as interações.</p></div>';
+    }
+}
+
+async function carregarResponsaveisInternos(chamadoId) {
+    try {
+        const responsaveis = await apiGetJson(`/api/chamados/${chamadoId}/responsaveis`);
+        modalInternoFields.transferSelect.replaceChildren(new Option("Selecione", ""));
+        (responsaveis || []).forEach(item => modalInternoFields.transferSelect.add(
+            new Option(`${item.nome} (${item.perfil === "ADMIN" ? "Admin" : "Técnico"})`, item.id)
+        ));
+        if (!responsaveis || !responsaveis.length) modalInternoFields.transferMessage.textContent = "Não há técnicos ativos disponíveis.";
+    } catch (erro) {
+        modalInternoFields.transferMessage.textContent = getMensagemErroAmigavel(erro.status || 0);
+    }
+}
+
+modalInternoFields.statusSelect.addEventListener("change", async () => {
+    if (!chamadoInternoAtual) return;
+    const anterior = chamadoInternoAtual.status;
+    try {
+        const response = await apiRequest(`/api/chamados/${chamadoInternoAtual.id}/status`, {
+            method: "PATCH", body: JSON.stringify({ status: modalInternoFields.statusSelect.value })
+        });
+        if (!response.ok) throw { status: response.status };
+        chamadoInternoAtual = { ...chamadoInternoAtual, ...(await response.json()) };
+        mostrarStatusInterno(chamadoInternoAtual);
+        await carregarInternos();
+    } catch (erro) {
+        modalInternoFields.statusSelect.value = String(anterior || "ABERTO").toUpperCase();
+        avisarInterno(getMensagemErroAmigavel(erro.status || 0), true);
+    }
+});
+
+modalInternoFields.interactionForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!chamadoInternoAtual) return;
+    const mensagem = modalInternoFields.interactionMessage.value.trim();
+    if (!mensagem) return;
+    try {
+        const response = await apiRequest(`/api/chamados/${chamadoInternoAtual.id}/interacoes`, {
+            method: "POST", body: JSON.stringify({ mensagem, tipo: "Comentário" })
+        });
+        if (!response.ok) throw { status: response.status };
+        modalInternoFields.interactionForm.reset();
+        await carregarInteracoesInternas(chamadoInternoAtual.id);
+    } catch (erro) {
+        avisarInterno(getMensagemErroAmigavel(erro.status || 0), true);
+    }
+});
+
+modalInternoFields.transferForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!chamadoInternoAtual || !modalInternoFields.transferSelect.value) return;
+    try {
+        const response = await apiRequest(`/api/chamados/${chamadoInternoAtual.id}/responsavel`, {
+            method: "PATCH", body: JSON.stringify({ responsavelId: Number(modalInternoFields.transferSelect.value) })
+        });
+        if (!response.ok) throw { status: response.status };
+        chamadoInternoAtual = { ...chamadoInternoAtual, ...(await response.json()) };
+        modalInternoFields.responsavel.textContent = chamadoInternoAtual.tecnicoNome || "Não atribuído";
+        modalInternoFields.transferMessage.textContent = "Chamado repassado com sucesso.";
+        await carregarInteracoesInternas(chamadoInternoAtual.id);
+        await carregarInternos();
+    } catch (erro) {
+        modalInternoFields.transferMessage.textContent = getMensagemErroAmigavel(erro.status || 0);
+    }
+});
+
+
 async function iniciarInternos() {
 
     try {
@@ -440,6 +555,8 @@ async function iniciarInternos() {
             await apiGetJson(
                 "/api/usuarios/me"
             );
+
+        usuarioAtualInterno = me;
 
         const perms =
             me.permissoes || [];
@@ -506,6 +623,14 @@ async function iniciarInternos() {
                 true
             );
 
+        }
+
+        if (perms.includes("CHAMADOS_INTERNOS")) {
+            const metricas = await apiGetJson("/api/dashboard/internos");
+            document.getElementById("internosMetricAbertos").textContent = metricas.chamadosAbertos ?? 0;
+            document.getElementById("internosMetricAndamento").textContent = metricas.chamadosEmAndamento ?? 0;
+            document.getElementById("internosMetricResolvidos").textContent = metricas.chamadosResolvidos ?? 0;
+            document.getElementById("internosMetricAtraso").textContent = metricas.chamadosEmAtraso ?? 0;
         }
 
 

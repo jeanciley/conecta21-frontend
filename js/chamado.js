@@ -27,9 +27,6 @@ const tituloChamado =
 const clienteChamado =
     document.getElementById("clienteChamado");
 
-const responsavelChamado =
-    document.getElementById("responsavelChamado");
-
 const categoriaChamado =
     document.getElementById("categoriaChamado");
 
@@ -46,9 +43,6 @@ const tituloChamadoError =
 
 const clienteChamadoError =
     document.getElementById("clienteChamadoError");
-
-const responsavelChamadoError =
-    document.getElementById("responsavelChamadoError");
 
 const descricaoChamadoError =
     document.getElementById("descricaoChamadoError");
@@ -117,6 +111,12 @@ const modalChamadoTitulo =
 
 const modalChamadoNumero =
     document.getElementById("modalChamadoNumero");
+const modalChamadoNumeroHeader =
+    document.getElementById("modalChamadoNumeroHeader");
+const modalChamadoStatusHeader =
+    document.getElementById("modalChamadoStatusHeader");
+const modalChamadoController =
+    window.Conecta21TicketModal.bind(modalChamado);
 
 const modalChamadoCliente =
     document.getElementById("modalChamadoCliente");
@@ -166,9 +166,16 @@ const tipoInteracao =
 const descricaoInteracao =
     document.getElementById("descricaoInteracao");
 
+const controleStatusChamado = document.querySelector("[data-ticket-status-control]");
+const painelTransferenciaChamado = document.querySelector("[data-ticket-transfer]");
+const formularioTransferenciaChamado = document.getElementById("formTransferirChamado");
+const seletorNovoResponsavelChamado = document.getElementById("novoResponsavelChamado");
+const mensagemTransferenciaChamado = document.querySelector("[data-ticket-transfer-message]");
+
 
 let chamadoAtual = null;
 let chamados = [];
+let usuarioAtualChamados = null;
 const interacoesCache = {};
 
 
@@ -225,6 +232,9 @@ async function carregarUsuarioMenu() {
         const usuario =
             await apiGetJson("/api/usuarios/me");
 
+        usuarioAtualChamados = usuario;
+        atualizarPermissoesDoModalChamado();
+
         const nome =
             usuario.nome ||
             usuario.nomeCompleto ||
@@ -252,6 +262,17 @@ async function carregarUsuarioMenu() {
 
     }
 
+}
+
+function usuarioPodeGerenciarChamados(usuario = usuarioAtualChamados) {
+    return !!usuario && (["ADMIN", "TECNICO"].includes(usuario.perfil)
+        || (usuario.permissoes || []).includes("GERENCIAR_CHAMADOS"));
+}
+
+function atualizarPermissoesDoModalChamado() {
+    const permitido = usuarioPodeGerenciarChamados();
+    if (controleStatusChamado) controleStatusChamado.hidden = !permitido;
+    if (painelTransferenciaChamado) painelTransferenciaChamado.hidden = !permitido;
 }
 
 
@@ -595,7 +616,6 @@ function validarFormulario() {
 
     tituloChamadoError.textContent = "";
     clienteChamadoError.textContent = "";
-    responsavelChamadoError.textContent = "";
     descricaoChamadoError.textContent = "";
 
 
@@ -704,14 +724,7 @@ novoChamadoForm.addEventListener(
                             categoriaId:
                                 Number(
                                     categoriaChamado.value
-                                ),
-
-                            tecnicoId:
-                                responsavelChamado.value
-                                    ? Number(
-                                        responsavelChamado.value
-                                    )
-                                    : null
+                                )
 
                         })
 
@@ -810,25 +823,7 @@ async function carregarOpcoesChamado() {
                 "/api/usuarios/me"
             );
 
-        const permissoes =
-            perfil.permissoes || [];
-
-
-        const [
-            usuarios,
-            categorias
-        ] =
-            await Promise.all([
-
-                permissoes.includes(
-                    "GERENCIAR_CHAMADOS"
-                )
-                    ? apiGetJson("/api/usuarios")
-                    : Promise.resolve([]),
-
-                apiGetJson("/api/categorias")
-
-            ]);
+        const categorias = await apiGetJson("/api/categorias");
 
 
         clienteChamado.value =
@@ -850,41 +845,6 @@ async function carregarOpcoesChamado() {
                 .hidden = true;
 
         }
-
-
-        responsavelChamado
-            .closest(".form-group")
-            .hidden =
-                !permissoes.includes(
-                    "GERENCIAR_CHAMADOS"
-                );
-
-
-        responsavelChamado.innerHTML =
-            '<option value="">Sem responsável</option>' +
-
-            usuarios
-                .filter(
-                    u =>
-                        u.perfil === "TECNICO" ||
-                        (u.permissoes || [])
-                            .includes(
-                                "CHAMADOS_INTERNOS"
-                            ) ||
-                        (u.permissoes || [])
-                            .includes(
-                                "GERENCIAR_CHAMADOS"
-                            )
-                )
-                .map(
-                    u =>
-                        '<option value="' +
-                        escapeHtmlChamado(u.id) +
-                        '">' +
-                        escapeHtmlChamado(u.nome) +
-                        "</option>"
-                )
-                .join("");
 
 
         if (categoriaChamado) {
@@ -929,8 +889,7 @@ btnCancelarChamado.addEventListener(
 
         tituloChamadoError.textContent = "";
         clienteChamadoError.textContent = "";
-        responsavelChamadoError.textContent = "";
-        descricaoChamadoError.textContent = "";
+            descricaoChamadoError.textContent = "";
 
         formNovoChamado.hidden = true;
 
@@ -1282,6 +1241,8 @@ chamadosTableBody.addEventListener(
 
         modalChamadoNumero.textContent =
             numeroChamado(chamado);
+        modalChamadoNumeroHeader.textContent =
+            numeroChamado(chamado);
 
 
         modalChamadoCliente.textContent =
@@ -1312,6 +1273,8 @@ chamadosTableBody.addEventListener(
             cssStatus(
                 chamado.status
             );
+        modalChamadoStatusHeader.textContent = formatarStatus(chamado.status);
+        modalChamadoStatusHeader.className = modalChamadoStatus.className;
 
 
         novoStatusChamado.value =
@@ -1371,11 +1334,50 @@ chamadosTableBody.addEventListener(
         );
 
 
-        modalChamado.hidden =
-            false;
+        atualizarPermissoesDoModalChamado();
+        modalChamadoController.open();
+        mensagemTransferenciaChamado.textContent = "";
+        if (usuarioPodeGerenciarChamados()) carregarResponsaveisParaTransferencia(chamado.id);
+
+        window.dispatchEvent(new CustomEvent("conecta21:ticket-opened", { detail: chamado }));
 
     }
 );
+
+
+async function carregarResponsaveisParaTransferencia(chamadoId) {
+    seletorNovoResponsavelChamado.replaceChildren(new Option("Selecione", ""));
+    try {
+        const responsaveis = await apiGetJson(`/api/chamados/${chamadoId}/responsaveis`);
+        (responsaveis || []).forEach(item => seletorNovoResponsavelChamado.add(
+            new Option(`${item.nome} (${item.perfil === "ADMIN" ? "Admin" : "Técnico"})`, item.id)
+        ));
+        if (!responsaveis || !responsaveis.length) mensagemTransferenciaChamado.textContent = "Não há técnicos ativos disponíveis.";
+    } catch (erro) {
+        mensagemTransferenciaChamado.textContent = getMensagemErroAmigavel(erro.status || 0);
+    }
+}
+
+formularioTransferenciaChamado.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!chamadoAtual || !seletorNovoResponsavelChamado.value) return;
+    try {
+        const response = await apiRequest(`/api/chamados/${chamadoAtual.id}/responsavel`, {
+            method: "PATCH",
+            body: JSON.stringify({ responsavelId: Number(seletorNovoResponsavelChamado.value) })
+        });
+        if (!response.ok) throw { status: response.status };
+        const atualizado = await response.json();
+        chamadoAtual = { ...chamadoAtual, ...atualizado };
+        modalChamadoResponsavel.textContent = atualizado.tecnicoNome || "Não atribuído";
+        mensagemTransferenciaChamado.textContent = "Chamado repassado com sucesso.";
+        delete interacoesCache[chamadoAtual.id];
+        await renderizarTimeline(chamadoAtual.id);
+        await carregarChamados();
+    } catch (erro) {
+        mensagemTransferenciaChamado.textContent = getMensagemErroAmigavel(erro.status || 0);
+    }
+});
 
 
 // =========================================
@@ -1383,22 +1385,8 @@ chamadosTableBody.addEventListener(
 // =========================================
 
 function fecharModalChamado() {
-
-    modalChamado.hidden =
-        true;
-
+    modalChamadoController.close();
 }
-
-
-btnFecharModalChamado.addEventListener(
-    "click",
-    fecharModalChamado
-);
-
-btnFecharModalChamadoFooter.addEventListener(
-    "click",
-    fecharModalChamado
-);
 
 
 // =========================================
@@ -1931,6 +1919,9 @@ novoStatusChamado.addEventListener(
                     chamadoAtual.status
                 );
 
+            modalChamadoStatusHeader.textContent = formatarStatus(chamadoAtual.status);
+            modalChamadoStatusHeader.className = modalChamadoStatus.className;
+
 
             const sla =
                 getSlaStatus(
@@ -2124,3 +2115,28 @@ function atualizarArquivos(arquivos) {
 carregarUsuarioMenu();
 
 carregarChamados();
+
+async function carregarModuloContratado() {
+    try {
+        const [modulos, usuario] = await Promise.all([
+            apiGetJson("/api/modulos"),
+            apiGetJson("/api/usuarios/me")
+        ]);
+        if (!modulos.gmudAtivo || !["ADMIN", "TECNICO"].includes(usuario.perfil)) return;
+        if (document.querySelector('script[data-modulo="gmud"]')) return;
+
+        const script = document.createElement("script");
+        script.src = "js/gmud.js";
+        script.dataset.modulo = "gmud";
+        script.onload = () => {
+            if (!modalChamado.hidden && chamadoAtual) {
+                window.dispatchEvent(new CustomEvent("conecta21:ticket-opened", { detail: chamadoAtual }));
+            }
+        };
+        document.body.appendChild(script);
+    } catch (_) {
+        // Se o contrato ou a sessão n\u00e3o estiverem ativos, a tela padr\u00e3o continua sem a feature.
+    }
+}
+
+carregarModuloContratado();

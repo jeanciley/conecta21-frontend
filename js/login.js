@@ -14,12 +14,16 @@ const emailError = document.getElementById("emailError");
 const senhaError = document.getElementById("senhaError");
 
 const btnEntrar = document.getElementById("btnEntrar");
+const lembrarInput = document.getElementById("lembrar");
 
 const loginMessage = document.getElementById("loginMessage");
 
 const toggleSenha = document.getElementById("toggleSenha");
 
 const esqueciSenha = document.getElementById("esqueciSenha");
+
+// Mantém o estado visual da opção quando já existe uma sessão persistente.
+lembrarInput.checked = localStorage.getItem("conecta21_token") !== null;
 
 
 // =========================================
@@ -266,7 +270,7 @@ loginForm.addEventListener("submit", async function (event) {
             return;
         }
 
-        salvarToken(dados.token);
+        salvarToken(dados.token, lembrarInput.checked);
 
         mostrarMensagem("Login realizado com sucesso!", "success");
 
@@ -288,28 +292,29 @@ loginForm.addEventListener("submit", async function (event) {
 // ESQUECI MINHA SENHA
 // =========================================
 
-esqueciSenha.addEventListener("click", function (event) {
-
-    event.preventDefault();
-
-    alert(
-        "A recuperação de senha será implementada posteriormente."
-    );
-
-});
-
+const forgotModal = document.getElementById("forgotModal");
 const forgotForm = document.getElementById("forgotForm");
 const forgotEmail = document.getElementById("forgotEmail");
 const forgotMessage = document.getElementById("forgotMessage");
 
-document.addEventListener("click", function (event) {
-    if (!event.target.closest || !event.target.closest("#esqueciSenha")) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    forgotForm.hidden = !forgotForm.hidden;
-    if (!forgotForm.hidden) { forgotEmail.value = emailInput.value.trim(); forgotEmail.focus(); }
-}, true);
+function fecharModalRecuperacao() {
+    forgotModal.close();
+}
 
+esqueciSenha.addEventListener("click", function (event) {
+    event.preventDefault();
+    forgotEmail.value = emailInput.value.trim();
+    forgotMessage.textContent = "";
+    forgotMessage.className = "login-message";
+    forgotModal.showModal();
+    forgotEmail.focus();
+});
+
+document.getElementById("closeForgotModal").addEventListener("click", fecharModalRecuperacao);
+document.getElementById("cancelForgotModal").addEventListener("click", fecharModalRecuperacao);
+forgotModal.addEventListener("click", function (event) {
+    if (event.target === forgotModal) fecharModalRecuperacao();
+});
 forgotForm.addEventListener("submit", async function (event) {
     event.preventDefault();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(forgotEmail.value.trim())) {

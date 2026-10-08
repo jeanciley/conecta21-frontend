@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="stylesheet" href="assets/css/equipe.css">
+    <link rel="stylesheet" href="assets/css/page-header.css">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon-conecta21.svg">
 </head>
 
 <body class="equipe-page">
@@ -17,36 +19,7 @@
          MENU LATERAL
     ========================================== -->
 
-    <aside class="sidebar">
-        <a href="dashboard.html" class="sidebar-logo" aria-label="Voltar ao Dashboard">
-            <span>Conecta</span><strong>21</strong>
-        </a>
-
-
-        <nav class="sidebar-menu">
-            <a href="dashboard.html" class="menu-item">Dashboard</a>
-            <a href="equipe.html" class="menu-item active">Equipe</a>
-            <a href="chamado.html" class="menu-item">Chamados</a>
-            <a href="sla.html" class="menu-item">SLA</a>
-            <a href="faq.html" class="menu-item">Base de conhecimento</a>
-            <a href="internos.html" class="menu-item" data-permission="CHAMADOS_INTERNOS">Chamados internos</a>
-            <a href="perfis.html" class="menu-item" data-admin-only>Perfis</a>
-
-        </nav>
-
-
-        <div class="sidebar-footer">
-
-            <button
-                id="btnLogout"
-                class="logout-button"
-            >
-                Sair
-            </button>
-
-        </div>
-
-    </aside>
+    <aside id="appSidebar" class="sidebar" aria-label="Navegação principal"></aside>
 
 
     <!-- =========================================
@@ -627,6 +600,7 @@
     <script src="js/services/equipeService.js"></script>
 
     <script src="js/equipe.js"></script>
+    <script src="js/profile-ui.js"></script>
 
 </body>
 

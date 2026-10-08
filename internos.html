@@ -27,6 +27,12 @@
         href="assets/css/faq.css"
     >
 
+    <link rel="stylesheet" href="assets/css/sla.css">
+    <link rel="stylesheet" href="assets/css/chamado-modal.css">
+    <link rel="stylesheet" href="assets/css/ticket-table.css">
+
+    <link rel="stylesheet" href="assets/css/page-header.css">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon-conecta21.svg">
 </head>
 
 <body class="dashboard-page">
@@ -269,6 +275,13 @@
             hidden
         ></div>
 
+        <section class="metrics-grid" aria-label="Indicadores de chamados internos">
+            <article class="metric-card"><span class="metric-label">Abertos</span><strong class="metric-value" id="internosMetricAbertos">—</strong></article>
+            <article class="metric-card"><span class="metric-label">Em andamento</span><strong class="metric-value" id="internosMetricAndamento">—</strong></article>
+            <article class="metric-card"><span class="metric-label">Resolvidos</span><strong class="metric-value" id="internosMetricResolvidos">—</strong></article>
+            <article class="metric-card metric-card-alert"><span class="metric-label">Em atraso (SLA)</span><strong class="metric-value" id="internosMetricAtraso">—</strong></article>
+        </section>
+
 
         <!-- =========================================
              EDITOR
@@ -367,7 +380,7 @@
              LISTA DE CHAMADOS
         ========================================== -->
 
-        <section class="faq-list-section">
+        <section class="ticket-table-panel">
 
             <div class="panel-header">
 
@@ -386,15 +399,15 @@
             </div>
 
 
-            <div class="table-container">
+            <div class="table-container ticket-table-container">
 
-                <table>
+                <table class="ticket-table">
 
                     <thead>
 
                         <tr>
 
-                            <th>#</th>
+                            <th>Chamado</th>
 
                             <th>Título</th>
 
@@ -404,7 +417,9 @@
 
                             <th>Status</th>
 
-                            <th>Abertura</th>
+                            <th>SLA</th>
+                            <th>Responsável</th>
+                            <th>A&#231;&#245;es</th>
 
                         </tr>
 
@@ -422,6 +437,68 @@
     </main>
 
 
+
+    <dialog id="modalChamadoInterno" class="ticket-modal-overlay" aria-labelledby="modalInternoTitulo">
+        <div class="modal-window chamado-modal ticket-modal-window">
+            <div class="modal-header">
+                <div class="ticket-modal-heading">
+                    <h2 id="modalInternoTitulo">Detalhes do chamado interno</h2>
+                    <div class="ticket-modal-meta">
+                        <span id="modalInternoNumeroHeader" class="ticket-modal-number">-</span>
+                        <span id="modalInternoStatusHeader" class="ticket-status">-</span>
+                    </div>
+                </div>
+                <button type="button" id="btnFecharModalInterno" class="modal-close" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="chamado-detalhes-grid">
+                    <div class="detalhe-item"><span class="detalhe-label">Solicitante</span><strong id="modalInternoSolicitante">-</strong></div>
+                    <div class="detalhe-item"><span class="detalhe-label">Categoria</span><strong id="modalInternoCategoria">-</strong></div>
+                    <div class="detalhe-item"><span class="detalhe-label">Prioridade</span><span id="modalInternoPrioridade" class="ticket-priority">-</span></div>
+                    <div class="detalhe-item"><span class="detalhe-label">Status</span><span id="modalInternoStatus" class="ticket-status">-</span></div>
+                    <div class="detalhe-item"><span class="detalhe-label">SLA</span><span id="modalInternoSla" class="sla-badge sla-sem-dados">Sem dados</span><small id="modalInternoSlaLimite" class="form-help"></small></div>
+                    <div class="detalhe-item"><span class="detalhe-label">Respons&aacute;vel</span><strong id="modalInternoResponsavel">-</strong></div>
+                    <div class="detalhe-item"><span class="detalhe-label">Data de abertura</span><strong id="modalInternoAbertura">-</strong></div>
+                    <div class="detalhe-item" data-interno-status-control hidden>
+                        <label for="novoStatusInterno" class="detalhe-label">Alterar status</label>
+                        <select id="novoStatusInterno">
+                            <option value="ABERTO">Aberto</option>
+                            <option value="EM_ANDAMENTO">Em andamento</option>
+                            <option value="RESOLVIDO">Resolvido</option>
+                            <option value="EM_ATRASO">Em atraso</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="detalhe-descricao"><span class="detalhe-label">Descri&#231;&#227;o</span><p id="modalInternoDescricao">-</p></div>
+                <section class="ticket-transfer-panel" data-interno-transfer hidden>
+                    <h3>Repassar chamado</h3>
+                    <form id="formTransferirInterno" class="ticket-transfer-form">
+                        <label for="novoResponsavelInterno">Novo respons&aacute;vel</label>
+                        <select id="novoResponsavelInterno" required></select>
+                        <button type="submit" class="btn btn-secondary">Repassar chamado</button>
+                    </form>
+                    <p data-interno-transfer-message role="status" aria-live="polite"></p>
+                </section>
+                <section class="chamado-timeline">
+                    <div class="timeline-header">
+                        <h3>Hist&oacute;rico de intera&ccedil;&otilde;es</h3>
+                        <p>Acompanhe as movimenta&ccedil;&otilde;es deste chamado.</p>
+                    </div>
+                    <div id="timelineChamadoInterno" class="timeline-list" aria-live="polite"></div>
+                    <div class="nova-interacao">
+                        <h3>Adicionar intera&ccedil;&atilde;o</h3>
+                        <form id="formInteracaoInterno">
+                            <label for="mensagemInteracaoInterno">Coment&aacute;rio</label>
+                            <textarea id="mensagemInteracaoInterno" rows="4" maxlength="4000" required></textarea>
+                            <button type="submit" class="btn btn-primary">Enviar coment&aacute;rio</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-footer"><button type="button" id="btnFecharModalInternoFooter" class="btn btn-secondary">Fechar</button></div>
+        </div>
+    </dialog>
+
     <!-- =========================================
          JAVASCRIPT
     ========================================== -->
@@ -429,8 +506,12 @@
     <script src="js/auth.js"></script>
 
     <script src="js/services/api.js"></script>
+    <script src="js/navigation.js"></script>
 
+    <script src="js/sla.js"></script>
+    <script src="js/modal-chamado.js"></script>
     <script src="js/internos.js"></script>
+    <script src="js/profile-ui.js"></script>
 
 </body>
 

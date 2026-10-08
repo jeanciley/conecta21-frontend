@@ -1,0 +1,44 @@
+﻿.gmud-dialog {
+    width: min(780px, calc(100vw - 28px));
+    max-width: none;
+    max-height: min(90vh, 900px);
+    max-height: min(90dvh, 900px);
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 16px;
+    color: var(--text-color, #0f172a);
+    background: var(--surface-color, #fff);
+    box-shadow: 0 24px 70px rgba(15, 23, 42, .28);
+}
+.gmud-dialog::backdrop { background: rgba(15, 23, 42, .58); backdrop-filter: blur(4px); }
+.gmud-dialog form { display: flex; max-height: inherit; flex-direction: column; margin: 0; }
+.gmud-dialog-header,.gmud-dialog-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px; }
+.gmud-dialog-header { border-bottom: 1px solid #e2e8f0; }
+.gmud-dialog-header h2 { margin: 0 0 5px; color: #0f172a; font-size: 21px; }
+.gmud-dialog-header p { margin: 0; color: #64748b; font-size: 14px; }
+.gmud-icon-close { display: grid; width: 36px; height: 36px; flex: 0 0 36px; place-items: center; border: 0; border-radius: 9px; background: #f1f5f9; color: #475569; font-size: 24px; cursor: pointer; }
+.gmud-dialog-body { overflow-y: auto; padding: 22px 24px; }
+.gmud-ticket-summary { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px 18px; margin-bottom: 20px; padding: 16px; border: 1px solid #e2e8f0; border-radius: 12px; background: #f8fafc; }
+.gmud-ticket-summary span,.gmud-ticket-summary strong { display: block; }
+.gmud-ticket-summary span { margin-bottom: 4px; color: #64748b; font-size: 12px; }
+.gmud-ticket-summary strong { overflow-wrap: anywhere; color: #0f172a; font-size: 14px; }
+.gmud-form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.gmud-form-grid label { display: grid; align-content: start; gap: 7px; min-width: 0; color: #334155; font-size: 13px; font-weight: 600; }
+.gmud-form-grid input,.gmud-form-grid select,.gmud-form-grid textarea { box-sizing: border-box; width: 100%; min-height: 42px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #0f172a; font: inherit; font-weight: 400; }
+.gmud-form-grid textarea { min-height: 104px; resize: vertical; }
+.gmud-form-grid input[type=file] { padding: 8px; }
+.gmud-form-grid small { color: #64748b; font-size: 12px; font-weight: 400; }
+.gmud-field-wide { grid-column: 1 / -1; }
+.gmud-message { min-height: 20px; margin: 12px 0 0; color: #15803d; font-size: 14px; }
+.gmud-message.error { color: #b91c1c; }
+.gmud-dialog-footer { justify-content: flex-end; border-top: 1px solid #e2e8f0; background: #fafafa; }
+@media (max-width: 600px) {
+    .gmud-dialog { width: calc(100vw - 16px); max-height: calc(100vh - 16px); max-height: calc(100dvh - 16px); border-radius: 12px; }
+    .gmud-dialog-header,.gmud-dialog-footer { padding: 16px; }
+    .gmud-dialog-body { padding: 16px; }
+    .gmud-form-grid,.gmud-ticket-summary { grid-template-columns: 1fr; }
+    .gmud-field-wide { grid-column: auto; }
+    .gmud-dialog-footer { flex-wrap: wrap; }
+    .gmud-dialog-footer .btn { flex: 1 1 140px; }
+}

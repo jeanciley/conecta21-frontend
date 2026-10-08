@@ -1,0 +1,399 @@
+/* =========================================
+   BADGES DE PRIORIDADE
+========================================= */
+
+.ticket-priority {
+
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+
+/* Prioridade baixa */
+
+.ticket-priority.baixa {
+
+    background-color: #ecfdf5;
+
+    color: #047857;
+
+}
+
+
+/* Prioridade média */
+
+.ticket-priority.media {
+
+    background-color: #fffbeb;
+
+    color: #b45309;
+
+}
+
+
+/* Prioridade alta */
+
+.ticket-priority.alta {
+
+    background-color: #fff7ed;
+
+    color: #c2410c;
+
+}
+
+
+/* Prioridade crítica */
+
+.ticket-priority.critica {
+
+    background-color: #fef2f2;
+
+    color: #b91c1c;
+
+}
+
+
+/* =========================================
+   BADGES DE STATUS
+========================================= */
+
+.ticket-status {
+
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+
+/* Aberto */
+
+.ticket-status.aberto {
+
+    background-color: #eff6ff;
+
+    color: #1d4ed8;
+
+}
+
+
+/* Em andamento */
+
+.ticket-status.andamento {
+
+    background-color: #fff7ed;
+
+    color: #c2410c;
+
+}
+
+
+/* Aguardando */
+
+.ticket-status.aguardando {
+
+    background-color: #fffbeb;
+
+    color: #a16207;
+
+}
+
+
+/* Resolvido */
+
+.ticket-status.resolvido {
+
+    background-color: #ecfdf5;
+
+    color: #047857;
+
+}
+
+
+/* Fechado */
+
+.ticket-status.fechado {
+
+    background-color: #f3f4f6;
+
+    color: #4b5563;
+
+}
+
+
+   MODAL DE DETALHES DO CHAMADO - CENTRALIZADO
+   Mesmo padrão visual do modal da Equipe
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1000;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.modal-overlay[hidden] {
+    display: none;
+}
+
+.modal-window.chamado-modal {
+    width: 100%;
+    max-width: 760px;
+    max-height: 90vh;
+    max-height: 90dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    animation: modalEntrada 0.2s ease-out;
+}
+
+@keyframes modalEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.chamado-modal .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.chamado-modal .modal-header h2 {
+    margin: 0 0 5px;
+    font-size: 22px;
+    color: #111827;
+}
+
+.chamado-modal .modal-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.chamado-modal .modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background-color: #f3f4f6;
+    color: #6b7280;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.chamado-modal .modal-close:hover {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
+.chamado-modal .modal-content {
+    display: block;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.chamado-modal .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 18px 24px;
+    border-top: 1px solid #e5e7eb;
+    background-color: #fafafa;
+}
+
+.chamado-modal .chamado-detalhes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.chamado-modal .detalhe-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px;
+    background-color: #f9fafb;
+    border: 1px solid #f0f1f3;
+    border-radius: 10px;
+    min-width: 0;
+}
+
+.chamado-modal .detalhe-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.chamado-modal .detalhe-item strong {
+    font-size: 14px;
+    color: #111827;
+    word-break: break-word;
+}
+
+.chamado-modal #novoStatusChamado {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #111827;
+    font-family: inherit;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+    transition: 0.2s;
+}
+
+.chamado-modal #novoStatusChamado:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.chamado-modal .detalhe-descricao {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 14px;
+    background-color: #f9fafb;
+    border: 1px solid #f0f1f3;
+    border-radius: 10px;
+}
+
+.chamado-modal .detalhe-descricao p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #111827;
+    word-break: break-word;
+}
+
+.chamado-modal .nova-interacao {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.chamado-modal .nova-interacao h3 {
+    margin: 0 0 16px;
+    font-size: 17px;
+    color: #111827;
+}
+
+.chamado-modal #formNovaInteracao {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.chamado-modal #formNovaInteracao button[type="submit"] {
+    align-self: flex-end;
+}
+
+@media (max-width: 550px) {
+    .modal-overlay {
+        padding: 12px;
+    }
+
+    .modal-window.chamado-modal {
+        max-height: 95vh;
+    }
+
+    .chamado-modal .modal-header {
+        padding: 20px;
+    }
+
+    .chamado-modal .modal-content {
+        padding: 20px;
+    }
+
+    .chamado-modal .modal-footer {
+        padding: 16px 20px;
+    }
+
+    .chamado-modal .chamado-detalhes-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ticket-modal-heading { min-width: 0; flex: 1; }
+.ticket-modal-heading h2 { min-width: 0; overflow-wrap: anywhere; line-height: 1.3; }
+.ticket-modal-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+.ticket-modal-meta .ticket-status { display: inline-flex; }
+.ticket-modal-number { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 20px; background: #f1f5f9; color: #475569; font-size: 12px; font-weight: 700; }
+.ticket-modal-overlay { overscroll-behavior: contain; }
+body.modal-open { overflow: hidden; }
+
+.chamado-modal .ticket-transfer-panel {
+    margin-top: 24px;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #f9fafb;
+}
+
+.ticket-transfer-panel h3 { margin: 0 0 14px; color: #111827; font-size: 16px; }
+.ticket-transfer-form { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; }
+.ticket-transfer-form label { display: grid; flex: 1 1 220px; gap: 7px; color: #475569; font-size: 13px; font-weight: 600; }
+.ticket-transfer-form select { min-height: 42px; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #0f172a; font: inherit; }
+.ticket-transfer-panel [data-ticket-transfer-message],
+.ticket-transfer-panel [data-interno-transfer-message] { margin: 10px 0 0; color: #475569; font-size: 13px; }
+.chamado-modal .chamado-timeline { margin-top: 28px; }
+.chamado-modal .timeline-header { margin-bottom: 18px; }
+.chamado-modal .timeline-header h3 { margin: 0 0 6px; color: #111827; font-size: 17px; }
+.chamado-modal .timeline-header p { margin: 0; color: #6b7280; font-size: 14px; }
+.chamado-modal .timeline-list { display: flex; flex-direction: column; gap: 14px; }
+.chamado-modal .timeline-item { position: relative; padding: 16px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; }
+.chamado-modal .timeline-item-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.chamado-modal .timeline-item-header strong { color: #111827; font-size: 14px; }
+.chamado-modal .timeline-item-header span { color: #64748b; font-size: 12px; }
+.chamado-modal .timeline-type { display: inline-block; margin-top: 8px; color: #1d4ed8; font-size: 12px; font-weight: 700; }
+.chamado-modal .timeline-item p { margin: 8px 0 0; color: #374151; font-size: 14px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.chamado-modal .timeline-empty { padding: 20px; border: 1px dashed #cbd5e1; border-radius: 10px; color: #64748b; text-align: center; }
+.chamado-modal .timeline-empty p { margin: 0; }
+.chamado-modal .nova-interacao { margin-top: 24px; }
+.chamado-modal #formInteracaoInterno { display: grid; gap: 12px; }
+.chamado-modal #formInteracaoInterno label { color: #475569; font-size: 13px; font-weight: 600; }
+.chamado-modal #formInteracaoInterno textarea { width: 100%; min-height: 100px; box-sizing: border-box; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; color: #0f172a; font: inherit; resize: vertical; }
+.chamado-modal #formInteracaoInterno button { justify-self: end; }

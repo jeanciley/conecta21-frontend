@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu perfil | Conecta21</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/profile.css">
+    <link rel="stylesheet" href="assets/css/page-header.css">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon-conecta21.svg">
+</head>
+<body class="dashboard-page">
+    <aside id="appSidebar" class="sidebar" aria-label="Navegação principal"></aside>
+    <main class="profile-page-main">
+        <header class="dashboard-header">
+            <div><h1>Meu perfil</h1><p>Atualize seus dados, sua foto e sua senha.</p></div>
+            <div class="user-area">
+                <button type="button" id="btnUserMenu" class="user-menu-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="userMenu">
+                    <span class="user-avatar" id="userAvatar" aria-hidden="true"><span id="userInitials">U</span></span>
+                    <span class="user-info"><span class="user-name" id="dashboardUserName">Carregando...</span><span class="user-profile" id="dashboardUserProfile">Minha conta</span></span>
+                    <span class="user-menu-arrow" aria-hidden="true">▾</span>
+                </button>
+                <div id="userMenu" class="user-menu" hidden>
+                    <a href="perfil.html" class="user-menu-item"><span>Editar perfil</span></a>
+                    <button type="button" id="btnUserLogout" class="user-menu-item user-menu-logout"><span>Sair</span></button>
+                </div>
+            </div>
+        </header>
+
+        <section class="profile-card" aria-labelledby="profileDetailsTitle">
+            <h2 id="profileDetailsTitle">Foto do perfil</h2>
+            <p>Envie uma imagem PNG, JPG ou WEBP de até 5 MB.</p>
+            <div class="profile-avatar-row">
+                <div class="profile-avatar-preview" id="profileAvatarPreview" aria-label="Prévia da foto do perfil">U</div>
+                <div class="profile-avatar-actions">
+                    <label class="btn btn-secondary" for="profileAvatarFile">Escolher foto</label>
+                    <input id="profileAvatarFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+                    <button id="saveProfileAvatar" class="btn btn-primary" type="button" disabled>Salvar foto</button>
+                    <button id="removeProfileAvatar" class="btn btn-outline" type="button" hidden>Remover foto</button>
+                </div>
+            </div>
+            <div id="avatarMessage" class="profile-message" role="status" aria-live="polite"></div>
+        </section>
+
+        <section class="profile-card" aria-labelledby="profileDataTitle">
+            <h2 id="profileDataTitle">Dados pessoais</h2>
+            <p>Seu nome e e-mail são usados para identificar sua conta.</p>
+            <form id="profileDataForm" class="profile-form">
+                <div class="form-group"><label for="profileName">Nome</label><input id="profileName" name="nome" type="text" maxlength="100" autocomplete="name" required></div>
+                <div class="form-group"><label for="profileEmail">E-mail</label><input id="profileEmail" name="email" type="email" maxlength="100" autocomplete="email" required></div>
+                <div class="profile-form-actions"><button class="btn btn-primary" type="submit">Salvar dados</button><span id="profileDataMessage" class="profile-message" role="status" aria-live="polite"></span></div>
+            </form>
+        </section>
+
+        <section class="profile-card" aria-labelledby="profilePasswordTitle">
+            <h2 id="profilePasswordTitle">Alterar senha</h2>
+            <p>Use ao menos 8 caracteres com letra maiúscula, minúscula, número e caractere especial.</p>
+            <form id="profilePasswordForm" class="profile-form">
+                <div class="form-group"><label for="currentPassword">Senha atual</label><input id="currentPassword" type="password" autocomplete="current-password" required></div>
+                <div class="form-group"><label for="newPassword">Nova senha</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+                <div class="form-group"><label for="confirmPassword">Confirme a nova senha</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+                <div class="profile-form-actions"><button class="btn btn-primary" type="submit">Alterar senha</button><span id="profilePasswordMessage" class="profile-message" role="status" aria-live="polite"></span></div>
+            </form>
+        </section>
+    </main>
+    <script src="js/auth.js"></script>
+    <script src="js/services/api.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/perfil.js"></script>
+    <script src="js/profile-ui.js"></script>
+</body>
+</html>

@@ -84,37 +84,63 @@ const statusChart =
 const slaChart =
     document.getElementById("slaChart");
 
+const dashboardViews = {
+    externos: {
+        interno: false,
+        message: dashboardMsg,
+        metrics: [metricAbertos, metricAndamento, metricResolvidos, metricAtraso],
+        status: statusChart,
+        sla: slaChart,
+        categories: listaCategorias,
+        overdue: listaAtraso
+    },
+    internos: {
+        interno: true,
+        message: document.getElementById("dashboardMsgInternos"),
+        metrics: [
+            document.getElementById("metricAbertosInternos"),
+            document.getElementById("metricAndamentoInternos"),
+            document.getElementById("metricResolvidosInternos"),
+            document.getElementById("metricAtrasoInternos")
+        ],
+        status: document.getElementById("statusChartInternos"),
+        sla: document.getElementById("slaChartInternos"),
+        categories: document.getElementById("listaCategoriasInternos"),
+        overdue: document.getElementById("listaAtrasoInternos")
+    }
+};
+
 
 // =========================================
 // MENSAGENS DO DASHBOARD
 // =========================================
 
-function mostrarDashboardMsg(texto, tipo) {
+function mostrarDashboardMsg(texto, tipo, elemento = dashboardMsg) {
 
-    if (!dashboardMsg) {
+    if (!elemento) {
         return;
     }
 
-    dashboardMsg.hidden = false;
+    elemento.hidden = false;
 
-    dashboardMsg.textContent = texto;
+    elemento.textContent = texto;
 
-    dashboardMsg.className =
+    elemento.className =
         "dashboard-msg " + (tipo || "error");
 }
 
 
-function limparDashboardMsg() {
+function limparDashboardMsg(elemento = dashboardMsg) {
 
-    if (!dashboardMsg) {
+    if (!elemento) {
         return;
     }
 
-    dashboardMsg.hidden = true;
+    elemento.hidden = true;
 
-    dashboardMsg.textContent = "";
+    elemento.textContent = "";
 
-    dashboardMsg.className =
+    elemento.className =
         "dashboard-msg";
 }
 
@@ -201,12 +227,11 @@ function gerarIniciais(nome) {
 // CARREGAR USUÁRIO LOGADO
 // =========================================
 
-async function carregarUsuarioDashboard() {
+async function carregarUsuarioDashboard(usuarioAtual = null) {
 
     try {
 
-        const usuario =
-            await apiGetJson("/api/usuarios/me");
+        const usuario = usuarioAtual || await apiGetJson("/api/usuarios/me");
 
 
         // -----------------------------------------
@@ -447,172 +472,46 @@ if (btnUserLogout) {
 // CARREGAR DADOS DO DASHBOARD
 // =========================================
 
-async function carregarDashboard() {
-
-    limparDashboardMsg();
+async function carregarDashboard(chave) {
+    const view = dashboardViews[chave];
+    limparDashboardMsg(view.message);
 
     try {
+        const endpoint = view.interno ? "/api/dashboard/internos" : "/api/dashboard";
+        const dados = await apiGetJson(endpoint);
+        const metricas = [
+            dados.chamadosAbertos,
+            dados.chamadosEmAndamento,
+            dados.chamadosResolvidos,
+            dados.chamadosEmAtraso
+        ];
+        view.metrics.forEach((elemento, index) => {
+            if (elemento) elemento.textContent = metricas[index] ?? 0;
+        });
 
-        const dados =
-            await apiGetJson("/api/dashboard");
-
-
-        // -----------------------------------------
-        // MÉTRICAS
-        // -----------------------------------------
-
-        if (metricAbertos) {
-
-            metricAbertos.textContent =
-                dados.chamadosAbertos ?? 0;
-
-        }
-
-
-        if (metricAndamento) {
-
-            metricAndamento.textContent =
-                dados.chamadosEmAndamento ?? 0;
-
-        }
-
-
-        if (metricResolvidos) {
-
-            metricResolvidos.textContent =
-                dados.chamadosResolvidos ?? 0;
-
-        }
-
-
-        if (metricAtraso) {
-
-            metricAtraso.textContent =
-                dados.chamadosEmAtraso ?? 0;
-
-        }
-
-
-        // -----------------------------------------
-        // CATEGORIAS
-        // -----------------------------------------
-
-        renderizarCategorias(
-            dados.chamadosPorCategoria || {}
-        );
-
-
-        // -----------------------------------------
-        // CHAMADOS POR STATUS
-        // -----------------------------------------
-
-        renderizarBarras(
-            statusChart,
-            dados.chamadosPorStatus || {},
-            {
-                ABERTO: "Aberto",
-
-                EM_ANDAMENTO: "Em atendimento",
-
-                RESOLVIDO: "Resolvido",
-
-                EM_ATRASO: "Em atraso"
-            }
-        );
-
-
-        // -----------------------------------------
-        // SLA
-        // -----------------------------------------
-
-        renderizarBarras(
-            slaChart,
-            {
-                "No prazo":
-                    dados.slaCumpridos || 0,
-
-                "Atrasados":
-                    dados.slaViolados || 0
-            }
-        );
-
-
+        renderizarCategorias(dados.chamadosPorCategoria || {}, view.categories);
+        renderizarBarras(view.status, dados.chamadosPorStatus || {}, {
+            ABERTO: "Aberto",
+            EM_ANDAMENTO: "Em atendimento",
+            RESOLVIDO: "Resolvido",
+            EM_ATRASO: "Em atraso"
+        }, view.interno);
+        renderizarBarras(view.sla, {
+            "No prazo": dados.slaCumpridos || 0,
+            "Atrasados": dados.slaViolados || 0
+        }, null, view.interno);
     } catch (erro) {
-
-        const status =
-            erro && erro.status
-                ? erro.status
-                : 0;
-
-
-        if (status === 401) {
-            return;
-        }
-
-
-        // -----------------------------------------
-        // RESET DAS MÉTRICAS
-        // -----------------------------------------
-
-        if (metricAbertos) {
-
-            metricAbertos.textContent =
-                "—";
-
-        }
-
-
-        if (metricAndamento) {
-
-            metricAndamento.textContent =
-                "—";
-
-        }
-
-
-        if (metricResolvidos) {
-
-            metricResolvidos.textContent =
-                "—";
-
-        }
-
-
-        if (metricAtraso) {
-
-            metricAtraso.textContent =
-                "—";
-
-        }
-
-
-        // -----------------------------------------
-        // MENSAGEM
-        // -----------------------------------------
-
-        mostrarDashboardMsg(
-            getMensagemErroAmigavel(status),
-            "error"
-        );
-
-
-        // -----------------------------------------
-        // CATEGORIAS
-        // -----------------------------------------
-
-        if (listaCategorias) {
-
-            listaCategorias.innerHTML =
-                '<div class="empty-state">' +
-                '<p>Não foi possível carregar as categorias.</p>' +
-                '</div>';
-
-        }
-
+        const status = erro && erro.status ? erro.status : 0;
+        if (status === 401) return;
+        view.metrics.forEach(elemento => {
+            if (elemento) elemento.textContent = "—";
+        });
+        renderizarBarras(view.status, {}, {}, view.interno);
+        renderizarBarras(view.sla, {}, null, view.interno);
+        renderizarCategorias({}, view.categories);
+        mostrarDashboardMsg(getMensagemErroAmigavel(status), "error", view.message);
     }
-
 }
-
 
 // =========================================
 // RENDERIZAR BARRAS
@@ -621,7 +520,8 @@ async function carregarDashboard() {
 function renderizarBarras(
     container,
     valores,
-    rotulos
+    rotulos,
+    interno = false
 ) {
 
     if (!container) {
@@ -690,12 +590,11 @@ function renderizarBarras(
 
 
                 const clicavel =
-                    Boolean(status);
+                    Boolean(status) && !interno;
 
 
-                const href =
-                    "chamado.html?status=" +
-                    (status || "");
+                const href = "chamado.html?status=" + (status || "")
+                    + (interno ? "&interno=true" : "");
 
 
                 const tag =
@@ -746,9 +645,9 @@ function renderizarBarras(
 // RENDERIZAR CATEGORIAS
 // =========================================
 
-function renderizarCategorias(porCategoria) {
+function renderizarCategorias(porCategoria, container = listaCategorias) {
 
-    if (!listaCategorias) {
+    if (!container) {
         return;
     }
 
@@ -759,7 +658,7 @@ function renderizarCategorias(porCategoria) {
 
     if (entradas.length === 0) {
 
-        listaCategorias.innerHTML =
+        container.innerHTML =
             '<div class="empty-state">' +
 
             "<h3>Nenhum dado por categoria</h3>" +
@@ -832,7 +731,7 @@ function renderizarCategorias(porCategoria) {
         ).join("");
 
 
-    listaCategorias.innerHTML =
+    container.innerHTML =
         '<div class="analytics-bars">' +
         itens +
         "</div>";
@@ -844,133 +743,74 @@ function renderizarCategorias(porCategoria) {
 // CARREGAR CHAMADOS EM ATRASO
 // =========================================
 
-async function carregarAtraso() {
-
-    if (!listaAtraso) {
-        return;
-    }
-
+async function carregarAtraso(chave) {
+    const view = dashboardViews[chave];
+    const container = view.overdue;
+    if (!container) return;
 
     try {
+        const query = "/api/chamados?status=EM_ATRASO&interno=" + view.interno
+            + "&page=0&size=5&sort=dataAbertura,DESC";
+        const pagina = await apiGetJson(query);
+        const emAtraso = (pagina && pagina.content) || [];
 
-        const pagina =
-            await apiGetJson(
-                "/api/chamados?status=EM_ATRASO&page=0&size=5&sort=dataAbertura,DESC"
-            );
-
-
-        const emAtraso =
-            (pagina && pagina.content) || [];
-
-
-        if (emAtraso.length === 0) {
-
-            listaAtraso.innerHTML =
-                '<div class="empty-state">' +
-
-                "<h3>Nenhum chamado em atraso</h3>" +
-
-                "<p>" +
-                "Todos os atendimentos estão dentro do SLA." +
-                "</p>" +
-
-                "</div>";
-
+        if (!emAtraso.length) {
+            container.innerHTML = '<div class="empty-state"><h3>Nenhum chamado em atraso</h3><p>Todos os atendimentos estão dentro do SLA.</p></div>';
             return;
         }
 
-
-        const itens =
-            emAtraso
-                .slice(0, 5)
-                .map(
-                    function (card) {
-
-                        const sla =
-                            getSlaStatus(card);
-
-
-                        return (
-
-                            '<li class="atraso-item">' +
-
-                            "<div>" +
-
-                            "<strong>#"
-
-                            +
-                            escapeHtml(card.id)
-
-                            +
-                            " — "
-
-                            +
-                            escapeHtml(card.titulo)
-
-                            +
-                            "</strong>" +
-
-                            '<span class="atraso-meta">' +
-
-                            escapeHtml(
-                                formatarPrioridade(
-                                    card.prioridade
-                                )
-                            ) +
-
-                            "</span>" +
-
-                            "</div>" +
-
-                            renderSlaBadge(sla) +
-
-                            "</li>"
-                        );
-
-                    }
-                )
-                .join("");
-
-
-        listaAtraso.innerHTML =
-            '<ul class="atraso-list">' +
-            itens +
-            "</ul>";
-
-
+        const itens = emAtraso.map(card => {
+            const sla = getSlaStatus(card);
+            return '<li class="atraso-item"><div><strong>#' + escapeHtml(card.id)
+                + ' — ' + escapeHtml(card.titulo) + '</strong><span class="atraso-meta">'
+                + escapeHtml(formatarPrioridade(card.prioridade))
+                + '</span></div>' + renderSlaBadge(sla) + '</li>';
+        }).join("");
+        container.innerHTML = '<ul class="atraso-list">' + itens + '</ul>';
     } catch (erro) {
-
-        const status =
-            erro && erro.status
-                ? erro.status
-                : 0;
-
-
-        if (status === 401) {
-            return;
-        }
-
-
-        listaAtraso.innerHTML =
-            '<div class="empty-state">' +
-
-            "<p>" +
-            "Não foi possível carregar os atrasos." +
-            "</p>" +
-
-            "</div>";
-
+        const status = erro && erro.status ? erro.status : 0;
+        if (status === 401) return;
+        container.innerHTML = '<div class="empty-state"><p>Não foi possível carregar os chamados em atraso.</p></div>';
     }
-
 }
 
+async function iniciarDashboard() {
+    const tabExternos = document.getElementById("tabExternos");
+    const tabInternos = document.getElementById("tabInternos");
+    const painelExternos = document.getElementById("painelExternos");
+    const painelInternos = document.getElementById("painelInternos");
 
-// =========================================
-// INICIALIZAÇÃO DO DASHBOARD
-// =========================================
+    try {
+        const usuario = await apiGetJson("/api/usuarios/me");
+        const permissoes = usuario.permissoes || [];
+        const internosPermitidos = permissoes.includes("CHAMADOS_INTERNOS");
+        const internoOnly = usuario.perfil === "USUARIO" && internosPermitidos
+            && !permissoes.includes("GERENCIAR_CHAMADOS");
+        const externosPermitidos = !internoOnly;
 
-carregarUsuarioDashboard();
+        tabExternos.hidden = !externosPermitidos;
+        tabInternos.hidden = !internosPermitidos;
+        await carregarUsuarioDashboard(usuario);
 
-carregarDashboard();
+        async function ativarAba(chave) {
+            const internos = chave === "internos";
+            if (internos && !internosPermitidos || !internos && !externosPermitidos) return;
+            tabExternos.classList.toggle("active", !internos);
+            tabInternos.classList.toggle("active", internos);
+            tabExternos.setAttribute("aria-selected", String(!internos));
+            tabInternos.setAttribute("aria-selected", String(internos));
+            painelExternos.hidden = internos;
+            painelInternos.hidden = !internos;
+            await Promise.all([carregarDashboard(chave), carregarAtraso(chave)]);
+        }
 
-carregarAtraso();
+        tabExternos.addEventListener("click", () => ativarAba("externos"));
+        tabInternos.addEventListener("click", () => ativarAba("internos"));
+        await ativarAba(externosPermitidos ? "externos" : "internos");
+    } catch (erro) {
+        const status = erro && erro.status ? erro.status : 0;
+        mostrarDashboardMsg(getMensagemErroAmigavel(status), "error");
+    }
+}
+
+iniciarDashboard();

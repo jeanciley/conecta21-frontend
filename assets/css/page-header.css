@@ -1,0 +1,106 @@
+.dashboard-header,
+.chamado-header,
+.equipe-header,
+.sla-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto;
+    align-items: center;
+    column-gap: 24px;
+    row-gap: 12px;
+}
+
+.dashboard-header > div:first-child,
+.chamado-header > div:first-child,
+.equipe-header > div:first-child,
+.sla-header > div:first-child {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+}
+
+.chamado-header-actions,
+.equipe-header-actions,
+.internos-header-actions,
+.faq-header-actions,
+.perfis-header-actions,
+.sla-header-actions {
+    display: contents;
+}
+
+.dashboard-header .user-area,
+.chamado-header .user-area,
+.equipe-header .user-area,
+.faq-header .user-area,
+.perfis-header .user-area,
+.sla-header .user-area {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: center;
+}
+
+.dashboard-header .btn,
+.chamado-header .btn,
+.equipe-header .btn,
+.internos-header .btn,
+.faq-header .btn,
+.perfis-header .btn,
+.sla-header .btn {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    align-self: start;
+}
+
+.dashboard-header .faq-search,
+.faq-header .faq-search {
+    grid-column: 1;
+    grid-row: 2;
+    width: min(420px, 100%);
+    min-width: 0;
+}
+
+.dashboard-header .user-menu-trigger,
+.chamado-header .user-menu-trigger,
+.equipe-header .user-menu-trigger,
+.faq-header .user-menu-trigger,
+.perfis-header .user-menu-trigger,
+.sla-header .user-menu-trigger {
+    white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+    .dashboard-header,
+    .chamado-header,
+    .equipe-header,
+    .sla-header {
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: 12px;
+        row-gap: 12px;
+        align-items: center;
+    }
+
+    .dashboard-header .user-area,
+    .chamado-header .user-area,
+    .equipe-header .user-area,
+    .faq-header .user-area,
+    .perfis-header .user-area,
+    .sla-header .user-area {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .dashboard-header .btn,
+    .chamado-header .btn,
+    .equipe-header .btn,
+    .internos-header .btn,
+    .faq-header .btn,
+    .perfis-header .btn,
+    .sla-header .btn,
+    .dashboard-header .faq-search,
+    .faq-header .faq-search {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+}
