@@ -790,6 +790,8 @@ async function iniciarDashboard() {
 
         tabExternos.hidden = !externosPermitidos;
         tabInternos.hidden = !internosPermitidos;
+        document.querySelectorAll("[data-admin-only]").forEach(x => x.hidden = usuario.perfil !== "ADMIN");
+        document.querySelectorAll("[data-permission]").forEach(x => x.hidden = !permissoes.includes(x.dataset.permission));
         await carregarUsuarioDashboard(usuario);
 
         async function ativarAba(chave) {
