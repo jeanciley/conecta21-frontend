@@ -26,7 +26,7 @@ async function iniciarFaq() {
         }
         document.querySelectorAll("[data-admin-only]").forEach(x => x.hidden = me.perfil !== "ADMIN");
         document.querySelectorAll("[data-permission]").forEach(x => x.hidden = !(me.permissoes || []).includes(x.dataset.permission));
-        document.getElementById("btnLogout").addEventListener("click", logout);
+        document.getElementById("btnLogout")?.addEventListener("click", logout);
         await carregarFaq();
     } catch (e) { mensagemFaq(getMensagemErroAmigavel(e.status || 0), true); }
 }

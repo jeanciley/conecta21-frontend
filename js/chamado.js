@@ -901,14 +901,16 @@ btnCancelarChamado.addEventListener(
 // LOGOUT - MENU LATERAL
 // =========================================
 
-btnLogout.addEventListener(
-    "click",
-    function () {
+if (btnLogout) {
+    btnLogout.addEventListener(
+        "click",
+        function () {
 
-        logout();
+            logout();
 
-    }
-);
+        }
+    );
+}
 
 
 // =========================================

@@ -482,7 +482,7 @@ async function iniciarPerfis() {
             .getElementById(
                 "btnLogout"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 logout
             );

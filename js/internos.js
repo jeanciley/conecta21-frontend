@@ -598,7 +598,7 @@ async function iniciarInternos() {
 
         document
             .getElementById("btnLogout")
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 logout
             );
